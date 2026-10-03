@@ -5,10 +5,15 @@
 Run the web UI with the same Python environment as the classifier:
 
 ```sh
-python web_server.py
+.venv/bin/python web_server.py
 ```
 
-Open **http://localhost:8000**. The page shows model loading progress, the detected
+Create `.venv` using the setup instructions below before the first run. On this
+Mac, it is already configured with the Miniconda dependencies. The macOS system
+`python3` does not have these packages and fails with `No module named 'cv2'`;
+use `.venv/bin/python`, or activate the environment with `source .venv/bin/activate`.
+
+Open **https://localhost:8000**. The page shows model loading progress, the detected
 item, relative match scores, top candidates, and inference time. Choose this
 device's browser camera, a camera connected to the Python server, or a photo
 upload. Camera mode confirms labels with two successive readings. The connected
@@ -17,29 +22,36 @@ targeting up to 30 frames per second. Actual frame rate depends on the camera an
 machine. Inference uses the latest original frame without queuing old frames.
 No additional Python dependencies are needed beyond `requirements.txt`.
 
-To view a Pi's interface from another device on your trusted local network:
+The server listens on your local network over HTTPS by default and prints its
+Wi-Fi address at startup. Browsers only allow camera access over HTTPS, so this
+lets a phone or laptop on the same Wi-Fi use its own camera. On first start the
+server creates a local certificate authority (`ca.pem`, `ca-key.pem`) with
+`openssl`, and signs a `cert.pem` for the current Wi-Fi address with it. A new
+certificate is signed automatically when the address changes.
 
-```sh
-python web_server.py --host 0.0.0.0 --port 8000
-```
+To avoid the browser's certificate warning, trust `ca.pem` once on each device.
+It is served at `https://<server-ip>:8000/ca.crt` (accept the warning one last
+time to download it). The CA can only sign certificates for `localhost` and
+private network addresses, so it cannot be used to impersonate real websites.
+Keep `ca-key.pem` private.
 
-Open `http://<pi-ip-address>:8000`. Use **Mac / Pi connected camera** for a USB
-camera attached to the Pi (`--camera 1` selects another camera), or upload a photo.
-Browser webcam access requires localhost or HTTPS, so it is unavailable on an
-ordinary HTTP Pi network address.
+- **This Mac:** `sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ca.pem`
+- **Firefox (any computer):** Settings → Privacy & Security → Certificates →
+  View Certificates → Authorities → Import, choose the file, and check
+  *Trust this CA to identify websites*.
+- **iPhone / iPad:** open the `/ca.crt` link in Safari and allow the profile
+  download. Install it in Settings → General → VPN & Device Management, then turn
+  it on in Settings → General → About → Certificate Trust Settings.
+- **Android:** Settings → Security → Encryption & credentials → Install a
+  certificate → CA certificate, and choose the downloaded file.
 
-To use a phone or laptop's own camera over Wi-Fi, serve HTTPS with a self-signed
-certificate (replace the IP with the server's address):
+Then open the printed `https://<server-ip>:8000`, choose **This device’s camera**,
+and allow camera access. Use **Mac / Pi connected camera** for a USB camera
+attached to the server (`--camera 1` selects another camera), or upload a photo.
 
-```sh
-openssl req -x509 -newkey rsa:2048 -nodes -days 365 -keyout key.pem -out cert.pem \
-  -subj "/CN=trash-lens" -addext "subjectAltName=IP:192.168.1.50"
-python web_server.py --host 0.0.0.0 --cert cert.pem --key key.pem
-```
-
-On the other device, open `https://192.168.1.50:8000`, accept the browser's
-certificate warning, choose **This device’s camera**, and allow camera access.
-Keep `key.pem` private. Ribbon-connected Pi cameras may require a
+Pass `--host 127.0.0.1` to keep it private to this machine, `--http` to serve
+plain HTTP, or `--cert` and `--key` to use your own certificate.
+Ribbon-connected Pi cameras may require a
 Picamera2 capture adapter; this interface currently uses OpenCV camera capture.
 The server has no authentication: use it only on a trusted network, not the public
 internet. All inference runs on the Python server, and inputs are not saved.

@@ -3,7 +3,9 @@ import argparse
 import io
 import json
 import secrets
+import socket
 import ssl
+import subprocess
 import sys
 from urllib.parse import urlsplit, parse_qs
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -18,6 +20,7 @@ from PIL import Image, UnidentifiedImageError
 from classifier import TrashClassifier, center_box
 
 ROOT = Path(__file__).resolve().parent
+CA_CERT = ROOT / "ca.pem"
 MAX_UPLOAD = 8 * 1024 * 1024
 
 
@@ -129,8 +132,10 @@ class Service:
     def load(self):
         try:
             self.model = TrashClassifier()
+            print("Model ready.", flush=True)
         except Exception as exc:
             self.error = str(exc)
+            print(f"Model failed to load: {exc}", file=sys.stderr, flush=True)
 
     def predict(self, frame):
         started = time.monotonic()
@@ -187,6 +192,8 @@ def make_handler(service):
                 return
             if self.path == "/api/status":
                 self.respond(200, {"ready": service.model is not None, "error": service.error})
+            elif self.path == "/ca.crt" and CA_CERT.exists():
+                self.respond(200, CA_CERT.read_bytes(), "application/x-x509-ca-cert")
             elif self.path in ("/", "/app.js", "/style.css"):
                 name, mime = {"/": ("index.html", "text/html; charset=utf-8"),
                               "/app.js": ("app.js", "text/javascript; charset=utf-8"),
@@ -238,16 +245,97 @@ def make_handler(service):
     return Handler
 
 
+def lan_ip():
+    """Return this machine's Wi-Fi/LAN address, or None if offline."""
+    # Ask the OS for the Wi-Fi address first; a VPN can hijack the default route.
+    for cmd in (["ipconfig", "getifaddr", "en0"], ["hostname", "-I"]):
+        try:
+            out = subprocess.run(cmd, capture_output=True, text=True, timeout=2).stdout.split()
+        except (OSError, subprocess.SubprocessError):
+            continue
+        if out:
+            return out[0]
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+        try:
+            # No packets are sent; this only picks the outbound interface.
+            s.connect(("10.255.255.255", 1))
+            return s.getsockname()[0]
+        except OSError:
+            return None
+
+
+# The local CA may only sign certificates for this machine and private networks,
+# so trusting it cannot be abused to impersonate real websites.
+CA_CONSTRAINTS = ",".join(
+    f"permitted;{name}" for name in ("DNS:localhost", "IP:127.0.0.0/255.0.0.0", "IP:10.0.0.0/255.0.0.0",
+                                     "IP:172.16.0.0/255.240.0.0", "IP:192.168.0.0/255.255.0.0"))
+
+
+def openssl(*args):
+    subprocess.run(["openssl", *args], check=True, capture_output=True)
+
+
+def ensure_ca(ca, ca_key):
+    """Create the local certificate authority that devices trust once."""
+    if ca.exists() and ca_key.exists():
+        return
+    openssl("req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "3650",
+            "-keyout", ca_key, "-out", ca, "-subj", "/O=Trash Lens/CN=Trash Lens Local CA",
+            "-addext", "basicConstraints=critical,CA:TRUE,pathlen:0",
+            "-addext", "keyUsage=critical,keyCertSign,cRLSign",
+            "-addext", f"nameConstraints=critical,{CA_CONSTRAINTS}")
+    ca_key.chmod(0o600)
+    print(f"Created a local certificate authority: {ca}", flush=True)
+
+
+def ensure_cert(ip, cert, key, ca, ca_key):
+    """Sign a certificate for localhost and ip with the local CA unless a valid one exists."""
+    if cert.exists() and key.exists():
+        verified = subprocess.run(["openssl", "verify", "-CAfile", ca, cert], capture_output=True).returncode == 0
+        covers = not ip or subprocess.run(["openssl", "x509", "-in", cert, "-noout", "-checkip", ip],
+                                          capture_output=True).returncode == 0
+        # Renew a month before expiry.
+        fresh = subprocess.run(["openssl", "x509", "-in", cert, "-noout", "-checkend", str(30 * 86400)],
+                               capture_output=True).returncode == 0
+        if verified and covers and fresh:
+            return
+    names = "DNS:localhost,IP:127.0.0.1" + (f",IP:{ip}" if ip else "")
+    openssl("req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "365",
+            "-keyout", key, "-out", cert, "-CA", ca, "-CAkey", ca_key, "-subj", "/O=Trash Lens",
+            "-addext", "basicConstraints=critical,CA:FALSE",
+            "-addext", "keyUsage=critical,digitalSignature,keyEncipherment",
+            "-addext", "extendedKeyUsage=serverAuth",
+            "-addext", f"subjectAltName={names}")
+    key.chmod(0o600)
+    print(f"Created a certificate for {names}", flush=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--host", default="127.0.0.1")
+    parser.add_argument("--host", default="0.0.0.0", help="use 127.0.0.1 for this machine only")
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--camera", type=int, default=0)
     parser.add_argument("--cert", help="TLS certificate (PEM) to serve HTTPS")
     parser.add_argument("--key", help="TLS private key (PEM) for --cert")
+    parser.add_argument("--http", action="store_true", help="serve plain HTTP (other devices cannot use their own camera)")
     args = parser.parse_args()
     if bool(args.cert) != bool(args.key):
         parser.error("--cert and --key must be used together")
+    ip = lan_ip() if args.host == "0.0.0.0" else None
+    if not args.http and not args.cert:
+        # Browsers only allow camera access over HTTPS, so phones and laptops on
+        # the Wi-Fi need it to use their own camera.
+        args.cert, args.key = ROOT / "cert.pem", ROOT / "key.pem"
+        try:
+            ensure_ca(CA_CERT, ROOT / "ca-key.pem")
+            ensure_cert(ip, args.cert, args.key, CA_CERT, ROOT / "ca-key.pem")
+        except (OSError, subprocess.CalledProcessError) as error:
+            print(f"Could not create a certificate ({error}); serving HTTP.", flush=True)
+            args.cert = args.key = None
+    with socket.socket() as probe:
+        # macOS lets 0.0.0.0 and 127.0.0.1 share a port, hiding an old server on localhost.
+        if probe.connect_ex(("127.0.0.1", args.port)) == 0:
+            sys.exit(f"Port {args.port} is already in use; stop the other server or pass --port.")
     service = Service(args.camera)
     server = ThreadingHTTPServer((args.host, args.port), make_handler(service))
     server.daemon_threads = True
@@ -259,7 +347,14 @@ def main():
         server.socket = context.wrap_socket(server.socket, server_side=True)
         scheme = "https"
     threading.Thread(target=service.load, daemon=True).start()
-    print(f"Trash detector: {scheme}://{'localhost' if args.host == '127.0.0.1' else args.host}:{args.port}", flush=True)
+    print(f"Trash detector: {scheme}://localhost:{args.port}", flush=True)
+    if ip:
+        print(f"On your Wi-Fi:  {scheme}://{ip}:{args.port}", flush=True)
+    if scheme == "https" and CA_CERT.exists():
+        print(f"To skip the certificate warning, install {scheme}://{ip or 'localhost'}:{args.port}/ca.crt "
+              "once on each device (see README).", flush=True)
+    elif args.host not in ("127.0.0.1", "localhost"):
+        print(f"On your network: {scheme}://{args.host}:{args.port}", flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:
