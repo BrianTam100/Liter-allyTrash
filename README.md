@@ -155,7 +155,7 @@ For an explicitly offline run, use
 
 ## Demo limitations
 
-This is classification of the center crop, not multi-object detection. The box
+This is classification of the entire camera frame, not multi-object detection. The box
 is a placement guide, not a detected object boundary. Relative match scores compare
 the listed candidates and are not probabilities that a prediction is correct.
 Unknown items can still be misidentified, and because the most probable item is

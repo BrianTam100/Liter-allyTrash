@@ -218,7 +218,7 @@ class TrashClassifier:
         return label, score
 
 
-BOX_FRACTION = 0.95  # detection rectangle, as a fraction of the frame's width and height
+BOX_FRACTION = 1.0  # Detect across the entire camera frame.
 
 
 def center_box(frame):
@@ -230,7 +230,7 @@ def center_box(frame):
 def render(frame, label, score, alternatives=(), bin_name=None):
     x, y, box_width, box_height = center_box(frame)
     preview = frame.copy()
-    cv2.rectangle(preview, (x, y), (x + box_width, y + box_height), (80, 255, 120), 2)
+    cv2.rectangle(preview, (x, y), (x + box_width - 1, y + box_height - 1), (80, 255, 120), 2)
     width = 800
     preview = cv2.resize(preview, (width, round(frame.shape[0] * width / frame.shape[1])))
     banner = np.full((180, width, 3), 30, dtype=np.uint8)

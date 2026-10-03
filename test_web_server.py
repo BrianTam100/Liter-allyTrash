@@ -125,7 +125,7 @@ class WebTests(unittest.TestCase):
         camera.subscribe()
         try:
             first, frame, jpeg = camera.latest()
-            self.assertEqual(frame.shape, (45, 60, 3))  # 95% of the 48x64 frame
+            self.assertEqual(frame.shape, (48, 64, 3))  # The entire camera frame reaches inference.
             self.assertTrue(jpeg.startswith(b'\xff\xd8'))
             with Image.open(io.BytesIO(jpeg)) as preview:
                 self.assertEqual(preview.size, (64, 48))
