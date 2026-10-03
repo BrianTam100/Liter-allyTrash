@@ -1,20 +1,22 @@
 const $ = id => document.getElementById(id);
-let ready = false, running = false, stream = null, generation = 0, pending = null, count = 0;
+let ready = false, running = false, stream = null, generation = 0;
+const BOX = .95; // detection rectangle, as a fraction of the camera's width and height
 const canvas = document.createElement('canvas');
 function sizeGuide() {
   const video = $('video');
   if (!video.videoWidth) return;
   const scale = Math.min(video.clientWidth / video.videoWidth, video.clientHeight / video.videoHeight);
-  $('guide').style.width = (Math.min(video.videoWidth, video.videoHeight) * .8 * scale) + 'px';
+  $('guide').style.width = (video.videoWidth * BOX * scale) + 'px';
+  $('guide').style.height = (video.videoHeight * BOX * scale) + 'px';
 }
 window.addEventListener('resize', sizeGuide);
 function resetResult() {
-  pending = null; count = 0; $('label').textContent = 'Ready for an item'; $('label').className = '';
+  $('label').textContent = 'Ready for an item'; $('label').className = '';
   $('score').textContent = '—'; $('score-bar').style.width = '0%';
   $('candidates').replaceChildren(); $('hint').textContent = 'Show one item against a plain background.';
 }
 function stop() {
-  running = false; generation++;
+  running = false; generation++; document.body.classList.remove('live');
   if (stream) stream.getTracks().forEach(track => track.stop());
   stream = null; $('video').srcObject = null;
   if ($('preview').dataset.streaming) {
@@ -36,23 +38,23 @@ async function request(path, body, live = false) {
   if (live) headers['X-Trash-Live'] = '1';
   const response = await fetch(path, {method: 'POST', headers, body});
   const result = await response.json();
-  if (!response.ok) throw new Error(result.error || 'Request failed');
+  if (!response.ok) throw Object.assign(new Error(result.error || 'Request failed'), {status: response.status});
   return result;
 }
-function show(result, live) {
-  let label = result.label;
-  if (live) {
-    if (/^(No trash|Hold|Image)/.test(label)) { pending = null; count = 0; }
-    else { count = pending === label ? count + 1 : 1; pending = label;
-      if (count < 2) label = 'Hold still — checking item'; }
-  }
-  const bin = label.startsWith('Hold') ? null : result.category;
-  $('label').textContent = bin || label;
+function show(result) {
+  // Live readings come with a state: checking (comparing readings), locked
+  // (best match held until the item is removed) or empty (no item in view).
+  const checking = result.state === 'checking', label = result.label;
+  const bin = checking ? null : result.category;
+  const item = label[0].toUpperCase() + label.slice(1);
+  $('label').textContent = checking ? 'Checking item…'
+    : bin ? `${item} — ${bin === 'Recyclable' ? 'Recycling' : 'Trash'}` : item;
   $('label').className = bin ? bin.toLowerCase() : '';
-  $('hint').textContent = label.startsWith('Hold') ? 'Confirming with a second reading.'
-    : (bin ? label[0].toUpperCase() + label.slice(1) + '. ' : '') + (result.drop_off
-      ? 'Take it to a drop-off recycling site, not the curbside bin.'
-      : 'Try another angle if this doesn’t look right.');
+  $('hint').textContent = checking ? `Hold still — comparing readings (${result.checks}/${result.of}).`
+    : (result.drop_off
+      ? 'Take it to a drop-off recycling site, not the curbside bin. '
+      : '') + (result.state === 'locked' ? 'Remove the item to scan the next one.'
+      : result.drop_off ? '' : 'Try another angle if this doesn’t look right.');
   $('score').textContent = Math.round(result.score * 100) + '%';
   $('score-bar').style.width = Math.round(result.score * 100) + '%';
   $('candidates').replaceChildren(...result.alternatives.map(item => {
@@ -63,10 +65,11 @@ function show(result, live) {
   $('timing').textContent = `Last inference: ${result.seconds.toFixed(2)}s · Processed locally`;
 }
 async function frameBlob() {
-  const video = $('video'), size = Math.floor(Math.min(video.videoWidth, video.videoHeight) * .8);
-  if (!size) throw new Error('Camera is not supplying frames.');
-  canvas.width = canvas.height = 512;
-  canvas.getContext('2d').drawImage(video, (video.videoWidth-size)/2, (video.videoHeight-size)/2, size, size, 0, 0, 512, 512);
+  const video = $('video'), width = Math.floor(video.videoWidth * BOX), height = Math.floor(video.videoHeight * BOX);
+  if (!width || !height) throw new Error('Camera is not supplying frames.');
+  const scale = 640 / Math.max(width, height);
+  canvas.width = Math.round(width * scale); canvas.height = Math.round(height * scale);
+  canvas.getContext('2d').drawImage(video, (video.videoWidth-width)/2, (video.videoHeight-height)/2, width, height, 0, 0, canvas.width, canvas.height);
   return new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', .85));
 }
 async function loop(token) {
@@ -77,10 +80,11 @@ async function loop(token) {
       if (!running || generation !== token) return;
       const result = await request(serverCamera ? '/api/camera' : '/api/predict', body, true);
       if (!running || generation !== token) return;
-      show(result, true); $('message').textContent = '';
+      show(result); $('message').textContent = '';
     } catch (error) {
       if (generation !== token) return;
-      stop(); $('message').textContent = error.message; return;
+      // Another screen watching the same camera is using the detector; try again.
+      if (error.status !== 429) { stop(); $('message').textContent = error.message; return; }
     }
     await new Promise(resolve => setTimeout(resolve, 350));
   }
@@ -109,7 +113,7 @@ $('start').onclick = async () => {
       $('preview').src = result.url;
       $('preview').hidden = false; $('video').hidden = true; $('placeholder').hidden = true;
     }
-    running = true; resetResult(); $('start').hidden = true; $('stop').hidden = false; loop(token);
+    running = true; document.body.classList.add('live'); resetResult(); $('start').hidden = true; $('stop').hidden = false; loop(token);
   } catch (error) { if (generation === token) { stop(); $('message').textContent = error.message; } }
 };
 $('stop').onclick = stop;
@@ -122,7 +126,7 @@ $('file').onchange = async event => {
   const url = URL.createObjectURL(file);
   $('preview').src = url; $('preview').onload = () => URL.revokeObjectURL(url);
   $('preview').hidden = false; $('placeholder').hidden = true; $('message').textContent = 'Recognizing image…';
-  try { const result = await request('/api/predict', file); if (token === generation) { show(result, false); $('message').textContent = ''; } }
+  try { const result = await request('/api/predict', file); if (token === generation) { show(result); $('message').textContent = ''; } }
   catch(error) { if (token === generation) $('message').textContent = error.message; }
   event.target.value = '';
 };
