@@ -2,7 +2,8 @@ import unittest
 from unittest.mock import patch, Mock
 
 import numpy as np
-from classifier import StablePrediction, TrashClassifier, category, common_family, run_camera
+from classifier import (DISPLAY_NAMES, FAMILIES, TRASH_ITEMS, StablePrediction, TrashClassifier,
+                        category, common_family, display_name, run_camera)
 
 
 class RecognitionBehaviorTests(unittest.TestCase):
@@ -28,6 +29,11 @@ class RecognitionBehaviorTests(unittest.TestCase):
         self.assertEqual(category("AA battery"), "Recyclable")
         self.assertEqual(category("banana peel"), "Trash")
         self.assertIsNone(category("No trash item detected"))
+
+    def test_display_names_cover_known_items(self):
+        self.assertEqual(display_name("plastic ketchup bottle"), "ketchup bottle")
+        self.assertEqual(display_name("banana peel"), "banana peel")
+        self.assertLessEqual(set(DISPLAY_NAMES), TRASH_ITEMS | set(FAMILIES))
 
     def test_empty_image_does_not_guess(self):
         model = TrashClassifier.__new__(TrashClassifier)

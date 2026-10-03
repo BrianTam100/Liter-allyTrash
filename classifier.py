@@ -14,7 +14,9 @@ os.environ.setdefault("HF_HOME", str(ROOT / ".model-cache"))
 import cv2
 import numpy as np
 
-MODEL_ID = "openai/clip-vit-base-patch16"
+# The large model recognizes items noticeably better; set TRASH_MODEL to
+# openai/clip-vit-base-patch16 for the smaller, faster one on slow machines.
+MODEL_ID = os.environ.get("TRASH_MODEL", "openai/clip-vit-large-patch14")
 BACKGROUND = ["an empty table with no object", "an empty hand", "a person with no trash", "a room with no trash item", "a computer screen", "a keyboard", "a wall", "a desk with many different objects"]
 TEMPLATES = ["a photo of {}.", "a close-up photo of {}.", "a photo of someone holding {}."]
 ALIASES = {
@@ -39,6 +41,61 @@ FAMILIES = {
     "battery": {"AA battery", "AAA battery", "9 volt battery", "coin cell battery"},
     "electrical cable": {"electrical cable", "USB cable"},
 }
+
+# Everyday names shown to people; the model keeps the descriptive labels above.
+DISPLAY_NAMES = {
+    "plastic water bottle": "water bottle", "plastic soda bottle": "soda bottle",
+    "plastic milk jug": "milk jug", "plastic yogurt cup": "yogurt cup",
+    "plastic food container": "food container", "plastic grocery bag": "plastic bag",
+    "plastic cup lid": "cup lid", "plastic bottle cap": "bottle cap",
+    "aluminum soda can": "soda can", "steel food can": "food can",
+    "aluminum food tray": "foil tray", "metal jar lid": "jar lid",
+    "cardboard tube": "toilet paper roll", "sheet of paper": "paper",
+    "paper envelope": "envelope", "paper coffee cup": "coffee cup", "used tissue": "tissue",
+    "potato chip bag": "chip bag", "snack bar wrapper": "granola bar wrapper",
+    "styrofoam food container": "styrofoam container", "broken headphones": "headphones",
+    "old shoe": "shoe", "plastic takeout lid": "takeout lid",
+    "plastic clamshell packaging": "clamshell container", "plastic squeeze bottle": "squeeze bottle",
+    "plastic spray bottle": "spray bottle", "plastic ketchup bottle": "ketchup bottle",
+    "plastic mustard bottle": "mustard bottle", "plastic dish soap bottle": "dish soap bottle",
+    "plastic hand soap bottle": "hand soap bottle", "plastic lotion bottle": "lotion bottle",
+    "plastic medicine bottle": "pill bottle", "plastic pill blister pack": "blister pack",
+    "plastic toothbrush packaging": "toothbrush packaging", "plastic zip tie": "zip tie",
+    "plastic bread bag clip": "bread clip", "plastic clothes hanger": "clothes hanger",
+    "plastic plant pot": "plant pot", "plastic bucket": "bucket",
+    "plastic packaging strap": "packing strap", "plastic six pack rings": "six-pack rings",
+    "plastic mesh produce bag": "mesh produce bag", "plastic freezer bag": "freezer bag",
+    "plastic sandwich bag": "sandwich bag", "plastic trash bag": "trash bag",
+    "plastic toy": "toy", "plastic ruler": "ruler", "plastic comb": "comb",
+    "plastic hairbrush": "hairbrush", "plastic razor": "razor",
+    "plastic deodorant stick": "deodorant", "tooth floss container": "floss container",
+    "empty bandage wrapper": "bandage wrapper", "adhesive bandage": "bandage",
+    "foil coffee bag": "coffee bag", "coffee capsule": "coffee pod",
+    "instant noodle packet": "noodle packet", "instant noodle cup": "cup noodles",
+    "sauce sachet": "sauce packet", "paper ice cream cup": "ice cream cup",
+    "paper straw wrapper": "straw wrapper", "wooden chopsticks": "chopsticks",
+    "wooden stir stick": "stir stick", "wooden toothpick": "toothpick",
+    "wooden popsicle stick": "popsicle stick", "marker pen": "marker",
+    "adhesive tape roll": "tape", "metal screw": "screw", "metal nail": "nail",
+    "metal washer": "washer", "metal nut": "nut", "metal bolt": "bolt", "metal key": "key",
+    "metal bottle cap": "bottle cap", "can pull tab": "can tab", "foil yogurt lid": "yogurt lid",
+    "metal cookie tin": "cookie tin", "metal tea tin": "tea tin",
+    "empty aerosol can": "aerosol can", "aluminum tube": "metal tube",
+    "disposable baking tray": "foil baking tray", "glass drinking cup": "drinking glass",
+    "broken ceramic": "broken ceramics", "glass condiment bottle": "condiment bottle",
+    "glass sauce jar": "sauce jar", "glass jam jar": "jam jar", "glass candle jar": "candle jar",
+    "cardboard drink carrier": "drink carrier", "cardboard shipping mailer": "shipping mailer",
+    "cardboard food sleeve": "cardboard sleeve", "cardboard tissue box": "tissue box",
+    "cardboard shoe box": "shoe box", "paper business card": "business card",
+    "paper ticket": "ticket", "paper label": "label", "paper confetti": "confetti",
+    "paper baking liner": "cupcake liner", "paper doily": "doily",
+    "wristwatch strap": "watch strap", "9 volt battery": "9V battery", "CD disc": "CD",
+    "plant leaves": "leaves", "small twig": "twig", "electrical cable": "cable",
+}
+
+
+def display_name(label):
+    return DISPLAY_NAMES.get(label, label)
 
 
 TRASH_ITEMS = set(json.loads((ROOT / "trash_items.json").read_text()))
@@ -85,7 +142,8 @@ class TrashClassifier:
         if not self.labels or len(set(self.labels)) != len(self.labels):
             raise ValueError("trash_items.json must contain unique item names.")
         self.device = "mps" if torch.backends.mps.is_available() else "cpu"
-        local_model = ROOT / ".model-cache" / "ready-model-patch16"
+        name = "model-patch16" if MODEL_ID == "openai/clip-vit-base-patch16" else MODEL_ID.split("/")[-1]
+        local_model = ROOT / ".model-cache" / ("ready-" + name)
         cached = (local_model / "config.json").exists() and (local_model / "model.safetensors").exists()
         source = str(local_model) if cached else MODEL_ID
         print(f"Loading {MODEL_ID} on {self.device}" + (" from local files." if cached else "; downloading model files."), flush=True)
@@ -122,9 +180,19 @@ class TrashClassifier:
             self.category = None
             return "Image has too little detail", 0.0
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        inputs = self.processor(images=rgb, return_tensors="pt").to(self.device)
+        # Pad the detection rectangle to a square so CLIP's center crop keeps its edges.
+        height, width = rgb.shape[:2]
+        if height != width:
+            side = max(height, width)
+            top, left = (side - height) // 2, (side - width) // 2
+            rgb = cv2.copyMakeBorder(rgb, top, side - height - top, left, side - width - left,
+                                     cv2.BORDER_CONSTANT, value=(128, 128, 128))
+        # Average the frame with its mirror image for a steadier match.
+        inputs = self.processor(images=[rgb, np.ascontiguousarray(rgb[:, ::-1])], return_tensors="pt").to(self.device)
         with self.torch.inference_mode():
             features = self.model.get_image_features(**inputs)
+            features = features / features.norm(dim=-1, keepdim=True)
+            features = features.mean(dim=0, keepdim=True)
             features = features / features.norm(dim=-1, keepdim=True)
             similarities = (features @ self.text_features.T)[0]
             scores = (similarities * self.model.logit_scale.exp()).softmax(dim=0)
@@ -150,16 +218,19 @@ class TrashClassifier:
         return label, score
 
 
+BOX_FRACTION = 0.95  # detection rectangle, as a fraction of the frame's width and height
+
+
 def center_box(frame):
     height, width = frame.shape[:2]
-    size = int(min(height, width) * 0.8)
-    return (width - size) // 2, (height - size) // 2, size
+    box_width, box_height = int(width * BOX_FRACTION), int(height * BOX_FRACTION)
+    return (width - box_width) // 2, (height - box_height) // 2, box_width, box_height
 
 
 def render(frame, label, score, alternatives=(), bin_name=None):
-    x, y, size = center_box(frame)
+    x, y, box_width, box_height = center_box(frame)
     preview = frame.copy()
-    cv2.rectangle(preview, (x, y), (x + size, y + size), (80, 255, 120), 2)
+    cv2.rectangle(preview, (x, y), (x + box_width, y + box_height), (80, 255, 120), 2)
     width = 800
     preview = cv2.resize(preview, (width, round(frame.shape[0] * width / frame.shape[1])))
     banner = np.full((180, width, 3), 30, dtype=np.uint8)
@@ -212,8 +283,8 @@ def run_camera(classifier, camera):
                     bin_name = None if label.startswith("Hold") else classifier.category
                     future = None
                 if future is None and time.monotonic() - last_prediction >= 0.35:
-                    x, y, size = center_box(frame)
-                    future = worker.submit(classifier.predict, frame[y:y + size, x:x + size].copy())
+                    x, y, box_width, box_height = center_box(frame)
+                    future = worker.submit(classifier.predict, frame[y:y + box_height, x:x + box_width].copy())
                     last_prediction = time.monotonic()
                 cv2.imshow(window, render(frame, label, score, alternatives, bin_name))
                 if cv2.waitKey(1) & 0xFF == ord("q") or cv2.getWindowProperty(window, cv2.WND_PROP_VISIBLE) < 1:

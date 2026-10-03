@@ -16,7 +16,8 @@ use `.venv/bin/python`, or activate the environment with `source .venv/bin/activ
 Open **https://localhost:8000**. The page shows model loading progress, the detected
 item, relative match scores, top candidates, and inference time. Choose this
 device's browser camera, a camera connected to the Python server, or a photo
-upload. Camera mode confirms labels with two successive readings. The connected
+upload. Camera mode compares three readings, locks in the best-scoring label, and
+holds it until the item is removed (two empty readings). The connected
 camera stays open and streams a mirrored preview independently of predictions,
 targeting up to 30 frames per second. Actual frame rate depends on the camera and
 machine. Inference uses the latest original frame without queuing old frames.
@@ -48,6 +49,54 @@ Keep `ca-key.pem` private.
 Then open the printed `https://<server-ip>:8000`, choose **This device’s camera**,
 and allow camera access. Use **Mac / Pi connected camera** for a USB camera
 attached to the server (`--camera 1` selects another camera), or upload a photo.
+
+### Trash can lid servo (Raspberry Pi)
+
+The model runs on the computer running `web_server.py` (for example a Mac). When
+the live camera locks in a **Trash** item, it sends an
+`open` message over UDP to `lid_server.py` on the Pi, which moves the servo. The
+lid stays open while trash is still in view and closes `HOLD_SECONDS` (default 5)
+after the last trash reading. Recyclable items and uploaded photos do not open it.
+
+On the Pi, the servo is driven by a PCA9685 board at I2C address 0x40 on bus 1
+(SDA = pin 3, SCL = pin 5). The Pi does not need the model or `requirements.txt`:
+
+```sh
+sudo apt install python3-smbus i2c-tools
+sudo raspi-config nonint do_i2c 0
+python3 lid_server.py
+```
+
+Then run `web_server.py` as usual on the computer running the model. It broadcasts
+lid commands to the whole local network, so it finds the Pi without its address.
+If the network blocks broadcasts (common on school or office Wi-Fi), pass the
+Pi's address (`hostname -I` on the Pi) with `--lid-host <pi-ip>`. `--no-lid`
+turns lid commands off.
+
+Servo 1's PCA9685 channel, calibrated center pulse, open angle (+33°), closed
+angle (-57°) and how long the lid stays open are set at the top of `lid.py`.
+Commands are clamped to the open/closed travel. `lid_server.py --port` (default
+5006) must match `--lid-port` on `web_server.py`. Anyone on the network can
+send the lid UDP port an `open` message, so use it only on a trusted network.
+
+### Pi camera, model on another computer
+
+To run the model on a Mac while using the Pi's camera, stream the camera from the Pi:
+
+```sh
+python3 pi_camera.py            # Pi camera module (Picamera2); --usb 0 for a USB webcam
+```
+
+Then on the Mac:
+
+```sh
+.venv/bin/python web_server.py --camera http://<pi-ip>:8080/stream.mjpg
+```
+
+Open `https://localhost:8000` on the Mac (or `https://<mac-ip>:8000` on the Pi's
+screen) and choose **Mac / Pi connected camera**. Every screen that opens the page
+sees the Pi's camera with the model's results. The stream has no password; use it
+only on a trusted network.
 
 Pass `--host 127.0.0.1` to keep it private to this machine, `--http` to serve
 plain HTTP, or `--cert` and `--key` to use your own certificate.
@@ -118,7 +167,8 @@ To classify a saved photo: `python classifier.py --image photo.jpg`.
 The older custom TensorFlow script is preserved as `classifier_tflite.py`; its
 `model.tflite` and `labels.txt` are unchanged and are not used by the new script.
 
-Model documentation: https://huggingface.co/openai/clip-vit-base-patch16
+Model documentation: https://huggingface.co/openai/clip-vit-large-patch14
+(set `TRASH_MODEL=openai/clip-vit-base-patch16` for the smaller, faster model)
 
 Run behavior checks with `python -m unittest test_classifier.py`.
 `recognition_check.json` records a small before/after diagnostic using the first

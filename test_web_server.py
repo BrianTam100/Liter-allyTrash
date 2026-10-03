@@ -9,6 +9,7 @@ from unittest.mock import Mock, patch
 import numpy as np
 
 from PIL import Image
+from lid import CENTER_PULSE, LED0, SERVO1_CHANNEL, Lid, set_servo1_angle
 from web_server import CameraStream, Service, make_handler
 
 
@@ -56,6 +57,54 @@ class WebTests(unittest.TestCase):
         self.assertEqual(self.request('/api/predict', b'x')[0], 503)
         self.assertEqual(self.request('/api/camera', headers={'Content-Type': 'text/plain'})[0], 403)
 
+    def camera_reading(self):
+        status, body = self.request('/api/camera')
+        self.assertEqual(status, 200)
+        return json.loads(body)
+
+    def test_live_item_locks_until_removed(self):
+        self.service.lid = Mock()
+        self.service.capture.latest = Mock(return_value=(1, np.zeros((8, 8, 3), np.uint8), b''))
+        scores = iter([.5, .8, .6])
+        self.service.model.predict.side_effect = lambda frame: ('plastic cup', next(scores))
+        self.assertEqual([self.camera_reading()['state'] for _ in range(2)], ['checking', 'checking'])
+        self.service.lid.open.assert_not_called()
+        locked = self.camera_reading()
+        self.assertEqual((locked['state'], locked['score']), ('locked', .8))
+        # A different reading while the item stays in view keeps the locked label.
+        self.service.model.predict.side_effect = None
+        self.service.model.predict.return_value = ('paper cup', .9)
+        self.service.model.category = 'Recyclable'
+        self.assertEqual(self.camera_reading()['label'], 'plastic cup')
+        self.assertEqual(self.service.lid.open.call_count, 2)
+        # Two empty readings clear the lock and stop opening the lid.
+        self.service.model.predict.return_value = ('No trash item detected', .9)
+        self.service.model.category = None
+        self.assertEqual(self.camera_reading()['state'], 'locked')
+        self.assertEqual(self.camera_reading()['state'], 'empty')
+        self.service.model.predict.return_value = ('paper cup', .9)
+        self.service.model.category = 'Recyclable'
+        self.assertEqual([self.camera_reading()['state'] for _ in range(3)], ['checking', 'checking', 'locked'])
+        self.assertEqual(self.service.lid.open.call_count, 3)
+
+    def test_lid_closes_after_hold(self):
+        bus = Mock()
+        with patch.dict('sys.modules', smbus=Mock(SMBus=Mock(return_value=bus))):
+            lid = Lid(hold_seconds=0.05)
+        self.assertNotIn(LED0 + 4 * SERVO1_CHANNEL, [c.args[1] for c in bus.write_byte_data.call_args_list])
+        lid.open()
+        self.assertEqual(bus.write_byte_data.call_args_list[-2].args[2], int(1533.63 * 4096 / 20000) & 0xFF)
+        threading.Event().wait(0.2)
+        self.assertFalse(lid.is_open)
+        writes = bus.write_byte_data.call_args_list[-4:]
+        self.assertEqual(writes[0].args[1], LED0 + 4 * SERVO1_CHANNEL)
+        self.assertEqual(writes[2].args[2], int(533.73 * 4096 / 20000) & 0xFF)
+
+    def test_servo_angle_is_clamped(self):
+        with patch('lid._bus', Mock()):
+            self.assertAlmostEqual(set_servo1_angle(80), CENTER_PULSE + 33 * 11.11)
+            self.assertAlmostEqual(set_servo1_angle(-90), CENTER_PULSE - 57 * 11.11)
+
     def test_home_and_unknown_path(self):
         status, body = self.request('/', method='GET')
         self.assertEqual(status, 200)
@@ -76,7 +125,7 @@ class WebTests(unittest.TestCase):
         camera.subscribe()
         try:
             first, frame, jpeg = camera.latest()
-            self.assertEqual(frame.shape, (38, 38, 3))
+            self.assertEqual(frame.shape, (45, 60, 3))  # 95% of the 48x64 frame
             self.assertTrue(jpeg.startswith(b'\xff\xd8'))
             with Image.open(io.BytesIO(jpeg)) as preview:
                 self.assertEqual(preview.size, (64, 48))

@@ -17,7 +17,8 @@ import cv2
 import numpy as np
 from PIL import Image, UnidentifiedImageError
 
-from classifier import DROP_OFF, TrashClassifier, center_box
+from classifier import DROP_OFF, TrashClassifier, center_box, display_name
+from lid import RemoteLid
 
 ROOT = Path(__file__).resolve().parent
 CA_CERT = ROOT / "ca.pem"
@@ -78,7 +79,10 @@ class CameraStream:
                         return
                 try:
                     if cap is None:
-                        backend = cv2.CAP_AVFOUNDATION if sys.platform == 'darwin' else cv2.CAP_ANY
+                        if isinstance(self.camera, str):
+                            backend = cv2.CAP_FFMPEG  # network stream, e.g. pi_camera.py
+                        else:
+                            backend = cv2.CAP_AVFOUNDATION if sys.platform == 'darwin' else cv2.CAP_ANY
                         cap = cv2.VideoCapture(self.camera, backend)
                         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
                         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
@@ -86,15 +90,17 @@ class CameraStream:
                     started = time.monotonic()
                     ok, frame = cap.read()
                     if not ok or frame is None:
-                        raise ValueError("Cannot read connected camera. Check camera permissions and close other camera apps.")
-                    x, y, size = center_box(frame)
+                        raise ValueError(f"Cannot read camera stream {self.camera}. Check that pi_camera.py is running."
+                                         if isinstance(self.camera, str) else
+                                         "Cannot read connected camera. Check camera permissions and close other camera apps.")
+                    x, y, box_width, box_height = center_box(frame)
                     height, width = frame.shape[:2]
                     scale = min(1.0, 640 / max(height, width))
                     preview = cv2.resize(frame, (round(width * scale), round(height * scale)))
                     cv2.rectangle(preview, (round(x * scale), round(y * scale)),
-                                  (round((x + size) * scale), round((y + size) * scale)),
+                                  (round((x + box_width) * scale), round((y + box_height) * scale)),
                                   (80, 255, 120), 2)
-                    frame = frame[y:y + size, x:x + size].copy()
+                    frame = frame[y:y + box_height, x:x + box_width].copy()
                     ok, encoded = cv2.imencode('.jpg', cv2.flip(preview, 1), [cv2.IMWRITE_JPEG_QUALITY, 80])
                     if not ok:
                         raise ValueError("Camera frame encoding failed.")
@@ -120,9 +126,55 @@ class CameraStream:
             self.thread.join(timeout=3)
 
 
+class ItemLock:
+    """Picks the best label over a few live readings, then holds it until the item leaves."""
+    READINGS = 3      # readings to compare before locking a label
+    CLEAR_AFTER = 2   # empty readings in a row that mean the item was removed
+    SWITCH_AFTER = 4  # readings of a different item in a row that replace the lock
+    IDLE_RESET = 3.0  # seconds without readings (camera stopped) that start over
+
+    def __init__(self):
+        self.reset()
+        self.last = 0.0
+
+    def reset(self):
+        self.samples, self.locked, self.misses, self.others = [], None, 0, 0
+
+    def update(self, result):
+        now = time.monotonic()
+        if now - self.last > self.IDLE_RESET:
+            self.reset()
+        self.last = now
+        empty = result["category"] is None
+        if self.locked:
+            self.misses = self.misses + 1 if empty else 0
+            self.others = self.others + 1 if not empty and result["label"] != self.locked["label"] else 0
+            if self.misses >= self.CLEAR_AFTER:
+                self.reset()
+                return {**result, "state": "empty"}
+            if self.others < self.SWITCH_AFTER:
+                return {**self.locked, "state": "locked", "seconds": result["seconds"]}
+            self.reset()
+        if empty:
+            self.samples = []
+            return {**result, "state": "empty"}
+        self.samples.append(result)
+        if len(self.samples) < self.READINGS:
+            return {**result, "state": "checking", "checks": len(self.samples), "of": self.READINGS}
+        totals = {}
+        for sample in self.samples:
+            totals[sample["label"]] = totals.get(sample["label"], 0) + sample["score"]
+        best = max(totals, key=totals.get)
+        self.locked = max((sample for sample in self.samples if sample["label"] == best), key=lambda sample: sample["score"])
+        self.samples = []
+        return {**self.locked, "state": "locked"}
+
+
 class Service:
-    def __init__(self, camera=0):
+    def __init__(self, camera=0, lid=None):
         self.camera = camera
+        self.lid = lid
+        self.item = ItemLock()
         self.model = None
         self.error = None
         self.lock = threading.Lock()
@@ -141,11 +193,18 @@ class Service:
         started = time.monotonic()
         label, score = self.model.predict(frame)
         alternatives = self.model.alternatives
-        return {"label": label, "score": score, "category": self.model.category,
+        return {"label": display_name(label), "score": score, "category": self.model.category,
                 "drop_off": bool(self.model.category and alternatives and alternatives[0][0] in DROP_OFF),
-                "alternatives": [{"label": name, "score": value}
+                "alternatives": [{"label": display_name(name), "score": value}
                                  for name, value in alternatives],
                 "seconds": round(time.monotonic() - started, 2)}
+
+    def track(self, result):
+        """Lock live readings onto one item; keep the lid open while locked trash stays in view."""
+        result = self.item.update(result)
+        if self.lid and result["state"] == "locked" and result["category"] == "Trash":
+            self.lid.open()
+        return result
 
 
 def make_handler(service):
@@ -236,6 +295,9 @@ def make_handler(service):
                         picture.thumbnail((1280, 1280))
                         frame = cv2.cvtColor(np.asarray(picture), cv2.COLOR_RGB2BGR)
                 result = service.predict(frame)
+                # Only live camera readings move the lid; uploaded photos do not.
+                if self.path == "/api/camera" or self.headers.get("X-Trash-Live") == "1":
+                    result = service.track(result)
                 self.respond(200, result)
             except (ValueError, UnidentifiedImageError, Image.DecompressionBombError) as exc:
                 self.respond(400, {"error": str(exc)})
@@ -316,10 +378,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--host", default="0.0.0.0", help="use 127.0.0.1 for this machine only")
     parser.add_argument("--port", type=int, default=8000)
-    parser.add_argument("--camera", type=int, default=0)
+    parser.add_argument("--camera", default="0",
+                        help="camera number, or a stream URL such as http://<pi-ip>:8080/stream.mjpg")
     parser.add_argument("--cert", help="TLS certificate (PEM) to serve HTTPS")
     parser.add_argument("--key", help="TLS private key (PEM) for --cert")
     parser.add_argument("--http", action="store_true", help="serve plain HTTP (other devices cannot use their own camera)")
+    parser.add_argument("--lid-host", help="IP address of the Pi running lid_server.py (default: broadcast to the network)")
+    parser.add_argument("--lid-port", type=int, default=5006)
+    parser.add_argument("--no-lid", action="store_true", help="do not send lid commands")
     args = parser.parse_args()
     if bool(args.cert) != bool(args.key):
         parser.error("--cert and --key must be used together")
@@ -338,7 +404,8 @@ def main():
         # macOS lets 0.0.0.0 and 127.0.0.1 share a port, hiding an old server on localhost.
         if probe.connect_ex(("127.0.0.1", args.port)) == 0:
             sys.exit(f"Port {args.port} is already in use; stop the other server or pass --port.")
-    service = Service(args.camera)
+    lid = None if args.no_lid else RemoteLid(args.lid_host, args.lid_port)
+    service = Service(int(args.camera) if args.camera.isdigit() else args.camera, lid)
     server = ThreadingHTTPServer((args.host, args.port), make_handler(service))
     server.daemon_threads = True
     scheme = "http"
@@ -363,6 +430,8 @@ def main():
         pass
     finally:
         service.capture.close()
+        if lid:
+            lid.close()
         server.server_close()
 
 
