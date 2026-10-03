@@ -1,0 +1,82 @@
+{
+  "source": "https://github.com/garythung/trashnet",
+  "scope": "First 3 resized photos per category, manually inspected; diagnostic only, not a representative accuracy benchmark. Unsure messages abbreviated.",
+  "observations": "Improved glass cup and food can identification. Some cardboard and bottle images became uncertain. Plastic packaging remains ambiguous.",
+  "results": [
+    {
+      "image": "cardboard1.jpg",
+      "previous": "cardboard box",
+      "updated": "cardboard box"
+    },
+    {
+      "image": "cardboard2.jpg",
+      "previous": "cardboard box",
+      "updated": "Unsure"
+    },
+    {
+      "image": "cardboard3.jpg",
+      "previous": "cardboard box",
+      "updated": "Unsure"
+    },
+    {
+      "image": "glass1.jpg",
+      "previous": "glass bottle",
+      "updated": "Unsure"
+    },
+    {
+      "image": "glass2.jpg",
+      "previous": "plastic cup",
+      "updated": "glass drinking cup"
+    },
+    {
+      "image": "glass3.jpg",
+      "previous": "Unsure",
+      "updated": "glass drinking cup"
+    },
+    {
+      "image": "metal1.jpg",
+      "previous": "Unsure",
+      "updated": "steel food can"
+    },
+    {
+      "image": "metal2.jpg",
+      "previous": "Unsure",
+      "updated": "Unsure"
+    },
+    {
+      "image": "metal3.jpg",
+      "previous": "aluminum soda can",
+      "updated": "aluminum soda can"
+    },
+    {
+      "image": "paper1.jpg",
+      "previous": "Unsure",
+      "updated": "magazine"
+    },
+    {
+      "image": "paper2.jpg",
+      "previous": "cereal box",
+      "updated": "Unsure"
+    },
+    {
+      "image": "paper3.jpg",
+      "previous": "paper plate",
+      "updated": "paper plate"
+    },
+    {
+      "image": "plastic1.jpg",
+      "previous": "Unsure",
+      "updated": "plastic bottle"
+    },
+    {
+      "image": "plastic2.jpg",
+      "previous": "plastic cup lid",
+      "updated": "contact lens case"
+    },
+    {
+      "image": "plastic3.jpg",
+      "previous": "plastic cup lid",
+      "updated": "contact lens case"
+    }
+  ]
+}
