@@ -27,6 +27,7 @@ ALIASES = {
     "plastic food container": "a plastic takeaway food tub or container",
     "plastic yogurt cup": "a small yogurt pot or yogurt container",
     "potato chip bag": "a crinkled potato chip packet or crisps bag",
+    "paper towel": "a crumpled used paper towel",
     "snack bar wrapper": "a granola bar or protein bar wrapper",
     "cardboard tube": "an empty toilet paper roll or paper towel tube",
     "broken headphones": "headphones or earphones",
@@ -44,7 +45,7 @@ FAMILIES = {
 
 # Everyday names shown to people; the model keeps the descriptive labels above.
 DISPLAY_NAMES = {
-    "plastic water bottle": "water bottle", "plastic soda bottle": "soda bottle",
+    "plastic soda bottle": "soda bottle",
     "plastic milk jug": "milk jug", "plastic yogurt cup": "yogurt cup",
     "plastic food container": "food container", "plastic grocery bag": "plastic bag",
     "plastic cup lid": "cup lid", "plastic bottle cap": "bottle cap",
@@ -106,11 +107,24 @@ DROP_OFF = set(_recyclable["drop_off"])
 RECYCLABLE = set(_recyclable["curbside"]) | DROP_OFF
 
 
+# The only items the detector reports, and which lid each opens. Each lists the
+# model labels that count as it. Every other label in trash_items.json is still
+# compared so other objects are recognized as "not a sorted item" instead of being
+# forced into one of these.
+TARGETS = {
+    "plastic water bottle": ("Recyclable", {"plastic water bottle"}),
+    "cardboard": ("Recyclable", {"cardboard box", "pizza box", "cereal box", "cardboard tube",
+                                 "cardboard shipping mailer", "cardboard tissue box", "cardboard shoe box",
+                                 "cardboard drink carrier", "cardboard food sleeve"}),
+    "paper towel": ("Trash", {"paper towel", "paper napkin"}),
+    "chip bag": ("Trash", {"potato chip bag"}),
+}
+NOT_SORTED = "No sorted item detected"
+
+
 def category(item):
-    """Return "Recyclable" or "Trash" for an item name, or None for status messages."""
-    if item in RECYCLABLE:
-        return "Recyclable"
-    return "Trash" if item in TRASH_ITEMS else None
+    """Return "Recyclable" or "Trash" for a target item, or None for anything else."""
+    return TARGETS[item][0] if item in TARGETS else None
 
 
 def common_family(first, second):
@@ -124,7 +138,7 @@ class StablePrediction:
         self.count = 0
 
     def update(self, label):
-        if label.startswith(("No trash", "Hold", "Image")):
+        if label.startswith(("No ", "Hold", "Image")):
             self.pending, self.count = None, 0
             return label
         self.count = self.count + 1 if label == self.pending else 1
@@ -170,6 +184,11 @@ class TrashClassifier:
                 chunks.append(features / features.norm(dim=-1, keepdim=True))
             features = torch.cat(chunks).reshape(-1, len(TEMPLATES), chunks[0].shape[-1]).mean(dim=1)
             self.text_features = features / features.norm(dim=-1, keepdim=True)
+        missing = set().union(*(members for _, members in TARGETS.values())) - set(self.labels)
+        if missing:
+            raise ValueError(f"TARGETS lists labels missing from trash_items.json: {sorted(missing)}")
+        self.target_members = {name: [i for i, label in enumerate(self.labels) if label in members]
+                               for name, (_, members) in TARGETS.items()}
         self.alternatives = []
         self.category = None
 
@@ -196,25 +215,16 @@ class TrashClassifier:
             features = features / features.norm(dim=-1, keepdim=True)
             similarities = (features @ self.text_features.T)[0]
             scores = (similarities * self.model.logit_scale.exp()).softmax(dim=0)
-            values, indices = scores.topk(3)
-        index = int(indices[0])
-        score = float(values[0])
-        margin = float(similarities[index] - similarities[int(indices[1])])
-        self.alternatives = [(self.labels[int(i)], float(v)) for i, v in zip(indices, values) if int(i) < len(self.labels)]
-        # Demo heuristics, not calibrated probabilities of correctness. When the
-        # match is weak or close, keep the most probable item instead of giving up.
-        # The top item decides the bin, even when the label becomes a family name.
-        self.category = category(self.labels[index]) if index < len(self.labels) else None
-        if index >= len(self.labels):
-            label = "No trash item detected"
+        index = int(scores.argmax())
+        # Only the target items are reported; each target's score sums its labels.
+        totals = {name: float(scores[members].sum()) for name, members in self.target_members.items()}
+        self.alternatives = sorted(totals.items(), key=lambda item: item[1], reverse=True)[:3]
+        target = next((name for name, members in self.target_members.items() if index in members), None)
+        self.category = category(target)
+        if target is None:
+            label, score = NOT_SORTED, float(scores[index])
         else:
-            label = self.labels[index]
-            runner_up = int(indices[1])
-            family = common_family(label, self.labels[runner_up]) if margin < 0.012 and runner_up < len(self.labels) else None
-            if family:
-                family_score = float(scores[[i for i, name in enumerate(self.labels) if name in FAMILIES[family]]].sum())
-                if family_score >= 0.5:
-                    label, score = family, family_score
+            label, score = target, totals[target]
         return label, score
 
 

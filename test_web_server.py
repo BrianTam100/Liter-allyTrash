@@ -4,12 +4,12 @@ import threading
 import unittest
 from http.client import HTTPConnection
 from http.server import ThreadingHTTPServer
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, call, patch
 
 import numpy as np
 
 from PIL import Image
-from lid import CENTER_PULSE, LED0, SERVO1_CHANNEL, Lid, set_servo1_angle
+from lid import LED0, Lid, set_pulse
 from web_server import CameraStream, Service, make_handler
 
 
@@ -76,7 +76,7 @@ class WebTests(unittest.TestCase):
         self.service.model.predict.return_value = ('paper cup', .9)
         self.service.model.category = 'Recyclable'
         self.assertEqual(self.camera_reading()['label'], 'plastic cup')
-        self.assertEqual(self.service.lid.open.call_count, 2)
+        self.assertEqual(self.service.lid.open.call_args_list, [call('Trash'), call('Trash')])
         # Two empty readings clear the lock and stop opening the lid.
         self.service.model.predict.return_value = ('No trash item detected', .9)
         self.service.model.category = None
@@ -85,25 +85,34 @@ class WebTests(unittest.TestCase):
         self.service.model.predict.return_value = ('paper cup', .9)
         self.service.model.category = 'Recyclable'
         self.assertEqual([self.camera_reading()['state'] for _ in range(3)], ['checking', 'checking', 'locked'])
-        self.assertEqual(self.service.lid.open.call_count, 3)
+        self.assertEqual(self.service.lid.open.call_args_list[-2:], [call('Trash'), call('Recyclable')])
 
-    def test_lid_closes_after_hold(self):
+    def test_each_can_opens_and_closes_on_its_channel(self):
         bus = Mock()
-        with patch.dict('sys.modules', smbus=Mock(SMBus=Mock(return_value=bus))):
+        with patch.dict('sys.modules', smbus=Mock(SMBus=Mock(return_value=bus))), \
+                patch('lid.CALIBRATION_FILE', Mock(read_text=Mock(side_effect=OSError))):
             lid = Lid(hold_seconds=0.05)
-        self.assertNotIn(LED0 + 4 * SERVO1_CHANNEL, [c.args[1] for c in bus.write_byte_data.call_args_list])
-        lid.open()
-        self.assertEqual(bus.write_byte_data.call_args_list[-2].args[2], int(1533.63 * 4096 / 20000) & 0xFF)
-        threading.Event().wait(0.2)
-        self.assertFalse(lid.is_open)
-        writes = bus.write_byte_data.call_args_list[-4:]
-        self.assertEqual(writes[0].args[1], LED0 + 4 * SERVO1_CHANNEL)
-        self.assertEqual(writes[2].args[2], int(533.73 * 4096 / 20000) & 0xFF)
+        # Starting up turns outputs off without moving either lid.
+        self.assertFalse({LED0, LED0 + 12} & {c.args[1] for c in bus.write_byte_data.call_args_list})
 
-    def test_servo_angle_is_clamped(self):
+        def pulse_on(channel):
+            writes = [c.args for c in bus.write_byte_data.call_args_list if c.args[1] in (LED0 + 4 * channel + 2, LED0 + 4 * channel + 3)]
+            return writes[-2][2] | writes[-1][2] << 8
+
+        lid.open('Trash')
+        self.assertEqual(pulse_on(0), round(1611 * 4096 / 20000))
+        lid.open('Recyclable')
+        self.assertEqual(pulse_on(3), round(1722 * 4096 / 20000))
+        threading.Event().wait(0.2)
+        self.assertEqual(lid.open_cans, set())
+        self.assertEqual(pulse_on(0), round(534 * 4096 / 20000))
+        self.assertEqual(pulse_on(3), round(823 * 4096 / 20000))
+
+    def test_pulse_is_clamped_to_calibrated_travel(self):
+        calibration = {0: {'open_us': 1611, 'closed_us': 534}}
         with patch('lid._bus', Mock()):
-            self.assertAlmostEqual(set_servo1_angle(80), CENTER_PULSE + 33 * 11.11)
-            self.assertAlmostEqual(set_servo1_angle(-90), CENTER_PULSE - 57 * 11.11)
+            self.assertEqual(set_pulse(0, 2500, calibration), 1611)
+            self.assertEqual(set_pulse(0, 300, calibration), 534)
 
     def test_home_and_unknown_path(self):
         status, body = self.request('/', method='GET')

@@ -7,7 +7,7 @@ from lid import Lid
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    # Channel, angles and timing are set at the top of lid.py.
+    # Channels, calibrated positions and timing are set at the top of lid.py.
     parser.add_argument("--port", type=int, default=5006)
     args = parser.parse_args()
     lid = Lid()
@@ -18,11 +18,12 @@ def main():
     print(f"Listening for lid commands on UDP port {args.port}...", flush=True)
     try:
         while True:
-            command = sock.recvfrom(64)[0].strip()
-            if command == b"open":
-                lid.open()
-            elif command == b"close":
-                lid.close()
+            # "open Trash" / "open Recyclable"; a bare "open" means the trash can.
+            command, _, can = sock.recvfrom(64)[0].decode(errors="replace").strip().partition(" ")
+            if command == "open":
+                lid.open(can or "Trash")
+            elif command == "close":
+                lid.close(can or None)
     except KeyboardInterrupt:
         pass
     finally:

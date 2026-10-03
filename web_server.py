@@ -200,10 +200,12 @@ class Service:
                 "seconds": round(time.monotonic() - started, 2)}
 
     def track(self, result):
-        """Lock live readings onto one item; keep the lid open while locked trash stays in view."""
+        """Lock live readings onto one item; keep its can's lid open while it stays in view."""
         result = self.item.update(result)
-        if self.lid and result["state"] == "locked" and result["category"] == "Trash":
-            self.lid.open()
+        # Drop-off items (batteries, electronics) do not belong in the curbside recycling can.
+        if self.lid and result["state"] == "locked" and result["category"] in ("Trash", "Recyclable") \
+                and not result["drop_off"]:
+            self.lid.open(result["category"])
         return result
 
 

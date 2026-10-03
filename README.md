@@ -50,16 +50,27 @@ Then open the printed `https://<server-ip>:8000`, choose **This device’s camer
 and allow camera access. Use **Mac / Pi connected camera** for a USB camera
 attached to the server (`--camera 1` selects another camera), or upload a photo.
 
-### Trash can lid servo (Raspberry Pi)
+### Sorted items
+
+The detector only reports four items, set in `TARGETS` in `classifier.py`:
+**plastic water bottle** and **cardboard** (recycling), **paper towel** and
+**chip bag** (trash). The model still compares every item in `trash_items.json`,
+so anything else shows as "No sorted item detected" and opens no lid.
+
+### Trash and recycling can lids (Raspberry Pi)
 
 The model runs on the computer running `web_server.py` (for example a Mac). When
-the live camera locks in a **Trash** item, it sends an
-`open` message over UDP to `lid_server.py` on the Pi, which moves the servo. The
-lid stays open while trash is still in view and closes `HOLD_SECONDS` (default 5)
-after the last trash reading. Recyclable items and uploaded photos do not open it.
+the live camera locks in an item, it sends `open Trash` or `open Recyclable` over
+UDP to `lid_server.py` on the Pi, which opens that can's lid. A lid stays open
+while the item is still in view and closes `HOLD_SECONDS` (default 5) after the
+last matching reading. Drop-off items (batteries, electronics) and uploaded photos
+do not open a lid.
 
-On the Pi, the servo is driven by a PCA9685 board at I2C address 0x40 on bus 1
-(SDA = pin 3, SCL = pin 5). The Pi does not need the model or `requirements.txt`:
+The servos are driven by a PCA9685 board at I2C address 0x40 on bus 1 (SDA = pin 3,
+SCL = pin 5): the trash can on channel 0 and the recycling can on channel 3 (`CANS`
+in `lid.py`). Copy `lid.py`, `lid_server.py`, `calibrate_lids.py` and
+`servo_calibration.json` to the same folder on the Pi. The Pi does not need the
+model or `requirements.txt`:
 
 ```sh
 sudo apt install python3-smbus i2c-tools
@@ -67,17 +78,20 @@ sudo raspi-config nonint do_i2c 0
 python3 lid_server.py
 ```
 
-Then run `web_server.py` as usual on the computer running the model. It broadcasts
-lid commands to the whole local network, so it finds the Pi without its address.
-If the network blocks broadcasts (common on school or office Wi-Fi), pass the
-Pi's address (`hostname -I` on the Pi) with `--lid-host <pi-ip>`. `--no-lid`
-turns lid commands off.
+Each lid's open and closed pulse widths are saved in `servo_calibration.json`
+(trash: open 1611 µs, closed 534 µs; recycling: open 1722 µs, closed 823 µs), with
+the same values as defaults in `lid.py`. To recalibrate, stop `lid_server.py` and
+run `python3 calibrate_lids.py`: nudge a servo, then press `o` or `c` to save the
+open or closed position. Commands are always kept within each lid's calibrated
+travel. Nothing moves when `lid_server.py` starts.
 
-Servo 1's PCA9685 channel, calibrated center pulse, open angle (+33°), closed
-angle (-57°) and how long the lid stays open are set at the top of `lid.py`.
-Commands are clamped to the open/closed travel. `lid_server.py --port` (default
-5006) must match `--lid-port` on `web_server.py`. Anyone on the network can
-send the lid UDP port an `open` message, so use it only on a trusted network.
+Run `web_server.py` as usual on the computer running the model. It broadcasts lid
+commands to the whole local network, so it finds the Pi without its address. If
+the network blocks broadcasts (common on school or office Wi-Fi), pass the Pi's
+address (`hostname -I` on the Pi) with `--lid-host <pi-ip>`. `--no-lid` turns lid
+commands off. `lid_server.py --port` (default 5006) must match `--lid-port`. Anyone
+on the network can send the lid UDP port an `open` message, so use it only on a
+trusted network.
 
 ### Pi camera, model on another computer
 
