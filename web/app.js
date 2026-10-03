@@ -31,8 +31,10 @@ function sourceChanged() {
   $('upload-label').hidden = $('source').value !== 'upload';
   $('start').textContent = $('source').value === 'server' ? 'Start detection' : 'Start camera';
 }
-async function request(path, body) {
-  const response = await fetch(path, {method: 'POST', headers: {'X-Trash-UI':'1'}, body});
+async function request(path, body, live = false) {
+  const headers = {'X-Trash-UI':'1'};
+  if (live) headers['X-Trash-Live'] = '1';
+  const response = await fetch(path, {method: 'POST', headers, body});
   const result = await response.json();
   if (!response.ok) throw new Error(result.error || 'Request failed');
   return result;
@@ -73,7 +75,7 @@ async function loop(token) {
       const serverCamera = $('source').value === 'server';
       const body = serverCamera ? undefined : await frameBlob();
       if (!running || generation !== token) return;
-      const result = await request(serverCamera ? '/api/camera' : '/api/predict', body);
+      const result = await request(serverCamera ? '/api/camera' : '/api/predict', body, true);
       if (!running || generation !== token) return;
       show(result, true); $('message').textContent = '';
     } catch (error) {

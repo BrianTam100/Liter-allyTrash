@@ -49,6 +49,20 @@ Then open the printed `https://<server-ip>:8000`, choose **This device’s camer
 and allow camera access. Use **Mac / Pi connected camera** for a USB camera
 attached to the server (`--camera 1` selects another camera), or upload a photo.
 
+### Trash can lid servo (Raspberry Pi)
+
+When the live camera confirms a **Trash** item on two readings in a row, the server
+opens the lid servo. The lid stays open while trash is still in view and closes
+`--lid-seconds` (default 5) after the last trash reading. Recyclable items and
+uploaded photos do not open the lid.
+
+The servo is driven by a PCA9685 board at I2C address 0x40 on bus 1 (SDA = pin 3,
+SCL = pin 5). Enable I2C with `sudo raspi-config` → Interface Options → I2C, and
+install `sudo apt install python3-smbus i2c-tools` (`i2cdetect -y 1` should list
+`40`). Options: `--lid-channel` (default: all 16 channels), `--lid-open-us`
+(default 1944), `--lid-closed-us` (default 1167), and `--no-lid`. Without I2C,
+for example on a Mac, the server prints "Lid servo disabled" and runs normally.
+
 Pass `--host 127.0.0.1` to keep it private to this machine, `--http` to serve
 plain HTTP, or `--cert` and `--key` to use your own certificate.
 Ribbon-connected Pi cameras may require a

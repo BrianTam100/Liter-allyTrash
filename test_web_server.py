@@ -9,7 +9,7 @@ from unittest.mock import Mock, patch
 import numpy as np
 
 from PIL import Image
-from web_server import CameraStream, Service, make_handler
+from web_server import CameraStream, Lid, Service, make_handler
 
 
 class WebTests(unittest.TestCase):
@@ -55,6 +55,27 @@ class WebTests(unittest.TestCase):
         self.service.model = None
         self.assertEqual(self.request('/api/predict', b'x')[0], 503)
         self.assertEqual(self.request('/api/camera', headers={'Content-Type': 'text/plain'})[0], 403)
+
+    def test_confirmed_live_trash_opens_lid(self):
+        self.service.lid = Mock()
+        self.service.capture.latest = Mock(return_value=(1, np.zeros((8, 8, 3), np.uint8), b''))
+        self.assertEqual(self.request('/api/camera')[0], 200)
+        self.service.lid.open.assert_not_called()
+        self.assertEqual(self.request('/api/camera')[0], 200)
+        self.service.lid.open.assert_called_once()
+        self.service.model.category = 'Recyclable'
+        self.request('/api/camera'); self.request('/api/camera')
+        self.service.lid.open.assert_called_once()
+
+    def test_lid_closes_after_hold(self):
+        lid = Lid.__new__(Lid)
+        lid.open_us, lid.closed_us, lid.hold_seconds, lid.channels = 1944, 1167, 0.05, [0]
+        lid.lock, lid.timer, lid.is_open, lid.bus = threading.Lock(), None, False, Mock()
+        lid.open()
+        self.assertEqual(lid.bus.write_byte_data.call_args_list[2].args, (0x40, 8, 1944 * 4096 // 20000 & 0xFF))
+        threading.Event().wait(0.2)
+        self.assertFalse(lid.is_open)
+        self.assertEqual(lid.bus.write_byte_data.call_args.args, (0x40, 9, (1167 * 4096 // 20000) >> 8))
 
     def test_home_and_unknown_path(self):
         status, body = self.request('/', method='GET')

@@ -17,7 +17,7 @@ import cv2
 import numpy as np
 from PIL import Image, UnidentifiedImageError
 
-from classifier import DROP_OFF, TrashClassifier, center_box
+from classifier import DROP_OFF, StablePrediction, TrashClassifier, center_box
 
 ROOT = Path(__file__).resolve().parent
 CA_CERT = ROOT / "ca.pem"
@@ -120,9 +120,75 @@ class CameraStream:
             self.thread.join(timeout=3)
 
 
+class Lid:
+    """Lid servo on a PCA9685 I2C board; opens on trash, then closes after a delay."""
+    ADDR, MODE1, PRESCALE, LED0 = 0x40, 0x00, 0xFE, 0x06
+
+    def __init__(self, channel=None, open_us=1944, closed_us=1167, hold_seconds=5.0, i2c_bus=1):
+        # channel=None drives all 16 outputs, like the original test script.
+        self.channels = range(16) if channel is None else [channel]
+        self.open_us, self.closed_us, self.hold_seconds = open_us, closed_us, hold_seconds
+        self.lock = threading.Lock()
+        self.timer = None
+        self.is_open = False
+        try:
+            try:
+                from smbus import SMBus
+            except ImportError:
+                from smbus2 import SMBus
+            self.bus = SMBus(i2c_bus)
+            self.bus.write_byte_data(self.ADDR, self.MODE1, 0x10)    # sleep to set frequency
+            self.bus.write_byte_data(self.ADDR, self.PRESCALE, 121)  # ~50 Hz servo pulses
+            self.bus.write_byte_data(self.ADDR, self.MODE1, 0x20)    # wake, auto-increment
+            time.sleep(0.01)
+            self.move(closed_us)
+            print(f"Lid servo ready on PCA9685 0x{self.ADDR:02x}.", flush=True)
+        except Exception as exc:
+            self.bus = None
+            print(f"Lid servo disabled ({exc}).", file=sys.stderr, flush=True)
+
+    def move(self, pulse_us):
+        count = int(pulse_us * 4096 / 20000)
+        for channel in self.channels:
+            reg = self.LED0 + 4 * channel
+            self.bus.write_byte_data(self.ADDR, reg, 0)
+            self.bus.write_byte_data(self.ADDR, reg + 1, 0)
+            self.bus.write_byte_data(self.ADDR, reg + 2, count & 0xFF)
+            self.bus.write_byte_data(self.ADDR, reg + 3, (count >> 8) & 0x0F)
+
+    def open(self):
+        """Open the lid, or keep it open, for another hold_seconds."""
+        if self.bus is None:
+            return
+        with self.lock:
+            if self.timer:
+                self.timer.cancel()
+            if not self.is_open:
+                self.is_open = True
+                self.move(self.open_us)
+                print("Trash detected: opening lid.", flush=True)
+            self.timer = threading.Timer(self.hold_seconds, self.close)
+            self.timer.daemon = True
+            self.timer.start()
+
+    def close(self):
+        if self.bus is None:
+            return
+        with self.lock:
+            if self.timer:
+                self.timer.cancel()
+            self.timer = None
+            if self.is_open:
+                self.is_open = False
+                self.move(self.closed_us)
+                print("Closing lid.", flush=True)
+
+
 class Service:
-    def __init__(self, camera=0):
+    def __init__(self, camera=0, lid=None):
         self.camera = camera
+        self.lid = lid
+        self.stable = StablePrediction()
         self.model = None
         self.error = None
         self.lock = threading.Lock()
@@ -146,6 +212,12 @@ class Service:
                 "alternatives": [{"label": name, "score": value}
                                  for name, value in alternatives],
                 "seconds": round(time.monotonic() - started, 2)}
+
+    def update_lid(self, result):
+        """Open the lid once two successive live readings agree on a trash item."""
+        label = self.stable.update(result["label"])
+        if self.lid and result["category"] == "Trash" and not label.startswith(("Hold", "No trash", "Image")):
+            self.lid.open()
 
 
 def make_handler(service):
@@ -236,6 +308,9 @@ def make_handler(service):
                         picture.thumbnail((1280, 1280))
                         frame = cv2.cvtColor(np.asarray(picture), cv2.COLOR_RGB2BGR)
                 result = service.predict(frame)
+                # Only live camera readings move the lid; uploaded photos do not.
+                if self.path == "/api/camera" or self.headers.get("X-Trash-Live") == "1":
+                    service.update_lid(result)
                 self.respond(200, result)
             except (ValueError, UnidentifiedImageError, Image.DecompressionBombError) as exc:
                 self.respond(400, {"error": str(exc)})
@@ -320,6 +395,11 @@ def main():
     parser.add_argument("--cert", help="TLS certificate (PEM) to serve HTTPS")
     parser.add_argument("--key", help="TLS private key (PEM) for --cert")
     parser.add_argument("--http", action="store_true", help="serve plain HTTP (other devices cannot use their own camera)")
+    parser.add_argument("--lid-channel", type=int, help="PCA9685 channel of the lid servo (default: all 16)")
+    parser.add_argument("--lid-open-us", type=int, default=1944, help="servo pulse (microseconds) for an open lid")
+    parser.add_argument("--lid-closed-us", type=int, default=1167, help="servo pulse (microseconds) for a closed lid")
+    parser.add_argument("--lid-seconds", type=float, default=5.0, help="keep the lid open this long after trash leaves view")
+    parser.add_argument("--no-lid", action="store_true", help="do not drive the lid servo")
     args = parser.parse_args()
     if bool(args.cert) != bool(args.key):
         parser.error("--cert and --key must be used together")
@@ -338,7 +418,8 @@ def main():
         # macOS lets 0.0.0.0 and 127.0.0.1 share a port, hiding an old server on localhost.
         if probe.connect_ex(("127.0.0.1", args.port)) == 0:
             sys.exit(f"Port {args.port} is already in use; stop the other server or pass --port.")
-    service = Service(args.camera)
+    lid = None if args.no_lid else Lid(args.lid_channel, args.lid_open_us, args.lid_closed_us, args.lid_seconds)
+    service = Service(args.camera, lid)
     server = ThreadingHTTPServer((args.host, args.port), make_handler(service))
     server.daemon_threads = True
     scheme = "http"
@@ -363,6 +444,8 @@ def main():
         pass
     finally:
         service.capture.close()
+        if lid:
+            lid.close()
         server.server_close()
 
 
