@@ -26,9 +26,36 @@ class RecognitionBehaviorTests(unittest.TestCase):
 
     def test_items_are_recyclable_or_trash(self):
         self.assertEqual(category("plastic water bottle"), "Recyclable")
-        self.assertEqual(category("AA battery"), "Recyclable")
-        self.assertEqual(category("banana peel"), "Trash")
-        self.assertIsNone(category("No trash item detected"))
+        self.assertEqual(category("cardboard"), "Recyclable")
+        self.assertEqual(category("paper towel"), "Trash")
+        self.assertEqual(category("chip bag"), "Trash")
+        self.assertIsNone(category("banana peel"))
+        self.assertIsNone(category("AA battery"))
+        self.assertIsNone(category("No sorted item detected"))
+
+    def test_only_target_items_are_reported(self):
+        import torch
+        model = TrashClassifier.__new__(TrashClassifier)
+        model.labels = ["plastic water bottle", "pizza box", "cardboard box", "banana peel", "potato chip bag"]
+        model.target_members = {"plastic water bottle": [0], "cardboard": [1, 2], "paper towel": [], "chip bag": [4]}
+        model.torch = torch
+        model.device = "cpu"
+        model.processor = Mock(return_value=Mock(to=Mock(return_value={})))
+        model.model = Mock(logit_scale=torch.tensor(0.0))
+        model.model.get_image_features.return_value = torch.ones(2, 1)
+        frame = np.random.RandomState(0).randint(0, 255, (32, 32, 3), dtype=np.uint8)
+
+        def scores(*values):
+            # logit_scale.exp() is 1 and features are 1, so these become the softmax inputs.
+            model.text_features = torch.tensor([list(values)]).T
+            return model.predict(frame)
+
+        label, score = scores(1.0, 3.0, 2.9, 0.0, 0.0)
+        self.assertEqual((label, model.category), ("cardboard", "Recyclable"))
+        self.assertEqual([name for name, _ in model.alternatives][0], "cardboard")
+        label, _ = scores(1.0, 0.0, 0.0, 5.0, 0.0)
+        self.assertEqual((label, model.category), ("No sorted item detected", None))
+        self.assertNotIn("banana peel", [name for name, _ in model.alternatives])
 
     def test_display_names_cover_known_items(self):
         self.assertEqual(display_name("plastic ketchup bottle"), "ketchup bottle")
