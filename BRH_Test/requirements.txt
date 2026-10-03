@@ -1,0 +1,7 @@
+keyboard
+pyserial
+opencv-python
+mediapipe
+numpy
+sounddevice
+websockets

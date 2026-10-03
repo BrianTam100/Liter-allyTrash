@@ -12,5 +12,26 @@ Our project has the capability to run on wifi and bluetooth to control the motor
 
 ## Set up laptop
 1. Open a terminal in the BRH_Test folder and run ``conda create -n rover python=3.11 -y`` and ``conda activate rover``, this is to activate a virtual environment named rover to avoid library issues.
-2. Once all downloads for libraries are good, running ``python command_bluetooth_camera.py`` should set up interface nicely.
-3. Hand signs for angles are set in unit circle format and you can use wasd or the arrow keys to move/turn in place.
+2. Install laptop-side libraries with ``pip install -r requirements.txt``.
+3. Once all downloads for libraries are good, running ``python command_bluetooth_camera.py`` should set up interface nicely.
+4. Hand signs for angles are set in unit circle format (90 = forward, 0 = right, 180 = left, 270 = back) and you can use wasd or the arrow keys to move/turn in place.
+5. After changing `driveController/driveController.ino`, re-upload it to the Arduino. Left/right spins use a different wheel mix than forward/back; the old mix drove the front pair against the rear pair and stalled the X-axis motor.
+
+## Grok Voice drive commands
+The laptop scripts can talk to Grok over the xAI Voice (speech-to-speech) API. Grok listens on your microphone, confirms briefly, and calls a local tool that sends the same ``w`` / ``a`` / ``s`` / ``d`` / ``x`` bytes the Pi already forwards to the Arduino.
+
+1. Get an API key from https://console.x.ai and set it in PowerShell before you run a command script:
+
+   ``$env:XAI_API_KEY = "xai-..."``
+
+2. Bluetooth + camera + voice (same COM port as before):
+
+   ``python command_bluetooth_camera.py --port COM8``
+
+3. Wi-Fi keyboard + voice (Pi must already be running ``motor_control.py``):
+
+   ``python command.py --pi-ip 172.20.8.62``
+
+4. Say things like **go forward**, **back up**, **turn left**, **turn right**, **stop**, or **go forward for two seconds**. Keyboard WASD still overrides voice. Pass ``--no-voice`` if you want the old keyboard/camera-only behavior.
+
+Voice motion keeps going until you say stop (or give a duration). That matches the Arduino, which holds the last motor speeds until a new command arrives.
