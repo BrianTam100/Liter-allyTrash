@@ -1,6 +1,6 @@
 const $ = id => document.getElementById(id);
 let ready = false, running = false, stream = null, generation = 0;
-const BOX = .95; // detection rectangle, as a fraction of the camera's width and height
+const BOX = 1; // Use the entire camera frame for detection and its guide.
 const canvas = document.createElement('canvas');
 function sizeGuide() {
   const video = $('video');
@@ -113,7 +113,7 @@ $('start').onclick = async () => {
       $('preview').src = result.url;
       $('preview').hidden = false; $('video').hidden = true; $('placeholder').hidden = true;
     }
-    running = true; document.body.classList.add('live'); resetResult(); $('start').hidden = true; $('stop').hidden = false; loop(token);
+    running = true; document.body.classList.add('live'); sizeGuide(); resetResult(); $('start').hidden = true; $('stop').hidden = false; loop(token);
   } catch (error) { if (generation === token) { stop(); $('message').textContent = error.message; } }
 };
 $('stop').onclick = stop;

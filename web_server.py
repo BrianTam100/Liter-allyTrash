@@ -98,7 +98,7 @@ class CameraStream:
                     scale = min(1.0, 640 / max(height, width))
                     preview = cv2.resize(frame, (round(width * scale), round(height * scale)))
                     cv2.rectangle(preview, (round(x * scale), round(y * scale)),
-                                  (round((x + box_width) * scale), round((y + box_height) * scale)),
+                                  (round((x + box_width) * scale) - 1, round((y + box_height) * scale) - 1),
                                   (80, 255, 120), 2)
                     frame = frame[y:y + box_height, x:x + box_width].copy()
                     ok, encoded = cv2.imencode('.jpg', cv2.flip(preview, 1), [cv2.IMWRITE_JPEG_QUALITY, 80])
