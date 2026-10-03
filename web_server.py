@@ -17,7 +17,7 @@ import cv2
 import numpy as np
 from PIL import Image, UnidentifiedImageError
 
-from classifier import TrashClassifier, center_box
+from classifier import DROP_OFF, TrashClassifier, center_box
 
 ROOT = Path(__file__).resolve().parent
 CA_CERT = ROOT / "ca.pem"
@@ -140,9 +140,11 @@ class Service:
     def predict(self, frame):
         started = time.monotonic()
         label, score = self.model.predict(frame)
-        return {"label": label, "score": score,
+        alternatives = self.model.alternatives
+        return {"label": label, "score": score, "category": self.model.category,
+                "drop_off": bool(self.model.category and alternatives and alternatives[0][0] in DROP_OFF),
                 "alternatives": [{"label": name, "score": value}
-                                 for name, value in self.model.alternatives],
+                                 for name, value in alternatives],
                 "seconds": round(time.monotonic() - started, 2)}
 
 

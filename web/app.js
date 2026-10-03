@@ -9,7 +9,7 @@ function sizeGuide() {
 }
 window.addEventListener('resize', sizeGuide);
 function resetResult() {
-  pending = null; count = 0; $('label').textContent = 'Ready for an item';
+  pending = null; count = 0; $('label').textContent = 'Ready for an item'; $('label').className = '';
   $('score').textContent = '—'; $('score-bar').style.width = '0%';
   $('candidates').replaceChildren(); $('hint').textContent = 'Show one item against a plain background.';
 }
@@ -40,12 +40,17 @@ async function request(path, body) {
 function show(result, live) {
   let label = result.label;
   if (live) {
-    if (/^(Unsure|No trash|Hold|Image)/.test(label)) { pending = null; count = 0; }
+    if (/^(No trash|Hold|Image)/.test(label)) { pending = null; count = 0; }
     else { count = pending === label ? count + 1 : 1; pending = label;
       if (count < 2) label = 'Hold still — checking item'; }
   }
-  $('label').textContent = label;
-  $('hint').textContent = label.startsWith('Hold') ? 'Confirming with a second reading.' : 'Try another angle if this doesn’t look right.';
+  const bin = label.startsWith('Hold') ? null : result.category;
+  $('label').textContent = bin || label;
+  $('label').className = bin ? bin.toLowerCase() : '';
+  $('hint').textContent = label.startsWith('Hold') ? 'Confirming with a second reading.'
+    : (bin ? label[0].toUpperCase() + label.slice(1) + '. ' : '') + (result.drop_off
+      ? 'Take it to a drop-off recycling site, not the curbside bin.'
+      : 'Try another angle if this doesn’t look right.');
   $('score').textContent = Math.round(result.score * 100) + '%';
   $('score-bar').style.width = Math.round(result.score * 100) + '%';
   $('candidates').replaceChildren(...result.alternatives.map(item => {

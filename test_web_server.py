@@ -18,6 +18,7 @@ class WebTests(unittest.TestCase):
         self.service.model = Mock()
         self.service.model.predict.return_value = ('plastic cup', .7)
         self.service.model.alternatives = [('plastic cup', .7)]
+        self.service.model.category = 'Trash'
         self.server = ThreadingHTTPServer(('127.0.0.1', 0), make_handler(self.service))
         self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
         self.thread.start()
@@ -41,6 +42,7 @@ class WebTests(unittest.TestCase):
         status, body = self.request('/api/predict', buf.getvalue())
         self.assertEqual(status, 200)
         self.assertEqual(json.loads(body)['label'], 'plastic cup')
+        self.assertEqual(json.loads(body)['category'], 'Trash')
         frame = self.service.model.predict.call_args.args[0]
         self.assertEqual(frame[0, 0].tolist(), [0, 0, 255])
 

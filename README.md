@@ -74,10 +74,17 @@ averages three text descriptions per item, and includes expanded non-food items
 such as stationery, toiletries, tools, packaging, batteries, and electronics.
 The live camera requires two consecutive accepted readings before showing an item
 name. When the item changes, it clears the previous name while checking the new one.
-The three leading candidates are shown underneath, including when the result is
-uncertain. Background classes and a low-detail image check reduce forced guesses.
-If two close matches belong to the same object family, the display uses their
-broader name (such as cardboard box or plastic bottle) instead of guessing a subtype.
+The three leading candidates are shown underneath. When the match is weak or
+close, the result uses the most probable item instead of asking for another
+angle. Background classes and a low-detail image check still avoid naming an item
+when none is shown. If two close matches belong to the same object family, the
+display uses their broader name (such as cardboard box or plastic bottle).
+
+Each result is labeled **Recyclable** or **Trash**, decided by the most probable
+item. Recyclable items are listed in `recyclable_items.json`; every other item in
+`trash_items.json` is trash. Items under `drop_off` (batteries, electronics,
+plastic bags, paint) are recyclable at a drop-off site, not in the curbside bin,
+and the web UI says so. Edit the lists to match your local recycling rules.
 These changes are intended to improve recognition; no accuracy percentage is
 claimed for the expanded catalog or your webcam conditions.
 
@@ -102,7 +109,8 @@ For an explicitly offline run, use
 This is classification of the center crop, not multi-object detection. The box
 is a placement guide, not a detected object boundary. Relative match scores compare
 the listed candidates and are not probabilities that a prediction is correct.
-Unknown items can still be misidentified; the "unsure" thresholds are heuristics.
+Unknown items can still be misidentified, and because the most probable item is
+always used, a weak match is shown rather than flagged as unsure.
 Test your actual demo objects and lighting before presenting. Material type and
 local disposal rules cannot reliably be inferred from appearance alone.
 

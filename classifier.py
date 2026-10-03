@@ -41,6 +41,21 @@ FAMILIES = {
 }
 
 
+TRASH_ITEMS = set(json.loads((ROOT / "trash_items.json").read_text()))
+# Items not listed in recyclable_items.json are trash. Drop-off items are
+# recyclable, but not in the curbside bin (batteries, electronics, film).
+_recyclable = json.loads((ROOT / "recyclable_items.json").read_text())
+DROP_OFF = set(_recyclable["drop_off"])
+RECYCLABLE = set(_recyclable["curbside"]) | DROP_OFF
+
+
+def category(item):
+    """Return "Recyclable" or "Trash" for an item name, or None for status messages."""
+    if item in RECYCLABLE:
+        return "Recyclable"
+    return "Trash" if item in TRASH_ITEMS else None
+
+
 def common_family(first, second):
     return next((name for name, members in FAMILIES.items() if first in members and second in members), None)
 
@@ -52,7 +67,7 @@ class StablePrediction:
         self.count = 0
 
     def update(self, label):
-        if label.startswith(("Unsure", "No trash", "Hold", "Image")):
+        if label.startswith(("No trash", "Hold", "Image")):
             self.pending, self.count = None, 0
             return label
         self.count = self.count + 1 if label == self.pending else 1
@@ -98,11 +113,13 @@ class TrashClassifier:
             features = torch.cat(chunks).reshape(-1, len(TEMPLATES), chunks[0].shape[-1]).mean(dim=1)
             self.text_features = features / features.norm(dim=-1, keepdim=True)
         self.alternatives = []
+        self.category = None
 
     def predict(self, frame):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         if gray.std() < 3:
             self.alternatives = []
+            self.category = None
             return "Image has too little detail", 0.0
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         inputs = self.processor(images=rgb, return_tensors="pt").to(self.device)
@@ -116,21 +133,20 @@ class TrashClassifier:
         score = float(values[0])
         margin = float(similarities[index] - similarities[int(indices[1])])
         self.alternatives = [(self.labels[int(i)], float(v)) for i, v in zip(indices, values) if int(i) < len(self.labels)]
-        # Demo heuristics, not calibrated probabilities of correctness.
+        # Demo heuristics, not calibrated probabilities of correctness. When the
+        # match is weak or close, keep the most probable item instead of giving up.
+        # The top item decides the bin, even when the label becomes a family name.
+        self.category = category(self.labels[index]) if index < len(self.labels) else None
         if index >= len(self.labels):
             label = "No trash item detected"
-        elif float(similarities[index]) < 0.22:
-            label = "Unsure - show another angle"
-        elif margin < 0.012:
-            runner_up = int(indices[1])
-            family = common_family(self.labels[index], self.labels[runner_up]) if runner_up < len(self.labels) else None
-            family_score = float(scores[[i for i, name in enumerate(self.labels) if name in FAMILIES[family]]].sum()) if family else 0.0
-            if family_score >= 0.5:
-                label, score = family, family_score
-            else:
-                label = "Unsure - show another angle"
         else:
             label = self.labels[index]
+            runner_up = int(indices[1])
+            family = common_family(label, self.labels[runner_up]) if margin < 0.012 and runner_up < len(self.labels) else None
+            if family:
+                family_score = float(scores[[i for i, name in enumerate(self.labels) if name in FAMILIES[family]]].sum())
+                if family_score >= 0.5:
+                    label, score = family, family_score
         return label, score
 
 
@@ -140,7 +156,7 @@ def center_box(frame):
     return (width - size) // 2, (height - size) // 2, size
 
 
-def render(frame, label, score, alternatives=()):
+def render(frame, label, score, alternatives=(), bin_name=None):
     x, y, size = center_box(frame)
     preview = frame.copy()
     cv2.rectangle(preview, (x, y), (x + size, y + size), (80, 255, 120), 2)
@@ -148,7 +164,7 @@ def render(frame, label, score, alternatives=()):
     preview = cv2.resize(preview, (width, round(frame.shape[0] * width / frame.shape[1])))
     banner = np.full((180, width, 3), 30, dtype=np.uint8)
     font = cv2.FONT_HERSHEY_SIMPLEX
-    title = f"Detected: {label}"
+    title = f"{bin_name}: {label}" if bin_name else f"Detected: {label}"
     text_width = cv2.getTextSize(title, font, 1, 2)[0][0]
     scale = min(1.0, (width - 40) / max(text_width, 1))
     cv2.putText(banner, title, (20, 40), font, scale, (80, 255, 120), 2, cv2.LINE_AA)
@@ -177,6 +193,7 @@ def run_camera(classifier, camera):
         future = None
         stable = StablePrediction()
         alternatives = []
+        bin_name = None
         # Keep the video responsive while inference runs.
         with ThreadPoolExecutor(max_workers=1) as worker:
             while True:
@@ -192,12 +209,13 @@ def run_camera(classifier, camera):
                     label, score = future.result()
                     alternatives = list(classifier.alternatives)
                     label = stable.update(label)
+                    bin_name = None if label.startswith("Hold") else classifier.category
                     future = None
                 if future is None and time.monotonic() - last_prediction >= 0.35:
                     x, y, size = center_box(frame)
                     future = worker.submit(classifier.predict, frame[y:y + size, x:x + size].copy())
                     last_prediction = time.monotonic()
-                cv2.imshow(window, render(frame, label, score, alternatives))
+                cv2.imshow(window, render(frame, label, score, alternatives, bin_name))
                 if cv2.waitKey(1) & 0xFF == ord("q") or cv2.getWindowProperty(window, cv2.WND_PROP_VISIBLE) < 1:
                     break
     finally:
@@ -220,7 +238,7 @@ def main():
             if frame is None:
                 raise ValueError(f"Cannot read image: {args.image}")
             label, score = classifier.predict(frame)
-            print(f"Detected: {label} | Relative match: {score:.0%} (not certainty)")
+            print(f"{classifier.category or 'Detected'}: {label} | Relative match: {score:.0%} (not certainty)")
         else:
             run_camera(classifier, args.camera)
     except ImportError as exc:
