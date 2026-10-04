@@ -32,6 +32,11 @@ the hardware. The **Arduino** drives the motors.
       BRH_Test/driveController/driveController.ino
 ```
 
+**Two Pis in practice:** the rover base's Pi runs the drive scripts (start them with
+`pi_start.py`, reset with `pi_reset.py`); a **separate Pi on the trash cans** runs
+`lid_server.py` and `pi_camera.py` (start both with `start_lid_pi.py`, stop with `end_lid_pi.py`). The diagram shows
+them as one box. `--lid-host` and `--camera` use the lid Pi's IP.
+
 ## The main flows
 
 **Driving.** The browser holds a drive key and posts `/api/rover/command` about every
@@ -55,8 +60,10 @@ lids are enabled, the matching lid opens over UDP and stays open about 5 s after
 last reading.
 
 **Logging and points.** Every locked live reading (once per item) and every photo is
-written to `lt_detections`. When someone confirms the drop, a row goes into
-`lt_collections`, linked by the same `scan_id`. Recycling earns 10 points per item.
+written to `lt_detections`. When a live scan **opens a lid, that counts as the drop**:
+a row goes into `lt_collections` automatically (once per item), linked by the same
+`scan_id`. Photos, drop-off items, and live scans with automatic lids switched off still
+need **Use recognized item → Record drop**. Recycling earns 10 points per item.
 The Pi can also post sensor-verified drops to `/api/bin-events` with a shared API key.
 
 ## Ports and addresses
@@ -73,7 +80,15 @@ The Pi can also post sensor-verified drops to `/api/bin-events` with a shared AP
 
 - **Dashboard (`/`):** stats, scanner, record a drop, latest detections, recent drops.
 - **Rover controls (`/controls`):** connection and port, drive pad, keyboard/voice/gesture modes.
-- **Detection log (`/log`):** every AI detection, plus breakdowns by bin and by item.
+- **Detection log (`/log`):** what is in each bin now, every AI detection, plus breakdowns by bin and by item.
+  **Empty trash / Empty recycling** opens that lid and holds it open (the browser re-sends
+  `open` every 2 s, since the Pi closes idle lids after 5 s; it gives up after 3 min).
+  **Done, close lid** closes it and adds a row to `lt_bin_empties`; **Cancel** only closes it.
+  A bin's contents are the confirmed drops (`lt_collections`) since its latest empty.
+
+- **Settings (`/settings`, gear at the bottom of the sidebar):** **Delete everything** (type
+  `DELETE`) empties `lt_detections`, `lt_collections` and `lt_bin_empties`. The tables
+  and the Pilot account stay.
 
 Everyone shares a single "Pilot" account (no login). Each browser gets its own
 session token, which is what decides who is driving.
@@ -89,11 +104,13 @@ session token, which is what decides who is driving.
 | `classifier.py` | CLIP model, item lists, the 4 `TARGETS` the demo reports |
 | `trash_items.json`, `recyclable_items.json` | Labels the model compares; which are curbside or drop-off |
 | `BRH_Test/rover_bridge.py` | Drive link, port detection, ownership and heartbeat safety |
-| `BRH_Test/database.py` | Tables `lt_users`, `lt_collections`, `lt_detections` |
+| `BRH_Test/database.py` | Tables `lt_users`, `lt_collections`, `lt_detections`, `lt_bin_empties` |
 | `web/` | Shared static files and the dashboard template (`index.html`, `scanner.html`, `app.js`, `style.css`) |
 | `BRH_Test/website/templates/` | Other pages (`base.html`, `controls.html`/`rover.html`, `detections.html`) |
-| `lid.py`, `lid_server.py`, `calibrate_lids.py`, `servo_calibration.json` | Lid servos (Pi side) |
-| `pi_camera.py` | Pi camera stream |
+| `lid.py`, `lid_server.py`, `calibrate_lids.py`, `servo_calibration.json` | Lid servos (on the separate lid Pi) |
+| `pi_camera.py` | Pi camera stream (on the lid Pi) |
+| `start_lid_pi.py`, `end_lid_pi.py` | Lid Pi: start / stop `lid_server.py` and `pi_camera.py` together |
+| `pi_start.py`, `pi_reset.py` | Rover base Pi: start and supervise the drive (and camera) scripts; stop everything and reset Bluetooth. The lids run on a separate Pi |
 | `BRH_Test/command*.py`, `motor_control*.py` | Older desktop/Pi scripts; still work, but don't run them alongside the website |
 | `classifier_tflite.py`, `model.tflite`, `labels.txt`, `*_previous.py` | Earlier model experiments, not used by the website |
 
@@ -102,4 +119,4 @@ session token, which is what decides who is driving.
 The website uses `DATABASE_URL` from `BRH_Test/.env` if it's set (TigerData/Postgres),
 and a local SQLite file in `BRH_Test/.instance/` otherwise. SQLite tables are created
 automatically. **On TigerData, run `python web_server.py --init-db` after pulling new
-code** so new tables (such as `lt_detections`) exist.
+code** so new tables (such as `lt_detections`, `lt_bin_empties`) exist.

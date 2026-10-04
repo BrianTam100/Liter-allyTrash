@@ -24,7 +24,7 @@
       <a href="{{ url_for('controls') }}" class="nav-item {{ 'active' if request.endpoint == 'controls' }}" {% if request.endpoint == 'controls' %}aria-current="page"{% endif %}>{{ icon('compass') }}<span>Rover controls</span></a>
       <a href="{{ url_for('detection_log') }}" class="nav-item {{ 'active' if request.endpoint == 'detection_log' }}" {% if request.endpoint == 'detection_log' %}aria-current="page"{% endif %}>{{ icon('route') }}<span>Detection log</span></a>
     </nav>
-    <div class="sidebar-bottom"><span class="storage-tag">{{ storage_label }}</span></div>
+    <div class="sidebar-bottom"><a href="{{ url_for('settings') }}" class="nav-item settings-link {{ 'active' if request.endpoint == 'settings' }}" {% if request.endpoint == 'settings' %}aria-current="page"{% endif %}>{{ icon('gear') }}<span>Settings</span></a><span class="storage-tag">{{ storage_label }}</span></div>
   </aside>
   <div class="workspace">
     <main id="main" tabindex="-1">

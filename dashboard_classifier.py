@@ -204,6 +204,8 @@ def mount_classifier(app, service=None, autoload=True):
             return jsonify(error=str(exc)), 400
         return jsonify({**detector.status(owner), "url": f"/api/classifier/stream?generation={detector.generation}"})
 
+    auto_recorded = {"scan_id": None}  # the last locked item already saved as a drop
+
     def log_detection(result, source):
         # Live readings repeat the locked scan_id every frame; the unique key keeps one row per item.
         try:
@@ -260,6 +262,18 @@ def mount_classifier(app, service=None, autoload=True):
                 result = detector.remember(owner, result)
             if not live or result.get("state") == "locked":
                 log_detection(result, "photo" if not live else "server" if server_camera else "browser")
+            if result.get("lid_opened"):
+                result = {**result, "auto_recorded": True}
+                if auto_recorded["scan_id"] != result["scan_id"]:
+                    # One drop per locked item: the scan_id is the collection's unique request_id.
+                    try:
+                        db = app.extensions["database"]
+                        category = "recycling" if result["category"] == "Recyclable" else "trash"
+                        if db.add_collection(g.user["id"], category, 1, result["scan_id"], result["label"]):
+                            result["stats"] = db.stats(g.user["id"])
+                        auto_recorded["scan_id"] = result["scan_id"]
+                    except Exception:
+                        app.logger.exception("Could not record the automatic drop")
             return jsonify(result)
         except (ValueError, UnidentifiedImageError, Image.DecompressionBombError) as exc:
             return jsonify(error=str(exc)), 400

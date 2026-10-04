@@ -27,6 +27,8 @@ ROOT = Path(__file__).resolve().parent
 # Accounts are not used: every visitor records drops as this one local pilot.
 PILOT_EMAIL = "pilot@literally-trash.local"
 PILOT_NAME = "Pilot"
+# Dashboard bin name -> lid name used by lid.py.
+BIN_LIDS = {"trash": "Trash", "recycling": "Recyclable"}
 PROJECT_ROOT = ROOT.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -139,7 +141,38 @@ def create_app(config=None, bridge=None, classifier_service=None):
         if period not in {"all", "week", "month"}:
             period = "all"
         return render_template("detections.html", period=period, summary=db.detection_summary(period),
-            items=db.detection_items(period), log=db.detections(period))
+            items=db.detection_items(period), log=db.detections(period), bins=db.bin_contents(),
+            lid_available=detector.service.lid is not None)
+
+    @app.get("/settings")
+    def settings():
+        return render_template("settings.html")
+
+    @app.post("/api/settings/clear-data")
+    def clear_data():
+        payload = request.get_json(silent=True) or {}
+        if not isinstance(payload, dict) or payload.get("confirm") != "DELETE":
+            return jsonify(error="Type DELETE to confirm."), 400
+        db.clear_all()
+        return jsonify(cleared=True)
+
+    @app.post("/api/bins/<category>/<action>")
+    def bin_action(category, action):
+        # open: the browser repeats this every few seconds while someone empties the bin,
+        # because the Pi closes an idle lid after 5 s. done: close it and clear the contents.
+        if category not in BIN_LIDS or action not in {"open", "close", "done"}:
+            return jsonify(error="Unknown bin action."), 404
+        lid = detector.service.lid
+        if action == "open":
+            if lid:
+                lid.open(BIN_LIDS[category])
+            return jsonify(lid=lid is not None)
+        if lid:
+            lid.close(BIN_LIDS[category])
+        if action == "close":
+            return jsonify(closed=True)
+        cleared = db.empty_bin(category)
+        return jsonify(cleared=cleared, bins=db.bin_contents())
 
     @app.get("/api/rover")
     def rover_status():

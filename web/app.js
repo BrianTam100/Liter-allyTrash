@@ -48,13 +48,75 @@ formatTimes(document);
 
 // Swap in fresh history and detections without a full page reload.
 async function refreshPanels() {
-  const response = await fetch(location.pathname, {headers:{"Accept":"text/html"}});
+  const response = await fetch(location.pathname + location.search, {headers:{"Accept":"text/html"}});
   if (!response.ok) return;
   const fresh = new DOMParser().parseFromString(await response.text(), "text/html");
-  for (const selector of [".history-panel", ".detections-preview"]) {
+  for (const selector of [".history-panel", ".detections-preview", ".bins-panel"]) {
     const current = $(selector), next = fresh.querySelector(selector);
     if (current && next) { current.replaceWith(next); formatTimes(next); }
   }
+}
+
+// Emptying a bin: the first press opens its lid and keeps it open; Done closes it and clears the contents.
+const binPings = new Map();
+function stopBin(card, close) {
+  clearInterval(binPings.get(card));
+  binPings.delete(card);
+  card.classList.remove("open");
+  card.querySelector(".bin-empty").hidden = false;
+  card.querySelector(".bin-emptying").hidden = true;
+  if (close) api(`/api/bins/${card.dataset.bin}/close`, {}).catch(() => {});
+}
+document.addEventListener("click", async (event) => {
+  const card = event.target.closest(".bin-card");
+  if (!card || !event.target.closest("button")) return;
+  const bin = card.dataset.bin;
+  if (event.target.closest(".bin-empty")) {
+    document.querySelectorAll(".bin-card.open").forEach((other) => stopBin(other, true));
+    try { await api(`/api/bins/${bin}/open`, {}); } catch (error) { toast(error.message, true); return; }
+    card.classList.add("open");
+    card.querySelector(".bin-empty").hidden = true;
+    card.querySelector(".bin-emptying").hidden = false;
+    card.querySelector(".bin-done").focus();
+    const started = Date.now();
+    // The Pi closes an idle lid after 5 s; give up after 3 minutes so it is never left open.
+    binPings.set(card, setInterval(() => {
+      if (Date.now() - started > 180000) { stopBin(card, true); toast("Lid closed after 3 minutes. The bin was not cleared."); return; }
+      api(`/api/bins/${bin}/open`, {}).catch(() => {});
+    }, 2000));
+  } else if (event.target.closest(".bin-cancel")) {
+    stopBin(card, true);
+  } else if (event.target.closest(".bin-done")) {
+    stopBin(card, false);
+    try {
+      const result = await api(`/api/bins/${bin}/done`, {});
+      toast(`${bin === "trash" ? "Trash" : "Recycling"} emptied: ${result.cleared} item${result.cleared === 1 ? "" : "s"} cleared.`);
+      await refreshPanels();
+    } catch (error) { toast(error.message, true); }
+  }
+});
+window.addEventListener("pagehide", () => {
+  for (const card of binPings.keys()) {
+    fetch(`/api/bins/${card.dataset.bin}/close`, {method:"POST", keepalive:true, headers:{"Content-Type":"application/json", "X-CSRF-Token":csrf}, body:"{}"}).catch(() => {});
+  }
+});
+
+const clearForm = $("#clear-data-form");
+if (clearForm) {
+  clearForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const button = clearForm.querySelector("button"), feedback = $("#clear-feedback");
+    button.disabled = true;
+    feedback.classList.remove("error");
+    try {
+      await api("/api/settings/clear-data", {confirm: $("#clear-confirm").value.trim()});
+      clearForm.reset();
+      feedback.textContent = "All detections, drops and bin history were deleted.";
+    } catch (error) {
+      feedback.textContent = error.message;
+      feedback.classList.add("error");
+    } finally { button.disabled = false; }
+  });
 }
 
 const collectionForm = $("#collection-form");
@@ -90,6 +152,12 @@ if (collectionForm) {
       feedback.classList.add("error");
       button.disabled = false;
     }
+  });
+  document.addEventListener("trash:auto-recorded", (event) => {
+    const result = event.detail;
+    for (const name of ["points", "recycled", "items", "collections"]) $("#stat-" + name).textContent = result.stats[name];
+    toast(result.category === "Recyclable" ? `${result.label} added to recycling. +10 points!` : `${result.label} added to trash.`);
+    refreshPanels().catch(() => {});
   });
   document.addEventListener("trash:recognized", (event) => {
     const result = event.detail;
@@ -206,7 +274,8 @@ if (collectionForm) {
 
   function show(result) {
     const checking = result.state === 'checking';
-    const recognized = !checking && ['Trash','Recyclable'].includes(result.category) && !result.drop_off && result.scan_id;
+    const recognized = !checking && ['Trash','Recyclable'].includes(result.category) && !result.drop_off && result.scan_id && !result.auto_recorded;
+    if (result.stats) document.dispatchEvent(new CustomEvent('trash:auto-recorded',{detail:result}));
     latestResult = recognized ? result : null;
     const label = checking ? 'Checking item…' : result.label;
     if ($('label').textContent !== label) $('label').textContent = label;
@@ -215,6 +284,7 @@ if (collectionForm) {
     $('result-bin').classList.toggle('is-recycling', result.category === 'Recyclable');
     const hint = checking ? `Hold still — comparing readings (${result.checks}/${result.of}).`
       : result.drop_off ? 'Take this item to a drop-off site. It does not belong in the regular bin.'
+      : result.auto_recorded ? `Lid opened. Counted as a drop in the ${result.category === 'Recyclable' ? 'recycling' : 'trash'} bin.`
       : recognized ? 'Check the result, then use it to confirm your drop below.'
       : 'No supported item found. Try another angle or enter your item below.';
     if ($('hint').textContent !== hint) $('hint').textContent = hint;

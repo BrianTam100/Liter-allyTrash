@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<div class="page-heading"><h1>Settings</h1></div>
+<section class="panel danger-panel"><div class="panel-heading compact"><h2>Clear all data</h2></div>
+  <p class="muted">Deletes every detection, recorded drop, bin-empty record and point. The database tables stay, so the site keeps working. This can't be undone.</p>
+  <form id="clear-data-form" class="clear-form">
+    <label for="clear-confirm">Type <strong>DELETE</strong> to confirm</label>
+    <div class="clear-row"><input id="clear-confirm" name="confirm" autocomplete="off" required pattern="DELETE"><button type="submit" class="button danger">Delete everything</button></div>
+    <p id="clear-feedback" class="form-feedback" role="status"></p>
+  </form>
+</section>
+{% endblock %}

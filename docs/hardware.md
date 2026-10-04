@@ -34,8 +34,8 @@ after any change.
 ## Link from laptop to rover
 
 **Bluetooth (preferred; it supports every mode, including hand angles).**
-1. On the Pi, enable the serial port profile and run `sudo rfcomm watch hci0`, then
-   `sudo python3 motor_control_bluetooth_camera.py`. It forwards `/dev/rfcomm0` to the
+1. On the Pi, enable the serial port profile and run `sudo python3 pi_start.py` (it runs
+   `rfcomm watch hci0` and `motor_control_bluetooth_camera.py` for you). It forwards `/dev/rfcomm0` to the
    Arduino on `/dev/ttyACM0`. The full steps are in `BRH_Test/README.md`.
 2. On Windows, pairing creates two COM ports. The **outgoing** one (linked to the Pi's
    address) is the right one; the incoming one won't work.

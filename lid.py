@@ -157,5 +157,5 @@ class RemoteLid:
     def open(self, can="Trash"):
         self.send(b"open " + can.encode())
 
-    def close(self):
-        self.send(b"close")
+    def close(self, can=None):
+        self.send(b"close" + (b" " + can.encode() if can else b""))

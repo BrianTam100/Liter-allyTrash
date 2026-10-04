@@ -30,6 +30,7 @@ A GitHub contributor is `BrianTam100`.
 | [architecture.md](architecture.md) | The pieces (laptop, Pi, Arduino, website, database), how they talk, ports, and code map |
 | [hardware.md](hardware.md) | Drive base, wheels, Bluetooth/Wi-Fi link, lid servos, cameras |
 | [demo-runbook.md](demo-runbook.md) | Demo script, startup order, pre-demo checklist, and fixes for the parts most likely to break |
+| [restarting-the-website.md](restarting-the-website.md) | Stopping and starting the server, when a restart is needed, TigerData `--init-db` |
 
 Setup details that already exist elsewhere:
 
