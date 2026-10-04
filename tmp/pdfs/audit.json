@@ -1,0 +1,16 @@
+{
+  "pages": 100,
+  "domains": 1000,
+  "unique_domains": 1000,
+  "unique_roots": 1000,
+  "domains_per_page": 10,
+  "page_picks": 100,
+  "first_name_matches": 0,
+  "availability_checked": false,
+  "minimum_domain_font_size": 20,
+  "files": [
+    "C:\\Users\\John\\Desktop\\codingProjects\\SortRover\\output\\pdf\\maker_domain_names_100_pages.pdf",
+    "C:\\Users\\John\\Desktop\\codingProjects\\SortRover\\output\\pdf\\maker_domain_names_searchable.csv",
+    "C:\\Users\\John\\Desktop\\codingProjects\\SortRover\\output\\pdf\\maker_interests_and_domain_names.md"
+  ]
+}

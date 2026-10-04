@@ -12,6 +12,7 @@ from BRH_Test.database import Database
 class TigerDatabaseTests(unittest.TestCase):
     def test_cloud_startup_initializes_tables_and_preserves_url_options(self):
         connection = MagicMock()
+        connection.closed = False
         with patch("psycopg.connect", return_value=connection) as connect:
             db = Database(
                 "  postgresql://tester:secret@example.invalid/shared"
@@ -24,7 +25,29 @@ class TigerDatabaseTests(unittest.TestCase):
         for table in ("lt_users", "lt_collections", "lt_detections"):
             self.assertTrue(any(f"CREATE TABLE IF NOT EXISTS {table}" in query for query in queries))
         connection.commit.assert_called_once()
+        connection.close.assert_not_called()
+        db.close()
         connection.close.assert_called_once()
+
+    def test_cloud_queries_reuse_connections_and_discard_failed_transactions(self):
+        with patch.object(Database, "initialize"):
+            db = Database("postgresql://tester@example.invalid/shared", "unused.db")
+        connection = MagicMock()
+        connection.closed = False
+        with patch("psycopg.connect", return_value=connection) as connect:
+            with db.connect():
+                pass
+            with db.connect():
+                pass
+            self.assertEqual(connect.call_count, 1)
+            with self.assertRaises(RuntimeError):
+                with db.connect():
+                    raise RuntimeError("failed query")
+            connection.close.assert_called_once()
+            with db.connect():
+                pass
+            self.assertEqual(connect.call_count, 2)
+        db.close()
 
     def test_tls_and_timeout_defaults_and_transaction_failure(self):
         with patch.object(Database, "initialize"):

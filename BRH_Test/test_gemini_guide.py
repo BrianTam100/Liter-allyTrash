@@ -29,7 +29,9 @@ class GeminiGuideTests(unittest.TestCase):
 
     def test_visible_separate_page_and_text_analysis_without_writes(self):
         home = self.client.get("/").get_data(as_text=True)
-        self.assertLess(home.index('gemini-feature'), home.index('stat-grid'))
+        self.assertNotIn('gemini-feature', home)
+        self.assertLess(home.index('sidebar-bottom'), home.index('Gemini Sort Guide'))
+        self.assertLess(home.index('Gemini Sort Guide'), home.index('Settings'))
         self.assertIn('Gemini Sort Guide', self.client.get('/gemini').get_data(as_text=True))
         with patch.object(self.ai, "generate", return_value="Separate clean cardboard from the plastic window.") as generate:
             response = self.post({"description": "Mixed packaging", "location": "New York"})

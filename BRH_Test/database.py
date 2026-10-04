@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import sqlite3
+import time
+from queue import Empty, Full, LifoQueue
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -12,6 +14,8 @@ class Database:
         self.url = (url or "").strip()
         self.local_path = local_path
         self.is_tiger = bool(self.url)
+        self._idle_connections = LifoQueue(maxsize=8)
+        self.log_cache_revision = 0
         # Prepare shared storage before the dashboard accepts any visitors.
         if self.is_tiger:
             self.initialize()
@@ -28,19 +32,47 @@ class Database:
             if settings.get("sslmode") not in {"require", "verify-ca", "verify-full"}:
                 settings["sslmode"] = "require"
             settings.setdefault("connect_timeout", "5")
-            conn = psycopg.connect(**settings, row_factory=dict_row)
+            conn = None
+            while conn is None:
+                try:
+                    candidate, returned_at = self._idle_connections.get_nowait()
+                except Empty:
+                    break
+                if candidate.closed or time.monotonic() - returned_at > 60:
+                    candidate.close()
+                else:
+                    conn = candidate
+            if conn is None:
+                conn = psycopg.connect(**settings, row_factory=dict_row)
         else:
             Path(self.local_path).parent.mkdir(parents=True, exist_ok=True)
             conn = sqlite3.connect(self.local_path, timeout=10)
             conn.row_factory = sqlite3.Row
             conn.execute("PRAGMA foreign_keys = ON")
+        reusable = False
         try:
             yield conn
             conn.commit()
+            reusable = self.is_tiger
         except Exception:
             conn.rollback()
             raise
         finally:
+            if reusable and not conn.closed:
+                try:
+                    self._idle_connections.put_nowait((conn, time.monotonic()))
+                except Full:
+                    conn.close()
+            else:
+                conn.close()
+
+    def close(self):
+        """Release idle cloud connections when the server shuts down."""
+        while True:
+            try:
+                conn, _ = self._idle_connections.get_nowait()
+            except Empty:
+                return
             conn.close()
 
     def execute(self, conn, query, params=()):
@@ -119,7 +151,10 @@ class Database:
                 (user_id, category, item_count, request_id, item_name, created_at)
                 VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(request_id) DO NOTHING""",
                 (user_id, category, count, request_id, item_name, self.now()))
-            return cursor.rowcount == 1
+            added = cursor.rowcount == 1
+        if added:
+            self.log_cache_revision += 1
+        return added
 
     @staticmethod
     def since(period):
@@ -132,7 +167,10 @@ class Database:
                 (scan_id, user_id, label, category, drop_off, score, source, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(scan_id) DO NOTHING""",
                 (scan_id, user_id, label, category, int(drop_off), float(score), source, self.now()))
-            return cursor.rowcount == 1
+            added = cursor.rowcount == 1
+        if added:
+            self.log_cache_revision += 1
+        return added
 
     def detection_summary(self, period="all"):
         with self.connect() as conn:
@@ -213,6 +251,7 @@ class Database:
         with self.connect() as conn:
             self.execute(conn, "INSERT INTO lt_bin_empties (category, item_count, emptied_at) VALUES (?, ?, ?)",
                 (category, total, self.now()))
+        self.log_cache_revision += 1
         return total
 
     def clear_all(self):
@@ -220,3 +259,4 @@ class Database:
         with self.connect() as conn:
             for table in ("lt_detections", "lt_collections", "lt_bin_empties"):
                 self.execute(conn, f"DELETE FROM {table}")
+        self.log_cache_revision += 1

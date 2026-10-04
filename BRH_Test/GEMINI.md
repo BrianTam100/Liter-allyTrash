@@ -1,7 +1,7 @@
 # Gemini Sort Guide
 
-Gemini has a separate dashboard feature at `/gemini`, linked from a prominent
-card above the dashboard stats and from the main navigation. Upload a photo or
+Gemini has a separate guide at `/gemini`, linked at the bottom of the sidebar
+above Settings. Upload a photo or
 describe an item to get material guidance, preparation steps, reuse ideas, and
 questions to verify locally. Rover chat and Spectrum iMessage use xAI separately.
 

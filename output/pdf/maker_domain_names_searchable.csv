@@ -1,0 +1,1001 @@
+﻿ID,PDF page,Chapter,Theme,Domain,Name concept,Page pick,Theme inspiration
+1,1,ROBOTICS & ROVERS,Robot personalities,wobblepilot.com,Wobble Pilot,Yes,Names for machines that deserve a little personality.
+2,1,ROBOTICS & ROVERS,Robot personalities,servogoblin.com,Servo Goblin,,Names for machines that deserve a little personality.
+3,1,ROBOTICS & ROVERS,Robot personalities,clumsyorbit.com,Clumsy Orbit,,Names for machines that deserve a little personality.
+4,1,ROBOTICS & ROVERS,Robot personalities,beepbandit.com,Beep Bandit,,Names for machines that deserve a little personality.
+5,1,ROBOTICS & ROVERS,Robot personalities,rovingrascal.com,Roving Rascal,,Names for machines that deserve a little personality.
+6,1,ROBOTICS & ROVERS,Robot personalities,tintroublemaker.com,Tin Troublemaker,,Names for machines that deserve a little personality.
+7,1,ROBOTICS & ROVERS,Robot personalities,botbiscuit.com,Bot Biscuit,,Names for machines that deserve a little personality.
+8,1,ROBOTICS & ROVERS,Robot personalities,wheelgremlin.com,Wheel Gremlin,,Names for machines that deserve a little personality.
+9,1,ROBOTICS & ROVERS,Robot personalities,curiouschassis.com,Curious Chassis,,Names for machines that deserve a little personality.
+10,1,ROBOTICS & ROVERS,Robot personalities,bumblingbot.dev,Bumbling Bot,,Names for machines that deserve a little personality.
+11,2,ROBOTICS & ROVERS,Rover expeditions,dustyencoder.com,Dusty Encoder,Yes,"A sense of movement, exploration, and making things roll."
+12,2,ROBOTICS & ROVERS,Rover expeditions,wanderwheel.dev,Wander Wheel,,"A sense of movement, exploration, and making things roll."
+13,2,ROBOTICS & ROVERS,Rover expeditions,roverramble.com,Rover Ramble,,"A sense of movement, exploration, and making things roll."
+14,2,ROBOTICS & ROVERS,Rover expeditions,chassisquest.com,Chassis Quest,,"A sense of movement, exploration, and making things roll."
+15,2,ROBOTICS & ROVERS,Rover expeditions,littletrailbot.com,Little Trail Bot,,"A sense of movement, exploration, and making things roll."
+16,2,ROBOTICS & ROVERS,Rover expeditions,rollingcuriosity.com,Rolling Curiosity,,"A sense of movement, exploration, and making things roll."
+17,2,ROBOTICS & ROVERS,Rover expeditions,servosafari.com,Servo Safari,,"A sense of movement, exploration, and making things roll."
+18,2,ROBOTICS & ROVERS,Rover expeditions,wheelsandwonders.com,Wheels And Wonders,,"A sense of movement, exploration, and making things roll."
+19,2,ROBOTICS & ROVERS,Rover expeditions,motormeadow.com,Motor Meadow,,"A sense of movement, exploration, and making things roll."
+20,2,ROBOTICS & ROVERS,Rover expeditions,roveroutpost.dev,Rover Outpost,,"A sense of movement, exploration, and making things roll."
+21,3,ROBOTICS & ROVERS,Servo mischief,servosidekick.com,Servo Sidekick,Yes,Inspired by your PCA9685 control and calibration work.
+22,3,ROBOTICS & ROVERS,Servo mischief,pulseprank.com,Pulse Prank,,Inspired by your PCA9685 control and calibration work.
+23,3,ROBOTICS & ROVERS,Servo mischief,anglegoblin.com,Angle Goblin,,Inspired by your PCA9685 control and calibration work.
+24,3,ROBOTICS & ROVERS,Servo mischief,torquetango.com,Torque Tango,,Inspired by your PCA9685 control and calibration work.
+25,3,ROBOTICS & ROVERS,Servo mischief,jitterjester.com,Jitter Jester,,Inspired by your PCA9685 control and calibration work.
+26,3,ROBOTICS & ROVERS,Servo mischief,degreesofchaos.com,Degrees Of Chaos,,Inspired by your PCA9685 control and calibration work.
+27,3,ROBOTICS & ROVERS,Servo mischief,pulseandplay.dev,Pulse And Play,,Inspired by your PCA9685 control and calibration work.
+28,3,ROBOTICS & ROVERS,Servo mischief,wigglecontroller.com,Wiggle Controller,,Inspired by your PCA9685 control and calibration work.
+29,3,ROBOTICS & ROVERS,Servo mischief,servosorcery.dev,Servo Sorcery,,Inspired by your PCA9685 control and calibration work.
+30,3,ROBOTICS & ROVERS,Servo mischief,tinytorqueclub.com,Tiny Torque Club,,Inspired by your PCA9685 control and calibration work.
+31,4,ROBOTICS & ROVERS,Friendly robot workshop,botburrow.com,Bot Burrow,Yes,"Approachable names for a portfolio, build log, or small robotics brand."
+32,4,ROBOTICS & ROVERS,Friendly robot workshop,rovernook.com,Rover Nook,,"Approachable names for a portfolio, build log, or small robotics brand."
+33,4,ROBOTICS & ROVERS,Friendly robot workshop,servosprout.com,Servo Sprout,,"Approachable names for a portfolio, build log, or small robotics brand."
+34,4,ROBOTICS & ROVERS,Friendly robot workshop,friendlyactuator.com,Friendly Actuator,,"Approachable names for a portfolio, build log, or small robotics brand."
+35,4,ROBOTICS & ROVERS,Friendly robot workshop,littlemetalpal.com,Little Metal Pal,,"Approachable names for a portfolio, build log, or small robotics brand."
+36,4,ROBOTICS & ROVERS,Friendly robot workshop,beepworkshop.com,Beep Workshop,,"Approachable names for a portfolio, build log, or small robotics brand."
+37,4,ROBOTICS & ROVERS,Friendly robot workshop,rollingacorn.com,Rolling Acorn,,"Approachable names for a portfolio, build log, or small robotics brand."
+38,4,ROBOTICS & ROVERS,Friendly robot workshop,botneststudio.com,Bot Nest Studio,,"Approachable names for a portfolio, build log, or small robotics brand."
+39,4,ROBOTICS & ROVERS,Friendly robot workshop,chassiscottage.com,Chassis Cottage,,"Approachable names for a portfolio, build log, or small robotics brand."
+40,4,ROBOTICS & ROVERS,Friendly robot workshop,tincantrail.com,Tin Can Trail,,"Approachable names for a portfolio, build log, or small robotics brand."
+41,5,ROBOTICS & ROVERS,Motion meets software,motionmischief.com,Motion Mischief,Yes,The bridge between a line of code and a moving machine.
+42,5,ROBOTICS & ROVERS,Motion meets software,codeonwheels.dev,Code On Wheels,,The bridge between a line of code and a moving machine.
+43,5,ROBOTICS & ROVERS,Motion meets software,binaryactuator.com,Binary Actuator,,The bridge between a line of code and a moving machine.
+44,5,ROBOTICS & ROVERS,Motion meets software,loopsandlevers.com,Loops And Levers,,The bridge between a line of code and a moving machine.
+45,5,ROBOTICS & ROVERS,Motion meets software,movingmethods.dev,Moving Methods,,The bridge between a line of code and a moving machine.
+46,5,ROBOTICS & ROVERS,Motion meets software,scriptedstride.com,Scripted Stride,,The bridge between a line of code and a moving machine.
+47,5,ROBOTICS & ROVERS,Motion meets software,functioninmotion.com,Function In Motion,,The bridge between a line of code and a moving machine.
+48,5,ROBOTICS & ROVERS,Motion meets software,bytepoweredbot.com,Byte Powered Bot,,The bridge between a line of code and a moving machine.
+49,5,ROBOTICS & ROVERS,Motion meets software,controlandcoast.com,Control And Coast,,The bridge between a line of code and a moving machine.
+50,5,ROBOTICS & ROVERS,Motion meets software,kineticcommit.dev,Kinetic Commit,,The bridge between a line of code and a moving machine.
+51,6,ROBOTICS & ROVERS,Mechanical daydreams,velvetgear.com,Velvet Gear,Yes,Whimsical engineering names with a more imaginative feel.
+52,6,ROBOTICS & ROVERS,Mechanical daydreams,clockworkpebble.com,Clockwork Pebble,,Whimsical engineering names with a more imaginative feel.
+53,6,ROBOTICS & ROVERS,Mechanical daydreams,copperwanderer.com,Copper Wanderer,,Whimsical engineering names with a more imaginative feel.
+54,6,ROBOTICS & ROVERS,Mechanical daydreams,torqueteacup.com,Torque Teacup,,Whimsical engineering names with a more imaginative feel.
+55,6,ROBOTICS & ROVERS,Mechanical daydreams,tinmoonmachine.com,Tin Moon Machine,,Whimsical engineering names with a more imaginative feel.
+56,6,ROBOTICS & ROVERS,Mechanical daydreams,geargarden.dev,Gear Garden,,Whimsical engineering names with a more imaginative feel.
+57,6,ROBOTICS & ROVERS,Mechanical daydreams,mechanicalmarmalade.com,Mechanical Marmalade,,Whimsical engineering names with a more imaginative feel.
+58,6,ROBOTICS & ROVERS,Mechanical daydreams,littleleverland.com,Little Leverland,,Whimsical engineering names with a more imaginative feel.
+59,6,ROBOTICS & ROVERS,Mechanical daydreams,brassdaydream.com,Brass Daydream,,Whimsical engineering names with a more imaginative feel.
+60,6,ROBOTICS & ROVERS,Mechanical daydreams,cogandcloud.com,Cog And Cloud,,Whimsical engineering names with a more imaginative feel.
+61,7,ROBOTICS & ROVERS,Robot comedy,oopsallservos.com,Oops All Servos,Yes,Funny names for imperfect machines and proud prototypes.
+62,7,ROBOTICS & ROVERS,Robot comedy,botneedscoffee.com,Bot Needs Coffee,,Funny names for imperfect machines and proud prototypes.
+63,7,ROBOTICS & ROVERS,Robot comedy,wheelseeaboutthat.com,Wheel See About That,,Funny names for imperfect machines and proud prototypes.
+64,7,ROBOTICS & ROVERS,Robot comedy,someassemblyrequired.dev,Some Assembly Required,,Funny names for imperfect machines and proud prototypes.
+65,7,ROBOTICS & ROVERS,Robot comedy,robotatemycode.com,Robot Ate My Code,,Funny names for imperfect machines and proud prototypes.
+66,7,ROBOTICS & ROVERS,Robot comedy,slightlysentienttin.com,Slightly Sentient Tin,,Funny names for imperfect machines and proud prototypes.
+67,7,ROBOTICS & ROVERS,Robot comedy,torqueofthetown.com,Torque Of The Town,,Funny names for imperfect machines and proud prototypes.
+68,7,ROBOTICS & ROVERS,Robot comedy,definitelyarobot.dev,Definitely A Robot,,Funny names for imperfect machines and proud prototypes.
+69,7,ROBOTICS & ROVERS,Robot comedy,pleasedonottip.com,Please Do Not Tip,,Funny names for imperfect machines and proud prototypes.
+70,7,ROBOTICS & ROVERS,Robot comedy,beepresponsibly.com,Beep Responsibly,,Funny names for imperfect machines and proud prototypes.
+71,8,ROBOTICS & ROVERS,Compact rover brands,rovemint.com,Rove Mint,Yes,Shorter concepts that could grow beyond a single build.
+72,8,ROBOTICS & ROVERS,Compact rover brands,cogpebble.com,Cog Pebble,,Shorter concepts that could grow beyond a single build.
+73,8,ROBOTICS & ROVERS,Compact rover brands,servomoss.com,Servo Moss,,Shorter concepts that could grow beyond a single build.
+74,8,ROBOTICS & ROVERS,Compact rover brands,bottrove.dev,Bot Trove,,Shorter concepts that could grow beyond a single build.
+75,8,ROBOTICS & ROVERS,Compact rover brands,torquecub.com,Torque Cub,,Shorter concepts that could grow beyond a single build.
+76,8,ROBOTICS & ROVERS,Compact rover brands,wheelwisp.com,Wheel Wisp,,Shorter concepts that could grow beyond a single build.
+77,8,ROBOTICS & ROVERS,Compact rover brands,gearotter.com,Gear Otter,,Shorter concepts that could grow beyond a single build.
+78,8,ROBOTICS & ROVERS,Compact rover brands,rovenest.com,Rove Nest,,Shorter concepts that could grow beyond a single build.
+79,8,ROBOTICS & ROVERS,Compact rover brands,botthimble.com,Bot Thimble,,Shorter concepts that could grow beyond a single build.
+80,8,ROBOTICS & ROVERS,Compact rover brands,cogfable.com,Cog Fable,,Shorter concepts that could grow beyond a single build.
+81,9,ROBOTICS & ROVERS,Rover control room,pilotthepebble.com,Pilot The Pebble,Yes,Dashboard and remote-control names rooted in SortRover.
+82,9,ROBOTICS & ROVERS,Rover control room,chassischannel.com,Chassis Channel,,Dashboard and remote-control names rooted in SortRover.
+83,9,ROBOTICS & ROVERS,Rover control room,roverconsole.dev,Rover Console,,Dashboard and remote-control names rooted in SortRover.
+84,9,ROBOTICS & ROVERS,Rover control room,beepbridge.com,Beep Bridge,,Dashboard and remote-control names rooted in SortRover.
+85,9,ROBOTICS & ROVERS,Rover control room,commandthecog.com,Command The Cog,,Dashboard and remote-control names rooted in SortRover.
+86,9,ROBOTICS & ROVERS,Rover control room,tinymissiondesk.com,Tiny Mission Desk,,Dashboard and remote-control names rooted in SortRover.
+87,9,ROBOTICS & ROVERS,Rover control room,servostation.dev,Servo Station,,Dashboard and remote-control names rooted in SortRover.
+88,9,ROBOTICS & ROVERS,Rover control room,rollingtelemetry.com,Rolling Telemetry,,Dashboard and remote-control names rooted in SortRover.
+89,9,ROBOTICS & ROVERS,Rover control room,wheelsonline.com,Wheels Online,,Dashboard and remote-control names rooted in SortRover.
+90,9,ROBOTICS & ROVERS,Rover control room,motiondeck.io,Motion Deck,,Dashboard and remote-control names rooted in SortRover.
+91,10,ROBOTICS & ROVERS,Robotics after dark,moonlitmotors.com,Moonlit Motors,Yes,Late-night maker imagery remixed with your robot projects.
+92,10,ROBOTICS & ROVERS,Robotics after dark,nightshiftservo.com,Night Shift Servo,,Late-night maker imagery remixed with your robot projects.
+93,10,ROBOTICS & ROVERS,Robotics after dark,neonchassis.com,Neon Chassis,,Late-night maker imagery remixed with your robot projects.
+94,10,ROBOTICS & ROVERS,Robotics after dark,afterdarkactuator.com,After Dark Actuator,,Late-night maker imagery remixed with your robot projects.
+95,10,ROBOTICS & ROVERS,Robotics after dark,midnightwheelhouse.com,Midnight Wheelhouse,,Late-night maker imagery remixed with your robot projects.
+96,10,ROBOTICS & ROVERS,Robotics after dark,lanternrover.com,Lantern Rover,,Late-night maker imagery remixed with your robot projects.
+97,10,ROBOTICS & ROVERS,Robotics after dark,duskanddegrees.com,Dusk And Degrees,,Late-night maker imagery remixed with your robot projects.
+98,10,ROBOTICS & ROVERS,Robotics after dark,sleepystepper.com,Sleepy Stepper,,Late-night maker imagery remixed with your robot projects.
+99,10,ROBOTICS & ROVERS,Robotics after dark,starlitservo.com,Starlit Servo,,Late-night maker imagery remixed with your robot projects.
+100,10,ROBOTICS & ROVERS,Robotics after dark,nocturnaltorque.com,Nocturnal Torque,,Late-night maker imagery remixed with your robot projects.
+101,11,ELECTRONICS & EMBEDDED,Breadboard creatures,breadboardbadger.com,Breadboard Badger,Yes,"Playful hardware names inspired by wires, pins, and small boards."
+102,11,ELECTRONICS & EMBEDDED,Breadboard creatures,jumperjellyfish.com,Jumper Jellyfish,,"Playful hardware names inspired by wires, pins, and small boards."
+103,11,ELECTRONICS & EMBEDDED,Breadboard creatures,pinpanda.com,Pin Panda,,"Playful hardware names inspired by wires, pins, and small boards."
+104,11,ELECTRONICS & EMBEDDED,Breadboard creatures,resistorraccoon.com,Resistor Raccoon,,"Playful hardware names inspired by wires, pins, and small boards."
+105,11,ELECTRONICS & EMBEDDED,Breadboard creatures,capacitorcricket.com,Capacitor Cricket,,"Playful hardware names inspired by wires, pins, and small boards."
+106,11,ELECTRONICS & EMBEDDED,Breadboard creatures,coppercritter.com,Copper Critter,,"Playful hardware names inspired by wires, pins, and small boards."
+107,11,ELECTRONICS & EMBEDDED,Breadboard creatures,diodeduck.com,Diode Duck,,"Playful hardware names inspired by wires, pins, and small boards."
+108,11,ELECTRONICS & EMBEDDED,Breadboard creatures,breadboardbeetle.com,Breadboard Beetle,,"Playful hardware names inspired by wires, pins, and small boards."
+109,11,ELECTRONICS & EMBEDDED,Breadboard creatures,socketsalamander.com,Socket Salamander,,"Playful hardware names inspired by wires, pins, and small boards."
+110,11,ELECTRONICS & EMBEDDED,Breadboard creatures,wirewombat.com,Wire Wombat,,"Playful hardware names inspired by wires, pins, and small boards."
+111,12,ELECTRONICS & EMBEDDED,Solder workshop,soldersprinkles.com,Solder Sprinkles,Yes,"Names with warmth, craft, and a soldering-bench personality."
+112,12,ELECTRONICS & EMBEDDED,Solder workshop,moltenmethods.dev,Molten Methods,,"Names with warmth, craft, and a soldering-bench personality."
+113,12,ELECTRONICS & EMBEDDED,Solder workshop,copperapron.com,Copper Apron,,"Names with warmth, craft, and a soldering-bench personality."
+114,12,ELECTRONICS & EMBEDDED,Solder workshop,thesoldershelf.com,The Solder Shelf,,"Names with warmth, craft, and a soldering-bench personality."
+115,12,ELECTRONICS & EMBEDDED,Solder workshop,solderfable.com,Solder Fable,,"Names with warmth, craft, and a soldering-bench personality."
+116,12,ELECTRONICS & EMBEDDED,Solder workshop,tinandtinker.com,Tin And Tinker,,"Names with warmth, craft, and a soldering-bench personality."
+117,12,ELECTRONICS & EMBEDDED,Solder workshop,warmironworks.com,Warm Iron Works,,"Names with warmth, craft, and a soldering-bench personality."
+118,12,ELECTRONICS & EMBEDDED,Solder workshop,soldercabin.com,Solder Cabin,,"Names with warmth, craft, and a soldering-bench personality."
+119,12,ELECTRONICS & EMBEDDED,Solder workshop,fluxandfables.com,Flux And Fables,,"Names with warmth, craft, and a soldering-bench personality."
+120,12,ELECTRONICS & EMBEDDED,Solder workshop,copperworkbench.dev,Copper Workbench,,"Names with warmth, craft, and a soldering-bench personality."
+121,13,ELECTRONICS & EMBEDDED,Raspberry-sized projects,pocketmotherboard.com,Pocket Motherboard,Yes,Small-computer imagery without putting a product brand in the name.
+122,13,ELECTRONICS & EMBEDDED,Raspberry-sized projects,tinyboardtales.com,Tiny Board Tales,,Small-computer imagery without putting a product brand in the name.
+123,13,ELECTRONICS & EMBEDDED,Raspberry-sized projects,minimachinemeadow.com,Mini Machine Meadow,,Small-computer imagery without putting a product brand in the name.
+124,13,ELECTRONICS & EMBEDDED,Raspberry-sized projects,palmsizedportal.com,Palm Sized Portal,,Small-computer imagery without putting a product brand in the name.
+125,13,ELECTRONICS & EMBEDDED,Raspberry-sized projects,littlelinuxbox.com,Little Linux Box,,Small-computer imagery without putting a product brand in the name.
+126,13,ELECTRONICS & EMBEDDED,Raspberry-sized projects,boardberry.com,Board Berry,,Small-computer imagery without putting a product brand in the name.
+127,13,ELECTRONICS & EMBEDDED,Raspberry-sized projects,pocketpinwheel.com,Pocket Pinwheel,,Small-computer imagery without putting a product brand in the name.
+128,13,ELECTRONICS & EMBEDDED,Raspberry-sized projects,smallboardsociety.com,Small Board Society,,Small-computer imagery without putting a product brand in the name.
+129,13,ELECTRONICS & EMBEDDED,Raspberry-sized projects,microworkshop.dev,Micro Workshop,,Small-computer imagery without putting a product brand in the name.
+130,13,ELECTRONICS & EMBEDDED,Raspberry-sized projects,littleboardenergy.com,Little Board Energy,,Small-computer imagery without putting a product brand in the name.
+131,14,ELECTRONICS & EMBEDDED,Firmware personalities,firmwareferret.com,Firmware Ferret,Yes,Embedded projects with a mischievous streak.
+132,14,ELECTRONICS & EMBEDDED,Firmware personalities,flashgoblin.dev,Flash Goblin,,Embedded projects with a mischievous streak.
+133,14,ELECTRONICS & EMBEDDED,Firmware personalities,bootloaderbunny.com,Bootloader Bunny,,Embedded projects with a mischievous streak.
+134,14,ELECTRONICS & EMBEDDED,Firmware personalities,firmwarefidget.com,Firmware Fidget,,Embedded projects with a mischievous streak.
+135,14,ELECTRONICS & EMBEDDED,Firmware personalities,embeddedoddball.com,Embedded Oddball,,Embedded projects with a mischievous streak.
+136,14,ELECTRONICS & EMBEDDED,Firmware personalities,flashandfrolic.com,Flash And Frolic,,Embedded projects with a mischievous streak.
+137,14,ELECTRONICS & EMBEDDED,Firmware personalities,microcodemischief.com,Microcode Mischief,,Embedded projects with a mischievous streak.
+138,14,ELECTRONICS & EMBEDDED,Firmware personalities,firmwarefig.com,Firmware Fig,,Embedded projects with a mischievous streak.
+139,14,ELECTRONICS & EMBEDDED,Firmware personalities,bootloaderbungalow.com,Bootloader Bungalow,,Embedded projects with a mischievous streak.
+140,14,ELECTRONICS & EMBEDDED,Firmware personalities,persistentpebble.dev,Persistent Pebble,,Embedded projects with a mischievous streak.
+141,15,ELECTRONICS & EMBEDDED,Signals and pulses,signalsprout.dev,Signal Sprout,Yes,Names built around the language of electronics.
+142,15,ELECTRONICS & EMBEDDED,Signals and pulses,pulsepicnic.com,Pulse Picnic,,Names built around the language of electronics.
+143,15,ELECTRONICS & EMBEDDED,Signals and pulses,logiclantern.com,Logic Lantern,,Names built around the language of electronics.
+144,15,ELECTRONICS & EMBEDDED,Signals and pulses,clockpulseclub.com,Clock Pulse Club,,Names built around the language of electronics.
+145,15,ELECTRONICS & EMBEDDED,Signals and pulses,oscillatorotter.com,Oscillator Otter,,Names built around the language of electronics.
+146,15,ELECTRONICS & EMBEDDED,Signals and pulses,signalconfetti.com,Signal Confetti,,Names built around the language of electronics.
+147,15,ELECTRONICS & EMBEDDED,Signals and pulses,waveformwaffle.com,Waveform Waffle,,Names built around the language of electronics.
+148,15,ELECTRONICS & EMBEDDED,Signals and pulses,pulsepavilion.com,Pulse Pavilion,,Names built around the language of electronics.
+149,15,ELECTRONICS & EMBEDDED,Signals and pulses,rippleregister.com,Ripple Register,,Names built around the language of electronics.
+150,15,ELECTRONICS & EMBEDDED,Signals and pulses,signalkite.com,Signal Kite,,Names built around the language of electronics.
+151,16,ELECTRONICS & EMBEDDED,Pins and jumpers,pinandponder.com,Pin And Ponder,Yes,Small details from the electronics bench turned into brands.
+152,16,ELECTRONICS & EMBEDDED,Pins and jumpers,jumperjamboree.com,Jumper Jamboree,,Small details from the electronics bench turned into brands.
+153,16,ELECTRONICS & EMBEDDED,Pins and jumpers,spareheader.com,Spare Header,,Small details from the electronics bench turned into brands.
+154,16,ELECTRONICS & EMBEDDED,Pins and jumpers,pinpuddle.com,Pin Puddle,,Small details from the electronics bench turned into brands.
+155,16,ELECTRONICS & EMBEDDED,Pins and jumpers,headerhedgehog.com,Header Hedgehog,,Small details from the electronics bench turned into brands.
+156,16,ELECTRONICS & EMBEDDED,Pins and jumpers,jumperjigsaw.com,Jumper Jigsaw,,Small details from the electronics bench turned into brands.
+157,16,ELECTRONICS & EMBEDDED,Pins and jumpers,bentpinclub.com,Bent Pin Club,,Small details from the electronics bench turned into brands.
+158,16,ELECTRONICS & EMBEDDED,Pins and jumpers,copperjumper.dev,Copper Jumper,,Small details from the electronics bench turned into brands.
+159,16,ELECTRONICS & EMBEDDED,Pins and jumpers,friendlyground.com,Friendly Ground,,Small details from the electronics bench turned into brands.
+160,16,ELECTRONICS & EMBEDDED,Pins and jumpers,littlepinparade.com,Little Pin Parade,,Small details from the electronics bench turned into brands.
+161,17,ELECTRONICS & EMBEDDED,Sensors with character,sensorsquirrel.com,Sensor Squirrel,Yes,"A home for sensing, measuring, and reacting to the world."
+162,17,ELECTRONICS & EMBEDDED,Sensors with character,curiousprobe.com,Curious Probe,,"A home for sensing, measuring, and reacting to the world."
+163,17,ELECTRONICS & EMBEDDED,Sensors with character,distancedoodle.com,Distance Doodle,,"A home for sensing, measuring, and reacting to the world."
+164,17,ELECTRONICS & EMBEDDED,Sensors with character,sensorsnack.com,Sensor Snack,,"A home for sensing, measuring, and reacting to the world."
+165,17,ELECTRONICS & EMBEDDED,Sensors with character,measuremischief.com,Measure Mischief,,"A home for sensing, measuring, and reacting to the world."
+166,17,ELECTRONICS & EMBEDDED,Sensors with character,probeandpoke.com,Probe And Poke,,"A home for sensing, measuring, and reacting to the world."
+167,17,ELECTRONICS & EMBEDDED,Sensors with character,ambientacorn.com,Ambient Acorn,,"A home for sensing, measuring, and reacting to the world."
+168,17,ELECTRONICS & EMBEDDED,Sensors with character,sensorstory.dev,Sensor Story,,"A home for sensing, measuring, and reacting to the world."
+169,17,ELECTRONICS & EMBEDDED,Sensors with character,readingtheroom.tech,Reading The Room,,"A home for sensing, measuring, and reacting to the world."
+170,17,ELECTRONICS & EMBEDDED,Sensors with character,tinysenseworks.com,Tiny Sense Works,,"A home for sensing, measuring, and reacting to the world."
+171,18,ELECTRONICS & EMBEDDED,"Tiny computers, big plans",smallchipbigplans.com,Small Chip Big Plans,Yes,Hardware names that celebrate doing more with less.
+172,18,ELECTRONICS & EMBEDDED,"Tiny computers, big plans",pocketpowerhouse.dev,Pocket Powerhouse,,Hardware names that celebrate doing more with less.
+173,18,ELECTRONICS & EMBEDDED,"Tiny computers, big plans",thumbprintmachine.com,Thumbprint Machine,,Hardware names that celebrate doing more with less.
+174,18,ELECTRONICS & EMBEDDED,"Tiny computers, big plans",tinyboardbigmood.com,Tiny Board Big Mood,,Hardware names that celebrate doing more with less.
+175,18,ELECTRONICS & EMBEDDED,"Tiny computers, big plans",littlecomputecabin.com,Little Compute Cabin,,Hardware names that celebrate doing more with less.
+176,18,ELECTRONICS & EMBEDDED,"Tiny computers, big plans",micromoxie.com,Micro Moxie,,Hardware names that celebrate doing more with less.
+177,18,ELECTRONICS & EMBEDDED,"Tiny computers, big plans",tinychiptavern.com,Tiny Chip Tavern,,Hardware names that celebrate doing more with less.
+178,18,ELECTRONICS & EMBEDDED,"Tiny computers, big plans",minilogiclodge.com,Mini Logic Lodge,,Hardware names that celebrate doing more with less.
+179,18,ELECTRONICS & EMBEDDED,"Tiny computers, big plans",pocketcircuitparty.com,Pocket Circuit Party,,Hardware names that celebrate doing more with less.
+180,18,ELECTRONICS & EMBEDDED,"Tiny computers, big plans",littlesilicondream.com,Little Silicon Dream,,Hardware names that celebrate doing more with less.
+181,19,ELECTRONICS & EMBEDDED,Electronics bench humor,oopswrongpin.com,Oops Wrong Pin,Yes,"A little smoke, a little chaos, a lot of tinkering."
+182,19,ELECTRONICS & EMBEDDED,Electronics bench humor,resistorsaidno.com,Resistor Said No,,"A little smoke, a little chaos, a lot of tinkering."
+183,19,ELECTRONICS & EMBEDDED,Electronics bench humor,breadboardspaghetti.com,Breadboard Spaghetti,,"A little smoke, a little chaos, a lot of tinkering."
+184,19,ELECTRONICS & EMBEDDED,Electronics bench humor,thewirewasloose.com,The Wire Was Loose,,"A little smoke, a little chaos, a lot of tinkering."
+185,19,ELECTRONICS & EMBEDDED,Electronics bench humor,letthesmokestayin.com,Let The Smoke Stay In,,"A little smoke, a little chaos, a lot of tinkering."
+186,19,ELECTRONICS & EMBEDDED,Electronics bench humor,groundedfortinkering.com,Grounded For Tinkering,,"A little smoke, a little chaos, a lot of tinkering."
+187,19,ELECTRONICS & EMBEDDED,Electronics bench humor,capacitordrama.com,Capacitor Drama,,"A little smoke, a little chaos, a lot of tinkering."
+188,19,ELECTRONICS & EMBEDDED,Electronics bench humor,unplugthenponder.com,Unplug Then Ponder,,"A little smoke, a little chaos, a lot of tinkering."
+189,19,ELECTRONICS & EMBEDDED,Electronics bench humor,soldernotsorry.com,Solder Not Sorry,,"A little smoke, a little chaos, a lot of tinkering."
+190,19,ELECTRONICS & EMBEDDED,Electronics bench humor,fivevoltsofchaos.com,Five Volts Of Chaos,,"A little smoke, a little chaos, a lot of tinkering."
+191,20,ELECTRONICS & EMBEDDED,Clean hardware brands,copperthicket.com,Copper Thicket,Yes,More polished names for an engineering site or studio.
+192,20,ELECTRONICS & EMBEDDED,Clean hardware brands,signalgrove.dev,Signal Grove,,More polished names for an engineering site or studio.
+193,20,ELECTRONICS & EMBEDDED,Clean hardware brands,pinharbor.com,Pin Harbor,,More polished names for an engineering site or studio.
+194,20,ELECTRONICS & EMBEDDED,Clean hardware brands,embercircuit.com,Ember Circuit,,More polished names for an engineering site or studio.
+195,20,ELECTRONICS & EMBEDDED,Clean hardware brands,quietoscillator.com,Quiet Oscillator,,More polished names for an engineering site or studio.
+196,20,ELECTRONICS & EMBEDDED,Clean hardware brands,coppercanvas.tech,Copper Canvas,,More polished names for an engineering site or studio.
+197,20,ELECTRONICS & EMBEDDED,Clean hardware brands,circuithearth.com,Circuit Hearth,,More polished names for an engineering site or studio.
+198,20,ELECTRONICS & EMBEDDED,Clean hardware brands,logicpebble.dev,Logic Pebble,,More polished names for an engineering site or studio.
+199,20,ELECTRONICS & EMBEDDED,Clean hardware brands,traceandtimber.com,Trace And Timber,,More polished names for an engineering site or studio.
+200,20,ELECTRONICS & EMBEDDED,Clean hardware brands,copperquarry.com,Copper Quarry,,More polished names for an engineering site or studio.
+201,21,CODING & SOFTWARE,Compiler creatures,compilercapybara.com,Compiler Capybara,Yes,C++ and coding inspiration with a mascot-friendly twist.
+202,21,CODING & SOFTWARE,Compiler creatures,syntaxsquirrel.dev,Syntax Squirrel,,C++ and coding inspiration with a mascot-friendly twist.
+203,21,CODING & SOFTWARE,Compiler creatures,bracketbadger.com,Bracket Badger,,C++ and coding inspiration with a mascot-friendly twist.
+204,21,CODING & SOFTWARE,Compiler creatures,pointerpuffin.com,Pointer Puffin,,C++ and coding inspiration with a mascot-friendly twist.
+205,21,CODING & SOFTWARE,Compiler creatures,functionferret.com,Function Ferret,,C++ and coding inspiration with a mascot-friendly twist.
+206,21,CODING & SOFTWARE,Compiler creatures,looplemur.com,Loop Lemur,,C++ and coding inspiration with a mascot-friendly twist.
+207,21,CODING & SOFTWARE,Compiler creatures,stackstoat.dev,Stack Stoat,,C++ and coding inspiration with a mascot-friendly twist.
+208,21,CODING & SOFTWARE,Compiler creatures,heaphedgehog.com,Heap Hedgehog,,C++ and coding inspiration with a mascot-friendly twist.
+209,21,CODING & SOFTWARE,Compiler creatures,semicolonseal.com,Semicolon Seal,,C++ and coding inspiration with a mascot-friendly twist.
+210,21,CODING & SOFTWARE,Compiler creatures,runtimeraven.com,Runtime Raven,,C++ and coding inspiration with a mascot-friendly twist.
+211,22,CODING & SOFTWARE,Programmer confessionals,itworkedattwoam.com,It Worked At Two AM,Yes,"Honest, funny names for the messy part of building software."
+212,22,CODING & SOFTWARE,Programmer confessionals,onesuspiciousloop.com,One Suspicious Loop,,"Honest, funny names for the messy part of building software."
+213,22,CODING & SOFTWARE,Programmer confessionals,thebughasfriends.com,The Bug Has Friends,,"Honest, funny names for the messy part of building software."
+214,22,CODING & SOFTWARE,Programmer confessionals,compiledbyaccident.com,Compiled By Accident,,"Honest, funny names for the messy part of building software."
+215,22,CODING & SOFTWARE,Programmer confessionals,mostlyvalidsyntax.com,Mostly Valid Syntax,,"Honest, funny names for the messy part of building software."
+216,22,CODING & SOFTWARE,Programmer confessionals,justonemorebracket.com,Just One More Bracket,,"Honest, funny names for the messy part of building software."
+217,22,CODING & SOFTWARE,Programmer confessionals,locallylegendary.dev,Locally Legendary,,"Honest, funny names for the messy part of building software."
+218,22,CODING & SOFTWARE,Programmer confessionals,forgotthesemicolon.dev,Forgot The Semicolon,,"Honest, funny names for the messy part of building software."
+219,22,CODING & SOFTWARE,Programmer confessionals,itwasthecache.dev,It Was The Cache,,"Honest, funny names for the messy part of building software."
+220,22,CODING & SOFTWARE,Programmer confessionals,undefinedbuthopeful.com,Undefined But Hopeful,,"Honest, funny names for the messy part of building software."
+221,23,CODING & SOFTWARE,Code with charm,syntaxsprinkles.com,Syntax Sprinkles,Yes,Gentler names that still feel like software.
+222,23,CODING & SOFTWARE,Code with charm,bracketbouquet.com,Bracket Bouquet,,Gentler names that still feel like software.
+223,23,CODING & SOFTWARE,Code with charm,codecrumpet.com,Code Crumpet,,Gentler names that still feel like software.
+224,23,CODING & SOFTWARE,Code with charm,functionfable.dev,Function Fable,,Gentler names that still feel like software.
+225,23,CODING & SOFTWARE,Code with charm,looplocket.com,Loop Locket,,Gentler names that still feel like software.
+226,23,CODING & SOFTWARE,Code with charm,bytebunting.com,Byte Bunting,,Gentler names that still feel like software.
+227,23,CODING & SOFTWARE,Code with charm,syntaxsunroom.com,Syntax Sunroom,,Gentler names that still feel like software.
+228,23,CODING & SOFTWARE,Code with charm,methodmeadow.dev,Method Meadow,,Gentler names that still feel like software.
+229,23,CODING & SOFTWARE,Code with charm,bracketbungalow.com,Bracket Bungalow,,Gentler names that still feel like software.
+230,23,CODING & SOFTWARE,Code with charm,littlelogicloft.com,Little Logic Loft,,Gentler names that still feel like software.
+231,24,CODING & SOFTWARE,The debugging lounge,debugdumpling.com,Debug Dumpling,Yes,"Names for documenting fixes, experiments, and lessons."
+232,24,CODING & SOFTWARE,The debugging lounge,breakpointbakery.com,Breakpoint Bakery,,"Names for documenting fixes, experiments, and lessons."
+233,24,CODING & SOFTWARE,The debugging lounge,tracebacktea.com,Traceback Tea,,"Names for documenting fixes, experiments, and lessons."
+234,24,CODING & SOFTWARE,The debugging lounge,thebugbungalow.com,The Bug Bungalow,,"Names for documenting fixes, experiments, and lessons."
+235,24,CODING & SOFTWARE,The debugging lounge,watchpointwaffle.com,Watchpoint Waffle,,"Names for documenting fixes, experiments, and lessons."
+236,24,CODING & SOFTWARE,The debugging lounge,debugden.dev,Debug Den,,"Names for documenting fixes, experiments, and lessons."
+237,24,CODING & SOFTWARE,The debugging lounge,stacktracesnacks.com,Stacktrace Snacks,,"Names for documenting fixes, experiments, and lessons."
+238,24,CODING & SOFTWARE,The debugging lounge,errorotter.com,Error Otter,,"Names for documenting fixes, experiments, and lessons."
+239,24,CODING & SOFTWARE,The debugging lounge,exceptionpicnic.com,Exception Picnic,,"Names for documenting fixes, experiments, and lessons."
+240,24,CODING & SOFTWARE,The debugging lounge,bugwhispercabin.com,Bug Whisper Cabin,,"Names for documenting fixes, experiments, and lessons."
+241,25,CODING & SOFTWARE,Web app workshop,routeraccoon.com,Route Raccoon,Yes,Inspired by your Flask dashboard and account-driven projects.
+242,25,CODING & SOFTWARE,Web app workshop,endpointemporium.dev,Endpoint Emporium,,Inspired by your Flask dashboard and account-driven projects.
+243,25,CODING & SOFTWARE,Web app workshop,flaskandfiddle.com,Flask And Fiddle,,Inspired by your Flask dashboard and account-driven projects.
+244,25,CODING & SOFTWARE,Web app workshop,dashboarddoodles.com,Dashboard Doodles,,Inspired by your Flask dashboard and account-driven projects.
+245,25,CODING & SOFTWARE,Web app workshop,renderramble.dev,Render Ramble,,Inspired by your Flask dashboard and account-driven projects.
+246,25,CODING & SOFTWARE,Web app workshop,querycabin.com,Query Cabin,,Inspired by your Flask dashboard and account-driven projects.
+247,25,CODING & SOFTWARE,Web app workshop,cookieworkshop.dev,Cookie Workshop,,Inspired by your Flask dashboard and account-driven projects.
+248,25,CODING & SOFTWARE,Web app workshop,tinyroutetown.com,Tiny Route Town,,Inspired by your Flask dashboard and account-driven projects.
+249,25,CODING & SOFTWARE,Web app workshop,viewportvillage.com,Viewport Village,,Inspired by your Flask dashboard and account-driven projects.
+250,25,CODING & SOFTWARE,Web app workshop,appintheattic.com,App In The Attic,,Inspired by your Flask dashboard and account-driven projects.
+251,26,CODING & SOFTWARE,C++ wordplay,pointerpicnic.dev,Pointer Picnic,Yes,"Pointers, references, templates, and low-level curiosity."
+252,26,CODING & SOFTWARE,C++ wordplay,heapofhope.com,Heap Of Hope,,"Pointers, references, templates, and low-level curiosity."
+253,26,CODING & SOFTWARE,C++ wordplay,referencerascal.com,Reference Rascal,,"Pointers, references, templates, and low-level curiosity."
+254,26,CODING & SOFTWARE,C++ wordplay,templatetavern.dev,Template Tavern,,"Pointers, references, templates, and low-level curiosity."
+255,26,CODING & SOFTWARE,C++ wordplay,nullandvoidclub.com,Null And Void Club,,"Pointers, references, templates, and low-level curiosity."
+256,26,CODING & SOFTWARE,C++ wordplay,constandcurious.dev,Const And Curious,,"Pointers, references, templates, and low-level curiosity."
+257,26,CODING & SOFTWARE,C++ wordplay,stackandsnack.com,Stack And Snack,,"Pointers, references, templates, and low-level curiosity."
+258,26,CODING & SOFTWARE,C++ wordplay,pointerweather.com,Pointer Weather,,"Pointers, references, templates, and low-level curiosity."
+259,26,CODING & SOFTWARE,C++ wordplay,raiiandshine.dev,RAII And Shine,,"Pointers, references, templates, and low-level curiosity."
+260,26,CODING & SOFTWARE,C++ wordplay,littleendianenergy.com,Little Endian Energy,,"Pointers, references, templates, and low-level curiosity."
+261,27,CODING & SOFTWARE,Python side quests,indentationstation.dev,Indentation Station,Yes,Script-friendly names for small tools and useful experiments.
+262,27,CODING & SOFTWARE,Python side quests,scriptsparrow.com,Script Sparrow,,Script-friendly names for small tools and useful experiments.
+263,27,CODING & SOFTWARE,Python side quests,loopandladle.com,Loop And Ladle,,Script-friendly names for small tools and useful experiments.
+264,27,CODING & SOFTWARE,Python side quests,bytecodebakery.com,Bytecode Bakery,,Script-friendly names for small tools and useful experiments.
+265,27,CODING & SOFTWARE,Python side quests,tupletales.dev,Tuple Tales,,Script-friendly names for small tools and useful experiments.
+266,27,CODING & SOFTWARE,Python side quests,pythonicpebble.com,Pythonic Pebble,,Script-friendly names for small tools and useful experiments.
+267,27,CODING & SOFTWARE,Python side quests,decoratordiner.com,Decorator Diner,,Script-friendly names for small tools and useful experiments.
+268,27,CODING & SOFTWARE,Python side quests,scriptedserendipity.com,Scripted Serendipity,,Script-friendly names for small tools and useful experiments.
+269,27,CODING & SOFTWARE,Python side quests,littlelambdalodge.com,Little Lambda Lodge,,Script-friendly names for small tools and useful experiments.
+270,27,CODING & SOFTWARE,Python side quests,importsomechaos.com,Import Some Chaos,,Script-friendly names for small tools and useful experiments.
+271,28,CODING & SOFTWARE,Commit culture,commitconfetti.com,Commit Confetti,Yes,Version-control jokes and the rhythm of shipping projects.
+272,28,CODING & SOFTWARE,Commit culture,branchandbreakfast.com,Branch And Breakfast,,Version-control jokes and the rhythm of shipping projects.
+273,28,CODING & SOFTWARE,Commit culture,mergemarmalade.com,Merge Marmalade,,Version-control jokes and the rhythm of shipping projects.
+274,28,CODING & SOFTWARE,Commit culture,pushandponder.dev,Push And Ponder,,Version-control jokes and the rhythm of shipping projects.
+275,28,CODING & SOFTWARE,Commit culture,commitcabin.com,Commit Cabin,,Version-control jokes and the rhythm of shipping projects.
+276,28,CODING & SOFTWARE,Commit culture,rebaseraccoon.com,Rebase Raccoon,,Version-control jokes and the rhythm of shipping projects.
+277,28,CODING & SOFTWARE,Commit culture,branchgoblin.dev,Branch Goblin,,Version-control jokes and the rhythm of shipping projects.
+278,28,CODING & SOFTWARE,Commit culture,cherrypickpicnic.com,Cherry Pick Picnic,,Version-control jokes and the rhythm of shipping projects.
+279,28,CODING & SOFTWARE,Commit culture,patchandpastry.com,Patch And Pastry,,Version-control jokes and the rhythm of shipping projects.
+280,28,CODING & SOFTWARE,Commit culture,smallcommitenergy.com,Small Commit Energy,,Version-control jokes and the rhythm of shipping projects.
+281,29,CODING & SOFTWARE,Portfolio without a name,proofoftinkering.com,Proof Of Tinkering,Yes,Broad domains for sharing all your work without using your first name.
+282,29,CODING & SOFTWARE,Portfolio without a name,thebuildshelf.dev,The Build Shelf,,Broad domains for sharing all your work without using your first name.
+283,29,CODING & SOFTWARE,Portfolio without a name,collectedcontraptions.com,Collected Contraptions,,Broad domains for sharing all your work without using your first name.
+284,29,CODING & SOFTWARE,Portfolio without a name,madeofcuriosity.dev,Made Of Curiosity,,Broad domains for sharing all your work without using your first name.
+285,29,CODING & SOFTWARE,Portfolio without a name,adrawerofprojects.com,A Drawer Of Projects,,Broad domains for sharing all your work without using your first name.
+286,29,CODING & SOFTWARE,Portfolio without a name,worksinthewild.dev,Works In The Wild,,Broad domains for sharing all your work without using your first name.
+287,29,CODING & SOFTWARE,Portfolio without a name,littlelaunchpad.dev,Little Launchpad,,Broad domains for sharing all your work without using your first name.
+288,29,CODING & SOFTWARE,Portfolio without a name,notesfromtheworkbench.com,Notes From The Workbench,,Broad domains for sharing all your work without using your first name.
+289,29,CODING & SOFTWARE,Portfolio without a name,unfinishedbutinteresting.com,Unfinished But Interesting,,Broad domains for sharing all your work without using your first name.
+290,29,CODING & SOFTWARE,Portfolio without a name,builtfortheplot.com,Built For The Plot,,Broad domains for sharing all your work without using your first name.
+291,30,CODING & SOFTWARE,Polished developer brands,syntaxharbor.com,Syntax Harbor,Yes,"Clean names for tools, products, or a small software studio."
+292,30,CODING & SOFTWARE,Polished developer brands,methodmoss.com,Method Moss,,"Clean names for tools, products, or a small software studio."
+293,30,CODING & SOFTWARE,Polished developer brands,loopquarry.dev,Loop Quarry,,"Clean names for tools, products, or a small software studio."
+294,30,CODING & SOFTWARE,Polished developer brands,bracketbeacon.com,Bracket Beacon,,"Clean names for tools, products, or a small software studio."
+295,30,CODING & SOFTWARE,Polished developer brands,stackcove.dev,Stack Cove,,"Clean names for tools, products, or a small software studio."
+296,30,CODING & SOFTWARE,Polished developer brands,bytehearth.com,Byte Hearth,,"Clean names for tools, products, or a small software studio."
+297,30,CODING & SOFTWARE,Polished developer brands,functiongrove.com,Function Grove,,"Clean names for tools, products, or a small software studio."
+298,30,CODING & SOFTWARE,Polished developer brands,patchpebble.dev,Patch Pebble,,"Clean names for tools, products, or a small software studio."
+299,30,CODING & SOFTWARE,Polished developer brands,logiclaneway.com,Logic Laneway,,"Clean names for tools, products, or a small software studio."
+300,30,CODING & SOFTWARE,Polished developer brands,codecanopy.dev,Code Canopy,,"Clean names for tools, products, or a small software studio."
+301,31,AI & COMPUTER VISION,Curious machine minds,modelmarmot.com,Model Marmot,Yes,"AI names with personality, grounded in your classifier work."
+302,31,AI & COMPUTER VISION,Curious machine minds,curiousweights.com,Curious Weights,,"AI names with personality, grounded in your classifier work."
+303,31,AI & COMPUTER VISION,Curious machine minds,tensorteacup.com,Tensor Teacup,,"AI names with personality, grounded in your classifier work."
+304,31,AI & COMPUTER VISION,Curious machine minds,inferenceimp.com,Inference Imp,,"AI names with personality, grounded in your classifier work."
+305,31,AI & COMPUTER VISION,Curious machine minds,neuralnoodleclub.com,Neural Noodle Club,,"AI names with personality, grounded in your classifier work."
+306,31,AI & COMPUTER VISION,Curious machine minds,friendlylatent.com,Friendly Latent,,"AI names with personality, grounded in your classifier work."
+307,31,AI & COMPUTER VISION,Curious machine minds,machinemusing.com,Machine Musing,,"AI names with personality, grounded in your classifier work."
+308,31,AI & COMPUTER VISION,Curious machine minds,thoughtfultensor.com,Thoughtful Tensor,,"AI names with personality, grounded in your classifier work."
+309,31,AI & COMPUTER VISION,Curious machine minds,modelmischief.dev,Model Mischief,,"AI names with personality, grounded in your classifier work."
+310,31,AI & COMPUTER VISION,Curious machine minds,tinyinferencehouse.com,Tiny Inference House,,"AI names with personality, grounded in your classifier work."
+311,32,AI & COMPUTER VISION,Computer vision whimsy,pixelpossum.com,Pixel Possum,Yes,"Cameras and recognition, made a little more fun."
+312,32,AI & COMPUTER VISION,Computer vision whimsy,visiongnome.com,Vision Gnome,,"Cameras and recognition, made a little more fun."
+313,32,AI & COMPUTER VISION,Computer vision whimsy,frameferret.com,Frame Ferret,,"Cameras and recognition, made a little more fun."
+314,32,AI & COMPUTER VISION,Computer vision whimsy,lenslemur.com,Lens Lemur,,"Cameras and recognition, made a little more fun."
+315,32,AI & COMPUTER VISION,Computer vision whimsy,cameracrumpet.com,Camera Crumpet,,"Cameras and recognition, made a little more fun."
+316,32,AI & COMPUTER VISION,Computer vision whimsy,pixelpeekaboo.com,Pixel Peekaboo,,"Cameras and recognition, made a little more fun."
+317,32,AI & COMPUTER VISION,Computer vision whimsy,frameandfable.com,Frame And Fable,,"Cameras and recognition, made a little more fun."
+318,32,AI & COMPUTER VISION,Computer vision whimsy,curiouscameraclub.com,Curious Camera Club,,"Cameras and recognition, made a little more fun."
+319,32,AI & COMPUTER VISION,Computer vision whimsy,littlevisionvillage.com,Little Vision Village,,"Cameras and recognition, made a little more fun."
+320,32,AI & COMPUTER VISION,Computer vision whimsy,lensandlogic.dev,Lens And Logic,,"Cameras and recognition, made a little more fun."
+321,33,AI & COMPUTER VISION,Classifier comedy,probablyacardboardbox.com,Probably A Cardboard Box,Yes,Names that admit machine predictions can be delightfully awkward.
+322,33,AI & COMPUTER VISION,Classifier comedy,themodelisguessing.com,The Model Is Guessing,,Names that admit machine predictions can be delightfully awkward.
+323,33,AI & COMPUTER VISION,Classifier comedy,confidentlyabanana.com,Confidently A Banana,,Names that admit machine predictions can be delightfully awkward.
+324,33,AI & COMPUTER VISION,Classifier comedy,labelgoblin.com,Label Goblin,,Names that admit machine predictions can be delightfully awkward.
+325,33,AI & COMPUTER VISION,Classifier comedy,suspiciouslyrecyclable.com,Suspiciously Recyclable,,Names that admit machine predictions can be delightfully awkward.
+326,33,AI & COMPUTER VISION,Classifier comedy,predictionpickle.com,Prediction Pickle,,Names that admit machine predictions can be delightfully awkward.
+327,33,AI & COMPUTER VISION,Classifier comedy,objectorpotato.com,Object Or Potato,,Names that admit machine predictions can be delightfully awkward.
+328,33,AI & COMPUTER VISION,Classifier comedy,tensortantrum.com,Tensor Tantrum,,Names that admit machine predictions can be delightfully awkward.
+329,33,AI & COMPUTER VISION,Classifier comedy,classifythechaos.com,Classify The Chaos,,Names that admit machine predictions can be delightfully awkward.
+330,33,AI & COMPUTER VISION,Classifier comedy,maybeitsabottle.com,Maybe Its A Bottle,,Names that admit machine predictions can be delightfully awkward.
+331,34,AI & COMPUTER VISION,Local AI clubhouse,basementbrainbox.com,Basement Brainbox,Yes,"Your interest in AI machines, local inference, and coding tools."
+332,34,AI & COMPUTER VISION,Local AI clubhouse,offlineoracleclub.com,Offline Oracle Club,,"Your interest in AI machines, local inference, and coding tools."
+333,34,AI & COMPUTER VISION,Local AI clubhouse,localmodellodge.com,Local Model Lodge,,"Your interest in AI machines, local inference, and coding tools."
+334,34,AI & COMPUTER VISION,Local AI clubhouse,homegrowninference.com,Homegrown Inference,,"Your interest in AI machines, local inference, and coding tools."
+335,34,AI & COMPUTER VISION,Local AI clubhouse,desksizedmind.com,Desk Sized Mind,,"Your interest in AI machines, local inference, and coding tools."
+336,34,AI & COMPUTER VISION,Local AI clubhouse,modelinthegarage.com,Model In The Garage,,"Your interest in AI machines, local inference, and coding tools."
+337,34,AI & COMPUTER VISION,Local AI clubhouse,tinytensortown.com,Tiny Tensor Town,,"Your interest in AI machines, local inference, and coding tools."
+338,34,AI & COMPUTER VISION,Local AI clubhouse,locallatentlab.com,Local Latent Lab,,"Your interest in AI machines, local inference, and coding tools."
+339,34,AI & COMPUTER VISION,Local AI clubhouse,quietcomputeclub.com,Quiet Compute Club,,"Your interest in AI machines, local inference, and coding tools."
+340,34,AI & COMPUTER VISION,Local AI clubhouse,athomealgorithms.com,At Home Algorithms,,"Your interest in AI machines, local inference, and coding tools."
+341,35,AI & COMPUTER VISION,Image generation imagination,pixeldaydreamer.com,Pixel Daydreamer,Yes,Visual creativity inspired by your image-generation questions.
+342,35,AI & COMPUTER VISION,Image generation imagination,latentlantern.com,Latent Lantern,,Visual creativity inspired by your image-generation questions.
+343,35,AI & COMPUTER VISION,Image generation imagination,renderraspberry.com,Render Raspberry,,Visual creativity inspired by your image-generation questions.
+344,35,AI & COMPUTER VISION,Image generation imagination,dreamframeden.com,Dream Frame Den,,Visual creativity inspired by your image-generation questions.
+345,35,AI & COMPUTER VISION,Image generation imagination,canvasandcompute.com,Canvas And Compute,,Visual creativity inspired by your image-generation questions.
+346,35,AI & COMPUTER VISION,Image generation imagination,imageimp.com,Image Imp,,Visual creativity inspired by your image-generation questions.
+347,35,AI & COMPUTER VISION,Image generation imagination,latentlemonade.com,Latent Lemonade,,Visual creativity inspired by your image-generation questions.
+348,35,AI & COMPUTER VISION,Image generation imagination,renderribbon.com,Render Ribbon,,Visual creativity inspired by your image-generation questions.
+349,35,AI & COMPUTER VISION,Image generation imagination,pixelpotionworks.com,Pixel Potion Works,,Visual creativity inspired by your image-generation questions.
+350,35,AI & COMPUTER VISION,Image generation imagination,imaginaryexposure.com,Imaginary Exposure,,Visual creativity inspired by your image-generation questions.
+351,36,AI & COMPUTER VISION,GPU and compute humor,vramvacation.com,VRAM Vacation,Yes,Names for ambitious AI hardware and playful build logs.
+352,36,AI & COMPUTER VISION,GPU and compute humor,tensortoaster.com,Tensor Toaster,,Names for ambitious AI hardware and playful build logs.
+353,36,AI & COMPUTER VISION,GPU and compute humor,warmgraphicscard.com,Warm Graphics Card,,Names for ambitious AI hardware and playful build logs.
+354,36,AI & COMPUTER VISION,GPU and compute humor,gpuforbreakfast.com,GPU For Breakfast,,Names for ambitious AI hardware and playful build logs.
+355,36,AI & COMPUTER VISION,GPU and compute humor,framesandfans.com,Frames And Fans,,Names for ambitious AI hardware and playful build logs.
+356,36,AI & COMPUTER VISION,GPU and compute humor,mydeskisaheater.com,My Desk Is A Heater,,Names for ambitious AI hardware and playful build logs.
+357,36,AI & COMPUTER VISION,GPU and compute humor,computecrouton.com,Compute Crouton,,Names for ambitious AI hardware and playful build logs.
+358,36,AI & COMPUTER VISION,GPU and compute humor,vramandjam.com,VRAM And Jam,,Names for ambitious AI hardware and playful build logs.
+359,36,AI & COMPUTER VISION,GPU and compute humor,computecanteen.dev,Compute Canteen,,Names for ambitious AI hardware and playful build logs.
+360,36,AI & COMPUTER VISION,GPU and compute humor,graphicsgoblinclub.com,Graphics Goblin Club,,Names for ambitious AI hardware and playful build logs.
+361,37,AI & COMPUTER VISION,AI maker studio,modelandmetal.com,Model And Metal,Yes,A broader identity for practical AI experiments.
+362,37,AI & COMPUTER VISION,AI maker studio,neuralworkbench.dev,Neural Workbench,,A broader identity for practical AI experiments.
+363,37,AI & COMPUTER VISION,AI maker studio,littleinferencestudio.com,Little Inference Studio,,A broader identity for practical AI experiments.
+364,37,AI & COMPUTER VISION,AI maker studio,practicalpixelworks.com,Practical Pixel Works,,A broader identity for practical AI experiments.
+365,37,AI & COMPUTER VISION,AI maker studio,machinemindmeadow.com,Machine Mind Meadow,,A broader identity for practical AI experiments.
+366,37,AI & COMPUTER VISION,AI maker studio,tensortoolbox.dev,Tensor Toolbox,,A broader identity for practical AI experiments.
+367,37,AI & COMPUTER VISION,AI maker studio,visionandvoltage.com,Vision And Voltage,,A broader identity for practical AI experiments.
+368,37,AI & COMPUTER VISION,AI maker studio,friendlymodelfoundry.com,Friendly Model Foundry,,A broader identity for practical AI experiments.
+369,37,AI & COMPUTER VISION,AI maker studio,applieddaydream.dev,Applied Daydream,,A broader identity for practical AI experiments.
+370,37,AI & COMPUTER VISION,AI maker studio,inferenceandiron.com,Inference And Iron,,A broader identity for practical AI experiments.
+371,38,AI & COMPUTER VISION,Pixels with personality,pixelpudding.com,Pixel Pudding,Yes,"Short visual names that can suit art, AI, or a camera project."
+372,38,AI & COMPUTER VISION,Pixels with personality,lenspebble.com,Lens Pebble,,"Short visual names that can suit art, AI, or a camera project."
+373,38,AI & COMPUTER VISION,Pixels with personality,framefig.com,Frame Fig,,"Short visual names that can suit art, AI, or a camera project."
+374,38,AI & COMPUTER VISION,Pixels with personality,pixelpogo.com,Pixel Pogo,,"Short visual names that can suit art, AI, or a camera project."
+375,38,AI & COMPUTER VISION,Pixels with personality,renderrobin.com,Render Robin,,"Short visual names that can suit art, AI, or a camera project."
+376,38,AI & COMPUTER VISION,Pixels with personality,latentlark.com,Latent Lark,,"Short visual names that can suit art, AI, or a camera project."
+377,38,AI & COMPUTER VISION,Pixels with personality,visionacorn.com,Vision Acorn,,"Short visual names that can suit art, AI, or a camera project."
+378,38,AI & COMPUTER VISION,Pixels with personality,pixelparsnip.com,Pixel Parsnip,,"Short visual names that can suit art, AI, or a camera project."
+379,38,AI & COMPUTER VISION,Pixels with personality,lenslocket.com,Lens Locket,,"Short visual names that can suit art, AI, or a camera project."
+380,38,AI & COMPUTER VISION,Pixels with personality,framefroth.com,Frame Froth,,"Short visual names that can suit art, AI, or a camera project."
+381,39,AI & COMPUTER VISION,Prompt and prediction play,promptpicnic.com,Prompt Picnic,Yes,Fun names for experimenting with generative and predictive tools.
+382,39,AI & COMPUTER VISION,Prompt and prediction play,predictablemischief.com,Predictable Mischief,,Fun names for experimenting with generative and predictive tools.
+383,39,AI & COMPUTER VISION,Prompt and prediction play,promptpancake.com,Prompt Pancake,,Fun names for experimenting with generative and predictive tools.
+384,39,AI & COMPUTER VISION,Prompt and prediction play,latentlunchbox.com,Latent Lunchbox,,Fun names for experimenting with generative and predictive tools.
+385,39,AI & COMPUTER VISION,Prompt and prediction play,tokenteapot.com,Token Teapot,,Fun names for experimenting with generative and predictive tools.
+386,39,AI & COMPUTER VISION,Prompt and prediction play,weightydaydreams.com,Weighty Daydreams,,Fun names for experimenting with generative and predictive tools.
+387,39,AI & COMPUTER VISION,Prompt and prediction play,promptandponder.com,Prompt And Ponder,,Fun names for experimenting with generative and predictive tools.
+388,39,AI & COMPUTER VISION,Prompt and prediction play,tokentumble.com,Token Tumble,,Fun names for experimenting with generative and predictive tools.
+389,39,AI & COMPUTER VISION,Prompt and prediction play,predictionparade.com,Prediction Parade,,Fun names for experimenting with generative and predictive tools.
+390,39,AI & COMPUTER VISION,Prompt and prediction play,samplesomewonder.com,Sample Some Wonder,,Fun names for experimenting with generative and predictive tools.
+391,40,AI & COMPUTER VISION,Clean AI brands,latentharbor.com,Latent Harbor,Yes,A more restrained direction for vision and model tooling.
+392,40,AI & COMPUTER VISION,Clean AI brands,framethicket.com,Frame Thicket,,A more restrained direction for vision and model tooling.
+393,40,AI & COMPUTER VISION,Clean AI brands,inferencegrove.dev,Inference Grove,,A more restrained direction for vision and model tooling.
+394,40,AI & COMPUTER VISION,Clean AI brands,tensorcove.com,Tensor Cove,,A more restrained direction for vision and model tooling.
+395,40,AI & COMPUTER VISION,Clean AI brands,modelhearth.com,Model Hearth,,A more restrained direction for vision and model tooling.
+396,40,AI & COMPUTER VISION,Clean AI brands,visionquarry.com,Vision Quarry,,A more restrained direction for vision and model tooling.
+397,40,AI & COMPUTER VISION,Clean AI brands,pixelcurrent.dev,Pixel Current,,A more restrained direction for vision and model tooling.
+398,40,AI & COMPUTER VISION,Clean AI brands,latentorchard.com,Latent Orchard,,A more restrained direction for vision and model tooling.
+399,40,AI & COMPUTER VISION,Clean AI brands,lenslaneway.com,Lens Laneway,,A more restrained direction for vision and model tooling.
+400,40,AI & COMPUTER VISION,Clean AI brands,neuralpebble.com,Neural Pebble,,A more restrained direction for vision and model tooling.
+401,41,WATCHES & WEARABLES,Playful timekeeping,tickletheclock.com,Tickle The Clock,Yes,Inspired by customWatch and building your own devices.
+402,41,WATCHES & WEARABLES,Playful timekeeping,wristrascal.com,Wrist Rascal,,Inspired by customWatch and building your own devices.
+403,41,WATCHES & WEARABLES,Playful timekeeping,minutemischief.com,Minute Mischief,,Inspired by customWatch and building your own devices.
+404,41,WATCHES & WEARABLES,Playful timekeeping,ticktart.com,Tick Tart,,Inspired by customWatch and building your own devices.
+405,41,WATCHES & WEARABLES,Playful timekeeping,timepiecetinker.com,Timepiece Tinker,,Inspired by customWatch and building your own devices.
+406,41,WATCHES & WEARABLES,Playful timekeeping,secondsandsprinkles.com,Seconds And Sprinkles,,Inspired by customWatch and building your own devices.
+407,41,WATCHES & WEARABLES,Playful timekeeping,wristwander.com,Wrist Wander,,Inspired by customWatch and building your own devices.
+408,41,WATCHES & WEARABLES,Playful timekeeping,tickgoblin.com,Tick Goblin,,Inspired by customWatch and building your own devices.
+409,41,WATCHES & WEARABLES,Playful timekeeping,hourhedgehog.com,Hour Hedgehog,,Inspired by customWatch and building your own devices.
+410,41,WATCHES & WEARABLES,Playful timekeeping,pocketsecond.com,Pocket Second,,Inspired by customWatch and building your own devices.
+411,42,WATCHES & WEARABLES,Wearable workshop,wristworkbench.dev,Wrist Workbench,Yes,"Names for a custom wearable, build diary, or device studio."
+412,42,WATCHES & WEARABLES,Wearable workshop,strapandscript.com,Strap And Script,,"Names for a custom wearable, build diary, or device studio."
+413,42,WATCHES & WEARABLES,Wearable workshop,wearablewaffle.com,Wearable Waffle,,"Names for a custom wearable, build diary, or device studio."
+414,42,WATCHES & WEARABLES,Wearable workshop,wristwidgetworks.com,Wrist Widget Works,,"Names for a custom wearable, build diary, or device studio."
+415,42,WATCHES & WEARABLES,Wearable workshop,smallscreensociety.com,Small Screen Society,,"Names for a custom wearable, build diary, or device studio."
+416,42,WATCHES & WEARABLES,Wearable workshop,tinydialstudio.com,Tiny Dial Studio,,"Names for a custom wearable, build diary, or device studio."
+417,42,WATCHES & WEARABLES,Wearable workshop,straplabstories.com,Strap Lab Stories,,"Names for a custom wearable, build diary, or device studio."
+418,42,WATCHES & WEARABLES,Wearable workshop,wristandwire.com,Wrist And Wire,,"Names for a custom wearable, build diary, or device studio."
+419,42,WATCHES & WEARABLES,Wearable workshop,wearablewonderland.dev,Wearable Wonderland,,"Names for a custom wearable, build diary, or device studio."
+420,42,WATCHES & WEARABLES,Wearable workshop,littlewristmachine.com,Little Wrist Machine,,"Names for a custom wearable, build diary, or device studio."
+421,43,WATCHES & WEARABLES,Clockwork animals,tickturtle.com,Tick Turtle,Yes,Mascot-ready names for watches and compact electronics.
+422,43,WATCHES & WEARABLES,Clockwork animals,clockworkcapybara.com,Clockwork Capybara,,Mascot-ready names for watches and compact electronics.
+423,43,WATCHES & WEARABLES,Clockwork animals,wristwren.com,Wrist Wren,,Mascot-ready names for watches and compact electronics.
+424,43,WATCHES & WEARABLES,Clockwork animals,minutemarmot.com,Minute Marmot,,Mascot-ready names for watches and compact electronics.
+425,43,WATCHES & WEARABLES,Clockwork animals,secondsparrow.com,Second Sparrow,,Mascot-ready names for watches and compact electronics.
+426,43,WATCHES & WEARABLES,Clockwork animals,dialduck.com,Dial Duck,,Mascot-ready names for watches and compact electronics.
+427,43,WATCHES & WEARABLES,Clockwork animals,chronocricket.com,Chrono Cricket,,Mascot-ready names for watches and compact electronics.
+428,43,WATCHES & WEARABLES,Clockwork animals,ticktoad.com,Tick Toad,,Mascot-ready names for watches and compact electronics.
+429,43,WATCHES & WEARABLES,Clockwork animals,watchfulwombat.com,Watchful Wombat,,Mascot-ready names for watches and compact electronics.
+430,43,WATCHES & WEARABLES,Clockwork animals,hourotter.com,Hour Otter,,Mascot-ready names for watches and compact electronics.
+431,44,WATCHES & WEARABLES,Time plus code,chronocommit.dev,Chrono Commit,Yes,The intersection of programming and timekeeping.
+432,44,WATCHES & WEARABLES,Time plus code,tickandtemplate.com,Tick And Template,,The intersection of programming and timekeeping.
+433,44,WATCHES & WEARABLES,Time plus code,wristruntime.com,Wrist Runtime,,The intersection of programming and timekeeping.
+434,44,WATCHES & WEARABLES,Time plus code,dialanddebug.com,Dial And Debug,,The intersection of programming and timekeeping.
+435,44,WATCHES & WEARABLES,Time plus code,secondsinsyntax.com,Seconds In Syntax,,The intersection of programming and timekeeping.
+436,44,WATCHES & WEARABLES,Time plus code,clockloopclub.com,Clock Loop Club,,The intersection of programming and timekeeping.
+437,44,WATCHES & WEARABLES,Time plus code,timerandtuple.com,Timer And Tuple,,The intersection of programming and timekeeping.
+438,44,WATCHES & WEARABLES,Time plus code,millisecondmeadow.com,Millisecond Meadow,,The intersection of programming and timekeeping.
+439,44,WATCHES & WEARABLES,Time plus code,wearablebytecode.com,Wearable Bytecode,,The intersection of programming and timekeeping.
+440,44,WATCHES & WEARABLES,Time plus code,compiletheclock.com,Compile The Clock,,The intersection of programming and timekeeping.
+441,45,WATCHES & WEARABLES,Tiny screen charm,miniscreenmischief.com,Mini Screen Mischief,Yes,Small displays and pocket interfaces with personality.
+442,45,WATCHES & WEARABLES,Tiny screen charm,littlepixeldial.com,Little Pixel Dial,,Small displays and pocket interfaces with personality.
+443,45,WATCHES & WEARABLES,Tiny screen charm,wristwindowworks.com,Wrist Window Works,,Small displays and pocket interfaces with personality.
+444,45,WATCHES & WEARABLES,Tiny screen charm,pocketviewport.dev,Pocket Viewport,,Small displays and pocket interfaces with personality.
+445,45,WATCHES & WEARABLES,Tiny screen charm,thumbsizedtheater.com,Thumb Sized Theater,,Small displays and pocket interfaces with personality.
+446,45,WATCHES & WEARABLES,Tiny screen charm,smallscreenspark.com,Small Screen Spark,,Small displays and pocket interfaces with personality.
+447,45,WATCHES & WEARABLES,Tiny screen charm,tinydisplayden.com,Tiny Display Den,,Small displays and pocket interfaces with personality.
+448,45,WATCHES & WEARABLES,Tiny screen charm,buttonsizedworld.com,Button Sized World,,Small displays and pocket interfaces with personality.
+449,45,WATCHES & WEARABLES,Tiny screen charm,pixelonyourwrist.com,Pixel On Your Wrist,,Small displays and pocket interfaces with personality.
+450,45,WATCHES & WEARABLES,Tiny screen charm,littleluminousface.com,Little Luminous Face,,Small displays and pocket interfaces with personality.
+451,46,WATCHES & WEARABLES,Watch humor,timeisanestimate.com,Time Is An Estimate,Yes,Funny names that lean into the quirks of homemade wearables.
+452,46,WATCHES & WEARABLES,Watch humor,tickhappens.com,Tick Happens,,Funny names that lean into the quirks of homemade wearables.
+453,46,WATCHES & WEARABLES,Watch humor,wristcasescenario.com,Wrist Case Scenario,,Funny names that lean into the quirks of homemade wearables.
+454,46,WATCHES & WEARABLES,Watch humor,slightlylatewatch.com,Slightly Late Watch,,Funny names that lean into the quirks of homemade wearables.
+455,46,WATCHES & WEARABLES,Watch humor,mywatchneedsareboot.com,My Watch Needs A Reboot,,Funny names that lean into the quirks of homemade wearables.
+456,46,WATCHES & WEARABLES,Watch humor,probablypastmidnight.com,Probably Past Midnight,,Funny names that lean into the quirks of homemade wearables.
+457,46,WATCHES & WEARABLES,Watch humor,clockneedscoffee.com,Clock Needs Coffee,,Funny names that lean into the quirks of homemade wearables.
+458,46,WATCHES & WEARABLES,Watch humor,timeflieswhenitcompiles.com,Time Flies When It Compiles,,Funny names that lean into the quirks of homemade wearables.
+459,46,WATCHES & WEARABLES,Watch humor,fivemoremilliseconds.com,Five More Milliseconds,,Funny names that lean into the quirks of homemade wearables.
+460,46,WATCHES & WEARABLES,Watch humor,thesecondsareloose.com,The Seconds Are Loose,,Funny names that lean into the quirks of homemade wearables.
+461,47,WATCHES & WEARABLES,Minimal wearable brands,dialmoss.com,Dial Moss,Yes,"Short, calm concepts for something worn every day."
+462,47,WATCHES & WEARABLES,Minimal wearable brands,wristmint.com,Wrist Mint,,"Short, calm concepts for something worn every day."
+463,47,WATCHES & WEARABLES,Minimal wearable brands,tickpebble.com,Tick Pebble,,"Short, calm concepts for something worn every day."
+464,47,WATCHES & WEARABLES,Minimal wearable brands,chronofern.com,Chrono Fern,,"Short, calm concepts for something worn every day."
+465,47,WATCHES & WEARABLES,Minimal wearable brands,dialcub.com,Dial Cub,,"Short, calm concepts for something worn every day."
+466,47,WATCHES & WEARABLES,Minimal wearable brands,wristwisp.com,Wrist Wisp,,"Short, calm concepts for something worn every day."
+467,47,WATCHES & WEARABLES,Minimal wearable brands,tickcove.com,Tick Cove,,"Short, calm concepts for something worn every day."
+468,47,WATCHES & WEARABLES,Minimal wearable brands,secondfig.com,Second Fig,,"Short, calm concepts for something worn every day."
+469,47,WATCHES & WEARABLES,Minimal wearable brands,dialdrift.com,Dial Drift,,"Short, calm concepts for something worn every day."
+470,47,WATCHES & WEARABLES,Minimal wearable brands,minuteember.com,Minute Ember,,"Short, calm concepts for something worn every day."
+471,48,WATCHES & WEARABLES,Handmade time,hoursbyhand.com,Hours By Hand,Yes,"Names with a craft feel, built around the custom-device project."
+472,48,WATCHES & WEARABLES,Handmade time,tinkerthetime.com,Tinker The Time,,"Names with a craft feel, built around the custom-device project."
+473,48,WATCHES & WEARABLES,Handmade time,littledialworkshop.com,Little Dial Workshop,,"Names with a craft feel, built around the custom-device project."
+474,48,WATCHES & WEARABLES,Handmade time,craftedseconds.com,Crafted Seconds,,"Names with a craft feel, built around the custom-device project."
+475,48,WATCHES & WEARABLES,Handmade time,timeonthebench.com,Time On The Bench,,"Names with a craft feel, built around the custom-device project."
+476,48,WATCHES & WEARABLES,Handmade time,wristcraftstories.com,Wristcraft Stories,,"Names with a craft feel, built around the custom-device project."
+477,48,WATCHES & WEARABLES,Handmade time,homemadehours.com,Homemade Hours,,"Names with a craft feel, built around the custom-device project."
+478,48,WATCHES & WEARABLES,Handmade time,brassandbuttons.com,Brass And Buttons,,"Names with a craft feel, built around the custom-device project."
+479,48,WATCHES & WEARABLES,Handmade time,dialdaydreams.com,Dial Daydreams,,"Names with a craft feel, built around the custom-device project."
+480,48,WATCHES & WEARABLES,Handmade time,wearyourprototype.com,Wear Your Prototype,,"Names with a craft feel, built around the custom-device project."
+481,49,WATCHES & WEARABLES,Nighttime clocks,moonlitminutes.com,Moonlit Minutes,Yes,An imaginative late-night remix of your wearable interests.
+482,49,WATCHES & WEARABLES,Nighttime clocks,duskdial.com,Dusk Dial,,An imaginative late-night remix of your wearable interests.
+483,49,WATCHES & WEARABLES,Nighttime clocks,midnightonthewrist.com,Midnight On The Wrist,,An imaginative late-night remix of your wearable interests.
+484,49,WATCHES & WEARABLES,Nighttime clocks,starlightseconds.com,Starlight Seconds,,An imaginative late-night remix of your wearable interests.
+485,49,WATCHES & WEARABLES,Nighttime clocks,lunarticktock.com,Lunar Tick Tock,,An imaginative late-night remix of your wearable interests.
+486,49,WATCHES & WEARABLES,Nighttime clocks,nightowldial.com,Night Owl Dial,,An imaginative late-night remix of your wearable interests.
+487,49,WATCHES & WEARABLES,Nighttime clocks,wristatdusk.com,Wrist At Dusk,,An imaginative late-night remix of your wearable interests.
+488,49,WATCHES & WEARABLES,Nighttime clocks,neonminute.com,Neon Minute,,An imaginative late-night remix of your wearable interests.
+489,49,WATCHES & WEARABLES,Nighttime clocks,lanterntimepiece.com,Lantern Timepiece,,An imaginative late-night remix of your wearable interests.
+490,49,WATCHES & WEARABLES,Nighttime clocks,afterhourschrono.com,After Hours Chrono,,An imaginative late-night remix of your wearable interests.
+491,50,WATCHES & WEARABLES,Connected wearables,wristpacket.com,Wrist Packet,Yes,"Code, connectivity, and gadgets you can take with you."
+492,50,WATCHES & WEARABLES,Connected wearables,wearablewaypoint.com,Wearable Waypoint,,"Code, connectivity, and gadgets you can take with you."
+493,50,WATCHES & WEARABLES,Connected wearables,ticktelemetry.com,Tick Telemetry,,"Code, connectivity, and gadgets you can take with you."
+494,50,WATCHES & WEARABLES,Connected wearables,pocketsignalclock.com,Pocket Signal Clock,,"Code, connectivity, and gadgets you can take with you."
+495,50,WATCHES & WEARABLES,Connected wearables,dialonline.dev,Dial Online,,"Code, connectivity, and gadgets you can take with you."
+496,50,WATCHES & WEARABLES,Connected wearables,wristping.com,Wrist Ping,,"Code, connectivity, and gadgets you can take with you."
+497,50,WATCHES & WEARABLES,Connected wearables,bluetoothandbuttons.com,Bluetooth And Buttons,,"Code, connectivity, and gadgets you can take with you."
+498,50,WATCHES & WEARABLES,Connected wearables,strapandsignal.com,Strap And Signal,,"Code, connectivity, and gadgets you can take with you."
+499,50,WATCHES & WEARABLES,Connected wearables,minutemesh.com,Minute Mesh,,"Code, connectivity, and gadgets you can take with you."
+500,50,WATCHES & WEARABLES,Connected wearables,wearablecircuitclub.com,Wearable Circuit Club,,"Code, connectivity, and gadgets you can take with you."
+501,51,HACKATHONS & BUILD CULTURE,Hackathon humor,demoordisaster.com,Demo Or Disaster,Yes,"Names for frantic demos, clever fixes, and sleep-deprived teams."
+502,51,HACKATHONS & BUILD CULTURE,Hackathon humor,deadlinedumpling.com,Deadline Dumpling,,"Names for frantic demos, clever fixes, and sleep-deprived teams."
+503,51,HACKATHONS & BUILD CULTURE,Hackathon humor,threenightsoneprototype.com,Three Nights One Prototype,,"Names for frantic demos, clever fixes, and sleep-deprived teams."
+504,51,HACKATHONS & BUILD CULTURE,Hackathon humor,pitchandpanic.com,Pitch And Panic,,"Names for frantic demos, clever fixes, and sleep-deprived teams."
+505,51,HACKATHONS & BUILD CULTURE,Hackathon humor,lastminutemagic.dev,Last Minute Magic,,"Names for frantic demos, clever fixes, and sleep-deprived teams."
+506,51,HACKATHONS & BUILD CULTURE,Hackathon humor,demogremlin.com,Demo Gremlin,,"Names for frantic demos, clever fixes, and sleep-deprived teams."
+507,51,HACKATHONS & BUILD CULTURE,Hackathon humor,shipbeforebreakfast.com,Ship Before Breakfast,,"Names for frantic demos, clever fixes, and sleep-deprived teams."
+508,51,HACKATHONS & BUILD CULTURE,Hackathon humor,extensioncordempire.com,Extension Cord Empire,,"Names for frantic demos, clever fixes, and sleep-deprived teams."
+509,51,HACKATHONS & BUILD CULTURE,Hackathon humor,prototypepillow.com,Prototype Pillow,,"Names for frantic demos, clever fixes, and sleep-deprived teams."
+510,51,HACKATHONS & BUILD CULTURE,Hackathon humor,thedemoactuallyworked.com,The Demo Actually Worked,,"Names for frantic demos, clever fixes, and sleep-deprived teams."
+511,52,HACKATHONS & BUILD CULTURE,Late-night build logs,midnightmakebelieve.com,Midnight Makebelieve,Yes,"A creative style drawn from hackathons, without assuming your sleep schedule."
+512,52,HACKATHONS & BUILD CULTURE,Late-night build logs,afterhoursassembler.com,After Hours Assembler,,"A creative style drawn from hackathons, without assuming your sleep schedule."
+513,52,HACKATHONS & BUILD CULTURE,Late-night build logs,nightowlworkbench.com,Night Owl Workbench,,"A creative style drawn from hackathons, without assuming your sleep schedule."
+514,52,HACKATHONS & BUILD CULTURE,Late-night build logs,twoamprototype.com,Two AM Prototype,,"A creative style drawn from hackathons, without assuming your sleep schedule."
+515,52,HACKATHONS & BUILD CULTURE,Late-night build logs,dusktodebug.com,Dusk To Debug,,"A creative style drawn from hackathons, without assuming your sleep schedule."
+516,52,HACKATHONS & BUILD CULTURE,Late-night build logs,moonlitmerge.dev,Moonlit Merge,,"A creative style drawn from hackathons, without assuming your sleep schedule."
+517,52,HACKATHONS & BUILD CULTURE,Late-night build logs,lanternandlaptop.com,Lantern And Laptop,,"A creative style drawn from hackathons, without assuming your sleep schedule."
+518,52,HACKATHONS & BUILD CULTURE,Late-night build logs,nightshiftnotebook.com,Night Shift Notebook,,"A creative style drawn from hackathons, without assuming your sleep schedule."
+519,52,HACKATHONS & BUILD CULTURE,Late-night build logs,sleeplesssolderclub.com,Sleepless Solder Club,,"A creative style drawn from hackathons, without assuming your sleep schedule."
+520,52,HACKATHONS & BUILD CULTURE,Late-night build logs,midnightbuildbungalow.com,Midnight Build Bungalow,,"A creative style drawn from hackathons, without assuming your sleep schedule."
+521,53,HACKATHONS & BUILD CULTURE,Weekend inventions,weekendwidgetclub.com,Weekend Widget Club,Yes,Broad names for personal projects and short bursts of invention.
+522,53,HACKATHONS & BUILD CULTURE,Weekend inventions,saturdayservo.com,Saturday Servo,,Broad names for personal projects and short bursts of invention.
+523,53,HACKATHONS & BUILD CULTURE,Weekend inventions,sundaysideproject.com,Sunday Side Project,,Broad names for personal projects and short bursts of invention.
+524,53,HACKATHONS & BUILD CULTURE,Weekend inventions,smallweekendwonder.com,Small Weekend Wonder,,Broad names for personal projects and short bursts of invention.
+525,53,HACKATHONS & BUILD CULTURE,Weekend inventions,sparetimespark.com,Spare Time Spark,,Broad names for personal projects and short bursts of invention.
+526,53,HACKATHONS & BUILD CULTURE,Weekend inventions,hobbyhourhardware.com,Hobby Hour Hardware,,Broad names for personal projects and short bursts of invention.
+527,53,HACKATHONS & BUILD CULTURE,Weekend inventions,weekendworkbench.dev,Weekend Workbench,,Broad names for personal projects and short bursts of invention.
+528,53,HACKATHONS & BUILD CULTURE,Weekend inventions,littledaysbigbuilds.com,Little Days Big Builds,,Broad names for personal projects and short bursts of invention.
+529,53,HACKATHONS & BUILD CULTURE,Weekend inventions,saturdaysyntax.dev,Saturday Syntax,,Broad names for personal projects and short bursts of invention.
+530,53,HACKATHONS & BUILD CULTURE,Weekend inventions,freetimefoundry.com,Free Time Foundry,,Broad names for personal projects and short bursts of invention.
+531,54,HACKATHONS & BUILD CULTURE,Prototype personalities,prototypepossum.com,Prototype Possum,Yes,Names that celebrate the experiment before it becomes polished.
+532,54,HACKATHONS & BUILD CULTURE,Prototype personalities,unfinishedunicorn.dev,Unfinished Unicorn,,Names that celebrate the experiment before it becomes polished.
+533,54,HACKATHONS & BUILD CULTURE,Prototype personalities,betabadger.com,Beta Badger,,Names that celebrate the experiment before it becomes polished.
+534,54,HACKATHONS & BUILD CULTURE,Prototype personalities,roughdraftrobot.com,Rough Draft Robot,,Names that celebrate the experiment before it becomes polished.
+535,54,HACKATHONS & BUILD CULTURE,Prototype personalities,prototypepogo.com,Prototype Pogo,,Names that celebrate the experiment before it becomes polished.
+536,54,HACKATHONS & BUILD CULTURE,Prototype personalities,halfbuilthappiness.com,Half Built Happiness,,Names that celebrate the experiment before it becomes polished.
+537,54,HACKATHONS & BUILD CULTURE,Prototype personalities,wobblyfirstversion.com,Wobbly First Version,,Names that celebrate the experiment before it becomes polished.
+538,54,HACKATHONS & BUILD CULTURE,Prototype personalities,littlebetabeast.com,Little Beta Beast,,Names that celebrate the experiment before it becomes polished.
+539,54,HACKATHONS & BUILD CULTURE,Prototype personalities,almostaninvention.com,Almost An Invention,,Names that celebrate the experiment before it becomes polished.
+540,54,HACKATHONS & BUILD CULTURE,Prototype personalities,prototypeparade.dev,Prototype Parade,,Names that celebrate the experiment before it becomes polished.
+541,55,HACKATHONS & BUILD CULTURE,Snack-fueled coding,chipsandchips.dev,Chips And Chips,Yes,"Playful hackathon imagery, used as a naming direction."
+542,55,HACKATHONS & BUILD CULTURE,Snack-fueled coding,snackoverflow.com,Snack Overflow,,"Playful hackathon imagery, used as a naming direction."
+543,55,HACKATHONS & BUILD CULTURE,Snack-fueled coding,cerealandserial.com,Cereal And Serial,,"Playful hackathon imagery, used as a naming direction."
+544,55,HACKATHONS & BUILD CULTURE,Snack-fueled coding,pretzelprocessor.com,Pretzel Processor,,"Playful hackathon imagery, used as a naming direction."
+545,55,HACKATHONS & BUILD CULTURE,Snack-fueled coding,cookieandcompiler.com,Cookie And Compiler,,"Playful hackathon imagery, used as a naming direction."
+546,55,HACKATHONS & BUILD CULTURE,Snack-fueled coding,noodlepowered.dev,Noodle Powered,,"Playful hackathon imagery, used as a naming direction."
+547,55,HACKATHONS & BUILD CULTURE,Snack-fueled coding,bytesizebreakfast.com,Byte Size Breakfast,,"Playful hackathon imagery, used as a naming direction."
+548,55,HACKATHONS & BUILD CULTURE,Snack-fueled coding,toastandtelemetry.com,Toast And Telemetry,,"Playful hackathon imagery, used as a naming direction."
+549,55,HACKATHONS & BUILD CULTURE,Snack-fueled coding,burritobreakpoint.com,Burrito Breakpoint,,"Playful hackathon imagery, used as a naming direction."
+550,55,HACKATHONS & BUILD CULTURE,Snack-fueled coding,snackdrivendevelopment.com,Snack Driven Development,,"Playful hackathon imagery, used as a naming direction."
+551,56,HACKATHONS & BUILD CULTURE,Side-quest headquarters,sidequestshelf.com,Side Quest Shelf,Yes,Names for a collection of projects that keep branching out.
+552,56,HACKATHONS & BUILD CULTURE,Side-quest headquarters,detourdeveloper.dev,Detour Developer,,Names for a collection of projects that keep branching out.
+553,56,HACKATHONS & BUILD CULTURE,Side-quest headquarters,curiousdiversions.com,Curious Diversions,,Names for a collection of projects that keep branching out.
+554,56,HACKATHONS & BUILD CULTURE,Side-quest headquarters,optionalobjective.dev,Optional Objective,,Names for a collection of projects that keep branching out.
+555,56,HACKATHONS & BUILD CULTURE,Side-quest headquarters,thetinkertrail.com,The Tinker Trail,,Names for a collection of projects that keep branching out.
+556,56,HACKATHONS & BUILD CULTURE,Side-quest headquarters,projectrabbithole.com,Project Rabbit Hole,,Names for a collection of projects that keep branching out.
+557,56,HACKATHONS & BUILD CULTURE,Side-quest headquarters,sidemissionstudio.com,Side Mission Studio,,Names for a collection of projects that keep branching out.
+558,56,HACKATHONS & BUILD CULTURE,Side-quest headquarters,littledetourlab.com,Little Detour Lab,,Names for a collection of projects that keep branching out.
+559,56,HACKATHONS & BUILD CULTURE,Side-quest headquarters,questinthegarage.com,Quest In The Garage,,Names for a collection of projects that keep branching out.
+560,56,HACKATHONS & BUILD CULTURE,Side-quest headquarters,sparetimesidekick.com,Spare Time Sidekick,,Names for a collection of projects that keep branching out.
+561,57,HACKATHONS & BUILD CULTURE,Maker club energy,curiousbenchclub.com,Curious Bench Club,Yes,"Friendly names for communities, build nights, or a shared portfolio."
+562,57,HACKATHONS & BUILD CULTURE,Maker club energy,thetinkertable.com,The Tinker Table,,"Friendly names for communities, build nights, or a shared portfolio."
+563,57,HACKATHONS & BUILD CULTURE,Maker club energy,makersandmischief.com,Makers And Mischief,,"Friendly names for communities, build nights, or a shared portfolio."
+564,57,HACKATHONS & BUILD CULTURE,Maker club energy,friendlyprototypeclub.com,Friendly Prototype Club,,"Friendly names for communities, build nights, or a shared portfolio."
+565,57,HACKATHONS & BUILD CULTURE,Maker club energy,bitsatthebench.com,Bits At The Bench,,"Friendly names for communities, build nights, or a shared portfolio."
+566,57,HACKATHONS & BUILD CULTURE,Maker club energy,thebuildbunch.dev,The Build Bunch,,"Friendly names for communities, build nights, or a shared portfolio."
+567,57,HACKATHONS & BUILD CULTURE,Maker club energy,inventorspicnic.com,Inventors Picnic,,"Friendly names for communities, build nights, or a shared portfolio."
+568,57,HACKATHONS & BUILD CULTURE,Maker club energy,smallprojectsociety.com,Small Project Society,,"Friendly names for communities, build nights, or a shared portfolio."
+569,57,HACKATHONS & BUILD CULTURE,Maker club energy,workshopwanderers.com,Workshop Wanderers,,"Friendly names for communities, build nights, or a shared portfolio."
+570,57,HACKATHONS & BUILD CULTURE,Maker club energy,tinkertogether.tech,Tinker Together,,"Friendly names for communities, build nights, or a shared portfolio."
+571,58,HACKATHONS & BUILD CULTURE,Bench-top adventure,workbenchwonderland.com,Workbench Wonderland,Yes,"A workshop remixed as a small, imaginative world."
+572,58,HACKATHONS & BUILD CULTURE,Bench-top adventure,partsdrawerportal.com,Parts Drawer Portal,,"A workshop remixed as a small, imaginative world."
+573,58,HACKATHONS & BUILD CULTURE,Bench-top adventure,thebenchbeyond.com,The Bench Beyond,,"A workshop remixed as a small, imaginative world."
+574,58,HACKATHONS & BUILD CULTURE,Bench-top adventure,toolboxtreasuremap.com,Toolbox Treasure Map,,"A workshop remixed as a small, imaginative world."
+575,58,HACKATHONS & BUILD CULTURE,Bench-top adventure,littlegaragegalaxy.com,Little Garage Galaxy,,"A workshop remixed as a small, imaginative world."
+576,58,HACKATHONS & BUILD CULTURE,Bench-top adventure,drawerofdaydreams.com,Drawer Of Daydreams,,"A workshop remixed as a small, imaginative world."
+577,58,HACKATHONS & BUILD CULTURE,Bench-top adventure,solderingsidequest.com,Soldering Side Quest,,"A workshop remixed as a small, imaginative world."
+578,58,HACKATHONS & BUILD CULTURE,Bench-top adventure,sparepartssafari.com,Spare Parts Safari,,"A workshop remixed as a small, imaginative world."
+579,58,HACKATHONS & BUILD CULTURE,Bench-top adventure,benchtopbazaar.com,Bench Top Bazaar,,"A workshop remixed as a small, imaginative world."
+580,58,HACKATHONS & BUILD CULTURE,Bench-top adventure,cabinetofcontraptions.com,Cabinet Of Contraptions,,"A workshop remixed as a small, imaginative world."
+581,59,HACKATHONS & BUILD CULTURE,Launch-day comedy,deployandprayclub.com,Deploy And Pray Club,Yes,Names for the moment a side project finally meets the world.
+582,59,HACKATHONS & BUILD CULTURE,Launch-day comedy,launchlunchbox.com,Launch Lunchbox,,Names for the moment a side project finally meets the world.
+583,59,HACKATHONS & BUILD CULTURE,Launch-day comedy,shipitsquirrel.com,Ship It Squirrel,,Names for the moment a side project finally meets the world.
+584,59,HACKATHONS & BUILD CULTURE,Launch-day comedy,releaseruckus.com,Release Ruckus,,Names for the moment a side project finally meets the world.
+585,59,HACKATHONS & BUILD CULTURE,Launch-day comedy,versiononevibes.com,Version One Vibes,,Names for the moment a side project finally meets the world.
+586,59,HACKATHONS & BUILD CULTURE,Launch-day comedy,launchinslippers.com,Launch In Slippers,,Names for the moment a side project finally meets the world.
+587,59,HACKATHONS & BUILD CULTURE,Launch-day comedy,deploythedumpling.com,Deploy The Dumpling,,Names for the moment a side project finally meets the world.
+588,59,HACKATHONS & BUILD CULTURE,Launch-day comedy,shipsomeshenanigans.com,Ship Some Shenanigans,,Names for the moment a side project finally meets the world.
+589,59,HACKATHONS & BUILD CULTURE,Launch-day comedy,demodaydream.com,Demo Daydream,,Names for the moment a side project finally meets the world.
+590,59,HACKATHONS & BUILD CULTURE,Launch-day comedy,helloworldhooray.com,Hello World Hooray,,Names for the moment a side project finally meets the world.
+591,60,HACKATHONS & BUILD CULTURE,Broad builder brands,curiositycargo.com,Curiosity Cargo,Yes,Flexible identities for the next project as well as the current one.
+592,60,HACKATHONS & BUILD CULTURE,Broad builder brands,oddlittleworks.com,Odd Little Works,,Flexible identities for the next project as well as the current one.
+593,60,HACKATHONS & BUILD CULTURE,Broad builder brands,theinventionnook.com,The Invention Nook,,Flexible identities for the next project as well as the current one.
+594,60,HACKATHONS & BUILD CULTURE,Broad builder brands,smallwonderfoundry.com,Small Wonder Foundry,,Flexible identities for the next project as well as the current one.
+595,60,HACKATHONS & BUILD CULTURE,Broad builder brands,buildandbumble.com,Build And Bumble,,Flexible identities for the next project as well as the current one.
+596,60,HACKATHONS & BUILD CULTURE,Broad builder brands,curiouslittlestudio.com,Curious Little Studio,,Flexible identities for the next project as well as the current one.
+597,60,HACKATHONS & BUILD CULTURE,Broad builder brands,tinkertrove.dev,Tinker Trove,,Flexible identities for the next project as well as the current one.
+598,60,HACKATHONS & BUILD CULTURE,Broad builder brands,practicalwhimsyworks.com,Practical Whimsy Works,,Flexible identities for the next project as well as the current one.
+599,60,HACKATHONS & BUILD CULTURE,Broad builder brands,benchtobeyond.com,Bench To Beyond,,Flexible identities for the next project as well as the current one.
+600,60,HACKATHONS & BUILD CULTURE,Broad builder brands,bitsofbravery.com,Bits Of Bravery,,Flexible identities for the next project as well as the current one.
+601,61,SERVERS & NETWORKS,Homelab humor,rackraccoon.com,Rack Raccoon,Yes,Inspired by your server hardware and memory questions.
+602,61,SERVERS & NETWORKS,Homelab humor,serverinslippers.com,Server In Slippers,,Inspired by your server hardware and memory questions.
+603,61,SERVERS & NETWORKS,Homelab humor,basementbyteclub.com,Basement Byte Club,,Inspired by your server hardware and memory questions.
+604,61,SERVERS & NETWORKS,Homelab humor,myclosethasuptime.com,My Closet Has Uptime,,Inspired by your server hardware and memory questions.
+605,61,SERVERS & NETWORKS,Homelab humor,fannoisefoundry.com,Fan Noise Foundry,,Inspired by your server hardware and memory questions.
+606,61,SERVERS & NETWORKS,Homelab humor,domesticdatacenter.com,Domestic Datacenter,,Inspired by your server hardware and memory questions.
+607,61,SERVERS & NETWORKS,Homelab humor,littlerackrascal.com,Little Rack Rascal,,Inspired by your server hardware and memory questions.
+608,61,SERVERS & NETWORKS,Homelab humor,sofasideserver.com,Sofa Side Server,,Inspired by your server hardware and memory questions.
+609,61,SERVERS & NETWORKS,Homelab humor,serverneedsahug.com,Server Needs A Hug,,Inspired by your server hardware and memory questions.
+610,61,SERVERS & NETWORKS,Homelab humor,homelabhiccup.com,Home Lab Hiccup,,Inspired by your server hardware and memory questions.
+611,62,SERVERS & NETWORKS,Friendly server brands,rackandroot.dev,Rack And Root,Yes,"Clean names for a homelab site, dashboard, or technical blog."
+612,62,SERVERS & NETWORKS,Friendly server brands,serversprout.com,Server Sprout,,"Clean names for a homelab site, dashboard, or technical blog."
+613,62,SERVERS & NETWORKS,Friendly server brands,quietrackclub.com,Quiet Rack Club,,"Clean names for a homelab site, dashboard, or technical blog."
+614,62,SERVERS & NETWORKS,Friendly server brands,nodenook.net,Node Nook,,"Clean names for a homelab site, dashboard, or technical blog."
+615,62,SERVERS & NETWORKS,Friendly server brands,computecottage.com,Compute Cottage,,"Clean names for a homelab site, dashboard, or technical blog."
+616,62,SERVERS & NETWORKS,Friendly server brands,rackpebble.com,Rack Pebble,,"Clean names for a homelab site, dashboard, or technical blog."
+617,62,SERVERS & NETWORKS,Friendly server brands,bytebasement.dev,Byte Basement,,"Clean names for a homelab site, dashboard, or technical blog."
+618,62,SERVERS & NETWORKS,Friendly server brands,serverhearth.com,Server Hearth,,"Clean names for a homelab site, dashboard, or technical blog."
+619,62,SERVERS & NETWORKS,Friendly server brands,littlenodelodge.com,Little Node Lodge,,"Clean names for a homelab site, dashboard, or technical blog."
+620,62,SERVERS & NETWORKS,Friendly server brands,rackandramble.com,Rack And Ramble,,"Clean names for a homelab site, dashboard, or technical blog."
+621,63,SERVERS & NETWORKS,Networking wordplay,packetpicnic.net,Packet Picnic,Yes,"Packets, routes, and connections with an approachable twist."
+622,63,SERVERS & NETWORKS,Networking wordplay,pingpudding.com,Ping Pudding,,"Packets, routes, and connections with an approachable twist."
+623,63,SERVERS & NETWORKS,Networking wordplay,routerrascal.com,Router Rascal,,"Packets, routes, and connections with an approachable twist."
+624,63,SERVERS & NETWORKS,Networking wordplay,hopandhope.net,Hop And Hope,,"Packets, routes, and connections with an approachable twist."
+625,63,SERVERS & NETWORKS,Networking wordplay,packetparade.dev,Packet Parade,,"Packets, routes, and connections with an approachable twist."
+626,63,SERVERS & NETWORKS,Networking wordplay,latencylemon.com,Latency Lemon,,"Packets, routes, and connections with an approachable twist."
+627,63,SERVERS & NETWORKS,Networking wordplay,pingandponder.com,Ping And Ponder,,"Packets, routes, and connections with an approachable twist."
+628,63,SERVERS & NETWORKS,Networking wordplay,routeroot.net,Route Root,,"Packets, routes, and connections with an approachable twist."
+629,63,SERVERS & NETWORKS,Networking wordplay,littlepacketparty.com,Little Packet Party,,"Packets, routes, and connections with an approachable twist."
+630,63,SERVERS & NETWORKS,Networking wordplay,hopscotchpackets.com,Hopscotch Packets,,"Packets, routes, and connections with an approachable twist."
+631,64,SERVERS & NETWORKS,SSH and terminals,shellsparrow.dev,Shell Sparrow,Yes,Inspired by your login and remote-access chats.
+632,64,SERVERS & NETWORKS,SSH and terminals,terminalteacup.com,Terminal Teacup,,Inspired by your login and remote-access chats.
+633,64,SERVERS & NETWORKS,SSH and terminals,remoteraccoon.com,Remote Raccoon,,Inspired by your login and remote-access chats.
+634,64,SERVERS & NETWORKS,SSH and terminals,shellandshelter.net,Shell And Shelter,,Inspired by your login and remote-access chats.
+635,64,SERVERS & NETWORKS,SSH and terminals,promptathome.dev,Prompt At Home,,Inspired by your login and remote-access chats.
+636,64,SERVERS & NETWORKS,SSH and terminals,loginlemur.com,Login Lemur,,Inspired by your login and remote-access chats.
+637,64,SERVERS & NETWORKS,SSH and terminals,littleremoteroom.com,Little Remote Room,,Inspired by your login and remote-access chats.
+638,64,SERVERS & NETWORKS,SSH and terminals,shellcabin.dev,Shell Cabin,,Inspired by your login and remote-access chats.
+639,64,SERVERS & NETWORKS,SSH and terminals,commandcottage.com,Command Cottage,,Inspired by your login and remote-access chats.
+640,64,SERVERS & NETWORKS,SSH and terminals,terminaltales.net,Terminal Tales,,Inspired by your login and remote-access chats.
+641,65,SERVERS & NETWORKS,RAM and storage comedy,memorymarmalade.com,Memory Marmalade,Yes,Memory and server-building names with a playful edge.
+642,65,SERVERS & NETWORKS,RAM and storage comedy,dimmdumpling.com,DIMM Dumpling,,Memory and server-building names with a playful edge.
+643,65,SERVERS & NETWORKS,RAM and storage comedy,stickofsilicon.com,Stick Of Silicon,,Memory and server-building names with a playful edge.
+644,65,SERVERS & NETWORKS,RAM and storage comedy,heapofhardware.com,Heap Of Hardware,,Memory and server-building names with a playful edge.
+645,65,SERVERS & NETWORKS,RAM and storage comedy,cachecracker.com,Cache Cracker,,Memory and server-building names with a playful edge.
+646,65,SERVERS & NETWORKS,RAM and storage comedy,ramrascal.com,RAM Rascal,,Memory and server-building names with a playful edge.
+647,65,SERVERS & NETWORKS,RAM and storage comedy,drivedrawer.com,Drive Drawer,,Memory and server-building names with a playful edge.
+648,65,SERVERS & NETWORKS,RAM and storage comedy,terabyteteapot.com,Terabyte Teapot,,Memory and server-building names with a playful edge.
+649,65,SERVERS & NETWORKS,RAM and storage comedy,memoryintheattic.com,Memory In The Attic,,Memory and server-building names with a playful edge.
+650,65,SERVERS & NETWORKS,RAM and storage comedy,storagesquirrel.net,Storage Squirrel,,Memory and server-building names with a playful edge.
+651,66,SERVERS & NETWORKS,Remote-control clubhouse,pocketcontrolroom.com,Pocket Control Room,Yes,"Inspired by KVM, mobile control, and operating machines remotely."
+652,66,SERVERS & NETWORKS,Remote-control clubhouse,remotefromthecouch.com,Remote From The Couch,,"Inspired by KVM, mobile control, and operating machines remotely."
+653,66,SERVERS & NETWORKS,Remote-control clubhouse,screensidekick.com,Screen Sidekick,,"Inspired by KVM, mobile control, and operating machines remotely."
+654,66,SERVERS & NETWORKS,Remote-control clubhouse,anywhereworkbench.com,Anywhere Workbench,,"Inspired by KVM, mobile control, and operating machines remotely."
+655,66,SERVERS & NETWORKS,Remote-control clubhouse,littleremotepilot.com,Little Remote Pilot,,"Inspired by KVM, mobile control, and operating machines remotely."
+656,66,SERVERS & NETWORKS,Remote-control clubhouse,consoleonthego.com,Console On The Go,,"Inspired by KVM, mobile control, and operating machines remotely."
+657,66,SERVERS & NETWORKS,Remote-control clubhouse,couchcommandcenter.com,Couch Command Center,,"Inspired by KVM, mobile control, and operating machines remotely."
+658,66,SERVERS & NETWORKS,Remote-control clubhouse,pocketkeyboardclub.com,Pocket Keyboard Club,,"Inspired by KVM, mobile control, and operating machines remotely."
+659,66,SERVERS & NETWORKS,Remote-control clubhouse,distantdesk.dev,Distant Desk,,"Inspired by KVM, mobile control, and operating machines remotely."
+660,66,SERVERS & NETWORKS,Remote-control clubhouse,remotewindowworks.com,Remote Window Works,,"Inspired by KVM, mobile control, and operating machines remotely."
+661,67,SERVERS & NETWORKS,Uptime personalities,uptimeumbrella.com,Uptime Umbrella,Yes,Names for dependable systems with a less serious face.
+662,67,SERVERS & NETWORKS,Uptime personalities,alwaysonotter.com,Always On Otter,,Names for dependable systems with a less serious face.
+663,67,SERVERS & NETWORKS,Uptime personalities,serverstillstanding.com,Server Still Standing,,Names for dependable systems with a less serious face.
+664,67,SERVERS & NETWORKS,Uptime personalities,ninelivesofuptime.com,Nine Lives Of Uptime,,Names for dependable systems with a less serious face.
+665,67,SERVERS & NETWORKS,Uptime personalities,pingaftermidnight.com,Ping After Midnight,,Names for dependable systems with a less serious face.
+666,67,SERVERS & NETWORKS,Uptime personalities,patientpacket.com,Patient Packet,,Names for dependable systems with a less serious face.
+667,67,SERVERS & NETWORKS,Uptime personalities,quietlyonline.net,Quietly Online,,Names for dependable systems with a less serious face.
+668,67,SERVERS & NETWORKS,Uptime personalities,uptimeandtea.com,Uptime And Tea,,Names for dependable systems with a less serious face.
+669,67,SERVERS & NETWORKS,Uptime personalities,thenodenevernaps.com,The Node Never Naps,,Names for dependable systems with a less serious face.
+670,67,SERVERS & NETWORKS,Uptime personalities,steadylittleserver.com,Steady Little Server,,Names for dependable systems with a less serious face.
+671,68,SERVERS & NETWORKS,Home network worlds,packetpond.net,Packet Pond,Yes,An imaginative place for your machines and connections.
+672,68,SERVERS & NETWORKS,Home network worlds,nodeneighborhood.com,Node Neighborhood,,An imaginative place for your machines and connections.
+673,68,SERVERS & NETWORKS,Home network worlds,routerrookery.com,Router Rookery,,An imaginative place for your machines and connections.
+674,68,SERVERS & NETWORKS,Home network worlds,littlelanvillage.com,Little LAN Village,,An imaginative place for your machines and connections.
+675,68,SERVERS & NETWORKS,Home network worlds,bytebackyard.net,Byte Backyard,,An imaginative place for your machines and connections.
+676,68,SERVERS & NETWORKS,Home network worlds,switchandstream.com,Switch And Stream,,An imaginative place for your machines and connections.
+677,68,SERVERS & NETWORKS,Home network worlds,cablecottage.com,Cable Cottage,,An imaginative place for your machines and connections.
+678,68,SERVERS & NETWORKS,Home network worlds,homenodehabitat.com,Home Node Habitat,,An imaginative place for your machines and connections.
+679,68,SERVERS & NETWORKS,Home network worlds,meshmeadow.net,Mesh Meadow,,An imaginative place for your machines and connections.
+680,68,SERVERS & NETWORKS,Home network worlds,packetporch.com,Packet Porch,,An imaginative place for your machines and connections.
+681,69,SERVERS & NETWORKS,Server after dark,moonlitrack.com,Moonlit Rack,Yes,"Quiet, nocturnal imagery remixed with homelab interests."
+682,69,SERVERS & NETWORKS,Server after dark,midnightpackets.net,Midnight Packets,,"Quiet, nocturnal imagery remixed with homelab interests."
+683,69,SERVERS & NETWORKS,Server after dark,nightowlnode.com,Night Owl Node,,"Quiet, nocturnal imagery remixed with homelab interests."
+684,69,SERVERS & NETWORKS,Server after dark,neonserverroom.com,Neon Server Room,,"Quiet, nocturnal imagery remixed with homelab interests."
+685,69,SERVERS & NETWORKS,Server after dark,rackatdusk.com,Rack At Dusk,,"Quiet, nocturnal imagery remixed with homelab interests."
+686,69,SERVERS & NETWORKS,Server after dark,lanternlan.net,Lantern LAN,,"Quiet, nocturnal imagery remixed with homelab interests."
+687,69,SERVERS & NETWORKS,Server after dark,silentfanclub.com,Silent Fan Club,,"Quiet, nocturnal imagery remixed with homelab interests."
+688,69,SERVERS & NETWORKS,Server after dark,starlitstorage.com,Starlit Storage,,"Quiet, nocturnal imagery remixed with homelab interests."
+689,69,SERVERS & NETWORKS,Server after dark,midnightroot.dev,Midnight Root,,"Quiet, nocturnal imagery remixed with homelab interests."
+690,69,SERVERS & NETWORKS,Server after dark,nocturnalnetwork.net,Nocturnal Network,,"Quiet, nocturnal imagery remixed with homelab interests."
+691,70,SERVERS & NETWORKS,Polished infrastructure names,nodethicket.com,Node Thicket,Yes,A calmer direction for technical tools and hosting projects.
+692,70,SERVERS & NETWORKS,Polished infrastructure names,packetharbor.net,Packet Harbor,,A calmer direction for technical tools and hosting projects.
+693,70,SERVERS & NETWORKS,Polished infrastructure names,rackcanopy.com,Rack Canopy,,A calmer direction for technical tools and hosting projects.
+694,70,SERVERS & NETWORKS,Polished infrastructure names,routehearth.com,Route Hearth,,A calmer direction for technical tools and hosting projects.
+695,70,SERVERS & NETWORKS,Polished infrastructure names,meshquarry.net,Mesh Quarry,,A calmer direction for technical tools and hosting projects.
+696,70,SERVERS & NETWORKS,Polished infrastructure names,servergrove.dev,Server Grove,,A calmer direction for technical tools and hosting projects.
+697,70,SERVERS & NETWORKS,Polished infrastructure names,rootandriver.net,Root And River,,A calmer direction for technical tools and hosting projects.
+698,70,SERVERS & NETWORKS,Polished infrastructure names,cachecove.com,Cache Cove,,A calmer direction for technical tools and hosting projects.
+699,70,SERVERS & NETWORKS,Polished infrastructure names,packetlaneway.com,Packet Laneway,,A calmer direction for technical tools and hosting projects.
+700,70,SERVERS & NETWORKS,Polished infrastructure names,computeorchard.net,Compute Orchard,,A calmer direction for technical tools and hosting projects.
+701,71,GAMES & COMMUNITY TOOLS,Game-tool workshop,overlayotter.com,Overlay Otter,Yes,Inspired by your BoomBeechInfo project and low-level game tooling.
+702,71,GAMES & COMMUNITY TOOLS,Game-tool workshop,pixeltoolkit.dev,Pixel Toolkit,,Inspired by your BoomBeechInfo project and low-level game tooling.
+703,71,GAMES & COMMUNITY TOOLS,Game-tool workshop,gamebenchgoblin.com,Game Bench Goblin,,Inspired by your BoomBeechInfo project and low-level game tooling.
+704,71,GAMES & COMMUNITY TOOLS,Game-tool workshop,tinyhudworkshop.com,Tiny HUD Workshop,,Inspired by your BoomBeechInfo project and low-level game tooling.
+705,71,GAMES & COMMUNITY TOOLS,Game-tool workshop,levellogiclab.com,Level Logic Lab,,Inspired by your BoomBeechInfo project and low-level game tooling.
+706,71,GAMES & COMMUNITY TOOLS,Game-tool workshop,gamewindowworks.com,Game Window Works,,Inspired by your BoomBeechInfo project and low-level game tooling.
+707,71,GAMES & COMMUNITY TOOLS,Game-tool workshop,overlayorchard.com,Overlay Orchard,,Inspired by your BoomBeechInfo project and low-level game tooling.
+708,71,GAMES & COMMUNITY TOOLS,Game-tool workshop,playfieldpixels.com,Playfield Pixels,,Inspired by your BoomBeechInfo project and low-level game tooling.
+709,71,GAMES & COMMUNITY TOOLS,Game-tool workshop,gamegadgetgrove.com,Game Gadget Grove,,Inspired by your BoomBeechInfo project and low-level game tooling.
+710,71,GAMES & COMMUNITY TOOLS,Game-tool workshop,pockethud.dev,Pocket HUD,,Inspired by your BoomBeechInfo project and low-level game tooling.
+711,72,GAMES & COMMUNITY TOOLS,Strategy-game flavor,tacticaltangerine.com,Tactical Tangerine,Yes,Island and tactical imagery as a creative remix of your game project.
+712,72,GAMES & COMMUNITY TOOLS,Strategy-game flavor,islandbyteclub.com,Island Byte Club,,Island and tactical imagery as a creative remix of your game project.
+713,72,GAMES & COMMUNITY TOOLS,Strategy-game flavor,coconutcommand.com,Coconut Command,,Island and tactical imagery as a creative remix of your game project.
+714,72,GAMES & COMMUNITY TOOLS,Strategy-game flavor,outpostoddities.com,Outpost Oddities,,Island and tactical imagery as a creative remix of your game project.
+715,72,GAMES & COMMUNITY TOOLS,Strategy-game flavor,mapandmischief.com,Map And Mischief,,Island and tactical imagery as a creative remix of your game project.
+716,72,GAMES & COMMUNITY TOOLS,Strategy-game flavor,lagoonlogic.com,Lagoon Logic,,Island and tactical imagery as a creative remix of your game project.
+717,72,GAMES & COMMUNITY TOOLS,Strategy-game flavor,tinytactictrove.com,Tiny Tactic Trove,,Island and tactical imagery as a creative remix of your game project.
+718,72,GAMES & COMMUNITY TOOLS,Strategy-game flavor,beachheadbits.com,Beachhead Bits,,Island and tactical imagery as a creative remix of your game project.
+719,72,GAMES & COMMUNITY TOOLS,Strategy-game flavor,islandinventor.com,Island Inventor,,Island and tactical imagery as a creative remix of your game project.
+720,72,GAMES & COMMUNITY TOOLS,Strategy-game flavor,sandandstrategy.com,Sand And Strategy,,Island and tactical imagery as a creative remix of your game project.
+721,73,GAMES & COMMUNITY TOOLS,HUD and overlay wordplay,headsuphedgehog.com,Heads Up Hedgehog,Yes,Screen layers and interfaces turned into memorable names.
+722,73,GAMES & COMMUNITY TOOLS,HUD and overlay wordplay,overlayowl.com,Overlay Owl,,Screen layers and interfaces turned into memorable names.
+723,73,GAMES & COMMUNITY TOOLS,HUD and overlay wordplay,floatingframeclub.com,Floating Frame Club,,Screen layers and interfaces turned into memorable names.
+724,73,GAMES & COMMUNITY TOOLS,HUD and overlay wordplay,pixeloverhead.com,Pixel Overhead,,Screen layers and interfaces turned into memorable names.
+725,73,GAMES & COMMUNITY TOOLS,HUD and overlay wordplay,hudandseek.com,HUD And Seek,,Screen layers and interfaces turned into memorable names.
+726,73,GAMES & COMMUNITY TOOLS,HUD and overlay wordplay,windowwisp.dev,Window Wisp,,Screen layers and interfaces turned into memorable names.
+727,73,GAMES & COMMUNITY TOOLS,HUD and overlay wordplay,layerlemur.com,Layer Lemur,,Screen layers and interfaces turned into memorable names.
+728,73,GAMES & COMMUNITY TOOLS,HUD and overlay wordplay,viewportvagabond.com,Viewport Vagabond,,Screen layers and interfaces turned into memorable names.
+729,73,GAMES & COMMUNITY TOOLS,HUD and overlay wordplay,overlayoddball.com,Overlay Oddball,,Screen layers and interfaces turned into memorable names.
+730,73,GAMES & COMMUNITY TOOLS,HUD and overlay wordplay,screensprout.dev,Screen Sprout,,Screen layers and interfaces turned into memorable names.
+731,74,GAMES & COMMUNITY TOOLS,Bot community charm,botbungalow.com,Bot Bungalow,Yes,Inspired by your Discord bot and member-management project.
+732,74,GAMES & COMMUNITY TOOLS,Bot community charm,communitycog.com,Community Cog,,Inspired by your Discord bot and member-management project.
+733,74,GAMES & COMMUNITY TOOLS,Bot community charm,chatroomcritter.com,Chatroom Critter,,Inspired by your Discord bot and member-management project.
+734,74,GAMES & COMMUNITY TOOLS,Bot community charm,botandbanter.com,Bot And Banter,,Inspired by your Discord bot and member-management project.
+735,74,GAMES & COMMUNITY TOOLS,Bot community charm,serversocialclub.com,Server Social Club,,Inspired by your Discord bot and member-management project.
+736,74,GAMES & COMMUNITY TOOLS,Bot community charm,friendlybotburrow.com,Friendly Bot Burrow,,Inspired by your Discord bot and member-management project.
+737,74,GAMES & COMMUNITY TOOLS,Bot community charm,littlechatmachine.com,Little Chat Machine,,Inspired by your Discord bot and member-management project.
+738,74,GAMES & COMMUNITY TOOLS,Bot community charm,botbonfire.com,Bot Bonfire,,Inspired by your Discord bot and member-management project.
+739,74,GAMES & COMMUNITY TOOLS,Bot community charm,communitycrumpet.com,Community Crumpet,,Inspired by your Discord bot and member-management project.
+740,74,GAMES & COMMUNITY TOOLS,Bot community charm,chatandchassis.com,Chat And Chassis,,Inspired by your Discord bot and member-management project.
+741,75,GAMES & COMMUNITY TOOLS,Backup and restore humor,oopswesavedit.com,Oops We Saved It,Yes,A playful direction based on your community recovery tool.
+742,75,GAMES & COMMUNITY TOOLS,Backup and restore humor,backupbadger.com,Backup Badger,,A playful direction based on your community recovery tool.
+743,75,GAMES & COMMUNITY TOOLS,Backup and restore humor,restoreraccoon.com,Restore Raccoon,,A playful direction based on your community recovery tool.
+744,75,GAMES & COMMUNITY TOOLS,Backup and restore humor,membermemento.com,Member Memento,,A playful direction based on your community recovery tool.
+745,75,GAMES & COMMUNITY TOOLS,Backup and restore humor,lostandrejoined.com,Lost And Rejoined,,A playful direction based on your community recovery tool.
+746,75,GAMES & COMMUNITY TOOLS,Backup and restore humor,comebackcache.com,Come Back Cache,,A playful direction based on your community recovery tool.
+747,75,GAMES & COMMUNITY TOOLS,Backup and restore humor,backupbiscuit.com,Backup Biscuit,,A playful direction based on your community recovery tool.
+748,75,GAMES & COMMUNITY TOOLS,Backup and restore humor,restoretheroster.com,Restore The Roster,,A playful direction based on your community recovery tool.
+749,75,GAMES & COMMUNITY TOOLS,Backup and restore humor,serversecondchance.com,Server Second Chance,,A playful direction based on your community recovery tool.
+750,75,GAMES & COMMUNITY TOOLS,Backup and restore humor,rollcallrescue.com,Roll Call Rescue,,A playful direction based on your community recovery tool.
+751,76,GAMES & COMMUNITY TOOLS,Social software brands,gatheringgizmo.com,Gathering Gizmo,Yes,Broad names for community tools without using a platform trademark.
+752,76,GAMES & COMMUNITY TOOLS,Social software brands,chatcanopy.com,Chat Canopy,,Broad names for community tools without using a platform trademark.
+753,76,GAMES & COMMUNITY TOOLS,Social software brands,membermeadow.com,Member Meadow,,Broad names for community tools without using a platform trademark.
+754,76,GAMES & COMMUNITY TOOLS,Social software brands,socialsocket.dev,Social Socket,,Broad names for community tools without using a platform trademark.
+755,76,GAMES & COMMUNITY TOOLS,Social software brands,crewcache.com,Crew Cache,,Broad names for community tools without using a platform trademark.
+756,76,GAMES & COMMUNITY TOOLS,Social software brands,rosterribbon.com,Roster Ribbon,,Broad names for community tools without using a platform trademark.
+757,76,GAMES & COMMUNITY TOOLS,Social software brands,communitycove.dev,Community Cove,,Broad names for community tools without using a platform trademark.
+758,76,GAMES & COMMUNITY TOOLS,Social software brands,gatherandgadget.com,Gather And Gadget,,Broad names for community tools without using a platform trademark.
+759,76,GAMES & COMMUNITY TOOLS,Social software brands,friendlyroster.com,Friendly Roster,,Broad names for community tools without using a platform trademark.
+760,76,GAMES & COMMUNITY TOOLS,Social software brands,groupgrove.dev,Group Grove,,Broad names for community tools without using a platform trademark.
+761,77,GAMES & COMMUNITY TOOLS,Gaming-code crossover,respawnruntime.com,Respawn Runtime,Yes,Programming concepts with a game-like sense of adventure.
+762,77,GAMES & COMMUNITY TOOLS,Gaming-code crossover,checkpointcompiler.dev,Checkpoint Compiler,,Programming concepts with a game-like sense of adventure.
+763,77,GAMES & COMMUNITY TOOLS,Gaming-code crossover,lootandloops.com,Loot And Loops,,Programming concepts with a game-like sense of adventure.
+764,77,GAMES & COMMUNITY TOOLS,Gaming-code crossover,questqueue.dev,Quest Queue,,Programming concepts with a game-like sense of adventure.
+765,77,GAMES & COMMUNITY TOOLS,Gaming-code crossover,pixelpartypatch.com,Pixel Party Patch,,Programming concepts with a game-like sense of adventure.
+766,77,GAMES & COMMUNITY TOOLS,Gaming-code crossover,leveluplambda.com,Level Up Lambda,,Programming concepts with a game-like sense of adventure.
+767,77,GAMES & COMMUNITY TOOLS,Gaming-code crossover,inventoryofideas.com,Inventory Of Ideas,,Programming concepts with a game-like sense of adventure.
+768,77,GAMES & COMMUNITY TOOLS,Gaming-code crossover,spawnpointsyntax.com,Spawn Point Syntax,,Programming concepts with a game-like sense of adventure.
+769,77,GAMES & COMMUNITY TOOLS,Gaming-code crossover,bytebossbattle.com,Byte Boss Battle,,Programming concepts with a game-like sense of adventure.
+770,77,GAMES & COMMUNITY TOOLS,Gaming-code crossover,stacksidequest.com,Stack Side Quest,,Programming concepts with a game-like sense of adventure.
+771,78,GAMES & COMMUNITY TOOLS,Tiny digital clubs,littlebyteguild.com,Little Byte Guild,Yes,"Names for project communities, build groups, or tool users."
+772,78,GAMES & COMMUNITY TOOLS,Tiny digital clubs,gadgetgathering.com,Gadget Gathering,,"Names for project communities, build groups, or tool users."
+773,78,GAMES & COMMUNITY TOOLS,Tiny digital clubs,circuitcrewclub.com,Circuit Crew Club,,"Names for project communities, build groups, or tool users."
+774,78,GAMES & COMMUNITY TOOLS,Tiny digital clubs,patchparty.dev,Patch Party,,"Names for project communities, build groups, or tool users."
+775,78,GAMES & COMMUNITY TOOLS,Tiny digital clubs,pixelpotluck.com,Pixel Potluck,,"Names for project communities, build groups, or tool users."
+776,78,GAMES & COMMUNITY TOOLS,Tiny digital clubs,thetinytechtavern.com,The Tiny Tech Tavern,,"Names for project communities, build groups, or tool users."
+777,78,GAMES & COMMUNITY TOOLS,Tiny digital clubs,botbuildersbunch.com,Bot Builders Bunch,,"Names for project communities, build groups, or tool users."
+778,78,GAMES & COMMUNITY TOOLS,Tiny digital clubs,friendlyfunctionclub.com,Friendly Function Club,,"Names for project communities, build groups, or tool users."
+779,78,GAMES & COMMUNITY TOOLS,Tiny digital clubs,hobbyhardwarehangout.com,Hobby Hardware Hangout,,"Names for project communities, build groups, or tool users."
+780,78,GAMES & COMMUNITY TOOLS,Tiny digital clubs,bytebuddybureau.com,Byte Buddy Bureau,,"Names for project communities, build groups, or tool users."
+781,79,GAMES & COMMUNITY TOOLS,Silly game-tool brands,goblinhud.com,Goblin HUD,Yes,"Less formal names for utilities, experiments, and helper apps."
+782,79,GAMES & COMMUNITY TOOLS,Silly game-tool brands,pixelplunderclub.com,Pixel Plunder Club,,"Less formal names for utilities, experiments, and helper apps."
+783,79,GAMES & COMMUNITY TOOLS,Silly game-tool brands,wanderingwidget.com,Wandering Widget,,"Less formal names for utilities, experiments, and helper apps."
+784,79,GAMES & COMMUNITY TOOLS,Silly game-tool brands,gamegremlingarage.com,Game Gremlin Garage,,"Less formal names for utilities, experiments, and helper apps."
+785,79,GAMES & COMMUNITY TOOLS,Silly game-tool brands,mischiefmenu.com,Mischief Menu,,"Less formal names for utilities, experiments, and helper apps."
+786,79,GAMES & COMMUNITY TOOLS,Silly game-tool brands,buttonbandit.dev,Button Bandit,,"Less formal names for utilities, experiments, and helper apps."
+787,79,GAMES & COMMUNITY TOOLS,Silly game-tool brands,tacticaltoast.com,Tactical Toast,,"Less formal names for utilities, experiments, and helper apps."
+788,79,GAMES & COMMUNITY TOOLS,Silly game-tool brands,overlayoctopus.com,Overlay Octopus,,"Less formal names for utilities, experiments, and helper apps."
+789,79,GAMES & COMMUNITY TOOLS,Silly game-tool brands,clickcritter.com,Click Critter,,"Less formal names for utilities, experiments, and helper apps."
+790,79,GAMES & COMMUNITY TOOLS,Silly game-tool brands,tinytooltroll.com,Tiny Tool Troll,,"Less formal names for utilities, experiments, and helper apps."
+791,80,GAMES & COMMUNITY TOOLS,Clean games and community,guildpebble.com,Guild Pebble,Yes,More polished concepts that can stretch across several products.
+792,80,GAMES & COMMUNITY TOOLS,Clean games and community,rosterharbor.com,Roster Harbor,,More polished concepts that can stretch across several products.
+793,80,GAMES & COMMUNITY TOOLS,Clean games and community,pixeloutpost.dev,Pixel Outpost,,More polished concepts that can stretch across several products.
+794,80,GAMES & COMMUNITY TOOLS,Clean games and community,crewlantern.com,Crew Lantern,,More polished concepts that can stretch across several products.
+795,80,GAMES & COMMUNITY TOOLS,Clean games and community,gathergrove.com,Gather Grove,,More polished concepts that can stretch across several products.
+796,80,GAMES & COMMUNITY TOOLS,Clean games and community,overlaycove.com,Overlay Cove,,More polished concepts that can stretch across several products.
+797,80,GAMES & COMMUNITY TOOLS,Clean games and community,questcanopy.dev,Quest Canopy,,More polished concepts that can stretch across several products.
+798,80,GAMES & COMMUNITY TOOLS,Clean games and community,communitycurrent.com,Community Current,,More polished concepts that can stretch across several products.
+799,80,GAMES & COMMUNITY TOOLS,Clean games and community,playfieldhearth.com,Playfield Hearth,,More polished concepts that can stretch across several products.
+800,80,GAMES & COMMUNITY TOOLS,Clean games and community,membermoss.com,Member Moss,,More polished concepts that can stretch across several products.
+801,81,RECYCLING & MATH REMIXES,Recycling robot charm,binbuddybot.com,Bin Buddy Bot,Yes,Inspired directly by SortRover and its waste-sorting dashboard.
+802,81,RECYCLING & MATH REMIXES,Recycling robot charm,sortsprout.com,Sort Sprout,,Inspired directly by SortRover and its waste-sorting dashboard.
+803,81,RECYCLING & MATH REMIXES,Recycling robot charm,cardboardcapybara.com,Cardboard Capybara,,Inspired directly by SortRover and its waste-sorting dashboard.
+804,81,RECYCLING & MATH REMIXES,Recycling robot charm,bottlebotburrow.com,Bottle Bot Burrow,,Inspired directly by SortRover and its waste-sorting dashboard.
+805,81,RECYCLING & MATH REMIXES,Recycling robot charm,recyclerascal.com,Recycle Rascal,,Inspired directly by SortRover and its waste-sorting dashboard.
+806,81,RECYCLING & MATH REMIXES,Recycling robot charm,littlelidlogic.com,Little Lid Logic,,Inspired directly by SortRover and its waste-sorting dashboard.
+807,81,RECYCLING & MATH REMIXES,Recycling robot charm,binandbeep.com,Bin And Beep,,Inspired directly by SortRover and its waste-sorting dashboard.
+808,81,RECYCLING & MATH REMIXES,Recycling robot charm,sortersquirrel.com,Sorter Squirrel,,Inspired directly by SortRover and its waste-sorting dashboard.
+809,81,RECYCLING & MATH REMIXES,Recycling robot charm,reclaimrover.com,Reclaim Rover,,Inspired directly by SortRover and its waste-sorting dashboard.
+810,81,RECYCLING & MATH REMIXES,Recycling robot charm,wastelesswobble.com,Waste Less Wobble,,Inspired directly by SortRover and its waste-sorting dashboard.
+811,82,RECYCLING & MATH REMIXES,Trash puns,bintherebuiltthat.com,Bin There Built That,Yes,Funny names for the SortRover family of ideas.
+812,82,RECYCLING & MATH REMIXES,Trash puns,trashwithclass.com,Trash With Class,,Funny names for the SortRover family of ideas.
+813,82,RECYCLING & MATH REMIXES,Trash puns,wastenotwiggle.com,Waste Not Wiggle,,Funny names for the SortRover family of ideas.
+814,82,RECYCLING & MATH REMIXES,Trash puns,garbageandgiggles.com,Garbage And Giggles,,Funny names for the SortRover family of ideas.
+815,82,RECYCLING & MATH REMIXES,Trash puns,rubbishruntime.com,Rubbish Runtime,,Funny names for the SortRover family of ideas.
+816,82,RECYCLING & MATH REMIXES,Trash puns,bincrediblebuilds.com,Bincredible Builds,,Funny names for the SortRover family of ideas.
+817,82,RECYCLING & MATH REMIXES,Trash puns,trashtalktelemetry.com,Trash Talk Telemetry,,Funny names for the SortRover family of ideas.
+818,82,RECYCLING & MATH REMIXES,Trash puns,sortofrecyclable.com,Sort Of Recyclable,,Funny names for the SortRover family of ideas.
+819,82,RECYCLING & MATH REMIXES,Trash puns,refusetobeboring.com,Refuse To Be Boring,,Funny names for the SortRover family of ideas.
+820,82,RECYCLING & MATH REMIXES,Trash puns,thebinhaseyes.com,The Bin Has Eyes,,Funny names for the SortRover family of ideas.
+821,83,RECYCLING & MATH REMIXES,Circular maker ideas,secondlifecircuits.com,Second Life Circuits,Yes,"Reuse and recycling, mixed with the urge to build things."
+822,83,RECYCLING & MATH REMIXES,Circular maker ideas,reclaimedcuriosity.com,Reclaimed Curiosity,,"Reuse and recycling, mixed with the urge to build things."
+823,83,RECYCLING & MATH REMIXES,Circular maker ideas,scraptospark.com,Scrap To Spark,,"Reuse and recycling, mixed with the urge to build things."
+824,83,RECYCLING & MATH REMIXES,Circular maker ideas,salvageandsyntax.com,Salvage And Syntax,,"Reuse and recycling, mixed with the urge to build things."
+825,83,RECYCLING & MATH REMIXES,Circular maker ideas,upcycledoddities.com,Upcycled Oddities,,"Reuse and recycling, mixed with the urge to build things."
+826,83,RECYCLING & MATH REMIXES,Circular maker ideas,partsagainparty.com,Parts Again Party,,"Reuse and recycling, mixed with the urge to build things."
+827,83,RECYCLING & MATH REMIXES,Circular maker ideas,reuseraccoon.com,Reuse Raccoon,,"Reuse and recycling, mixed with the urge to build things."
+828,83,RECYCLING & MATH REMIXES,Circular maker ideas,leftoverlogic.com,Leftover Logic,,"Reuse and recycling, mixed with the urge to build things."
+829,83,RECYCLING & MATH REMIXES,Circular maker ideas,scrapdrawerstudio.com,Scrap Drawer Studio,,"Reuse and recycling, mixed with the urge to build things."
+830,83,RECYCLING & MATH REMIXES,Circular maker ideas,yesterdaypartstomorrowbots.com,Yesterday Parts Tomorrow Bots,,"Reuse and recycling, mixed with the urge to build things."
+831,84,RECYCLING & MATH REMIXES,Sorting and sensing,sortandsense.dev,Sort And Sense,Yes,Names for recognizing items and sending them to the right place.
+832,84,RECYCLING & MATH REMIXES,Sorting and sensing,binvisionclub.com,Bin Vision Club,,Names for recognizing items and sending them to the right place.
+833,84,RECYCLING & MATH REMIXES,Sorting and sensing,labelthelitter.com,Label The Litter,,Names for recognizing items and sending them to the right place.
+834,84,RECYCLING & MATH REMIXES,Sorting and sensing,cameratocardboard.com,Camera To Cardboard,,Names for recognizing items and sending them to the right place.
+835,84,RECYCLING & MATH REMIXES,Sorting and sensing,sortersidekick.com,Sorter Sidekick,,Names for recognizing items and sending them to the right place.
+836,84,RECYCLING & MATH REMIXES,Sorting and sensing,sensorandsalvage.com,Sensor And Salvage,,Names for recognizing items and sending them to the right place.
+837,84,RECYCLING & MATH REMIXES,Sorting and sensing,bottleornot.com,Bottle Or Not,,Names for recognizing items and sending them to the right place.
+838,84,RECYCLING & MATH REMIXES,Sorting and sensing,wastewatcherworks.com,Waste Watcher Works,,Names for recognizing items and sending them to the right place.
+839,84,RECYCLING & MATH REMIXES,Sorting and sensing,classifiedcardboard.com,Classified Cardboard,,Names for recognizing items and sending them to the right place.
+840,84,RECYCLING & MATH REMIXES,Sorting and sensing,scansortsmile.com,Scan Sort Smile,,Names for recognizing items and sending them to the right place.
+841,85,RECYCLING & MATH REMIXES,Green engineering brands,loopandleaf.tech,Loop And Leaf,Yes,A cleaner identity for the practical recycling-automation idea.
+842,85,RECYCLING & MATH REMIXES,Green engineering brands,circuitclover.com,Circuit Clover,,A cleaner identity for the practical recycling-automation idea.
+843,85,RECYCLING & MATH REMIXES,Green engineering brands,reclaimquarry.com,Reclaim Quarry,,A cleaner identity for the practical recycling-automation idea.
+844,85,RECYCLING & MATH REMIXES,Green engineering brands,sortcanopy.com,Sort Canopy,,A cleaner identity for the practical recycling-automation idea.
+845,85,RECYCLING & MATH REMIXES,Green engineering brands,renewedvoltage.com,Renewed Voltage,,A cleaner identity for the practical recycling-automation idea.
+846,85,RECYCLING & MATH REMIXES,Green engineering brands,salvagesprout.com,Salvage Sprout,,A cleaner identity for the practical recycling-automation idea.
+847,85,RECYCLING & MATH REMIXES,Green engineering brands,bottleandbyte.com,Bottle And Byte,,A cleaner identity for the practical recycling-automation idea.
+848,85,RECYCLING & MATH REMIXES,Green engineering brands,reuseworkbench.com,Reuse Workbench,,A cleaner identity for the practical recycling-automation idea.
+849,85,RECYCLING & MATH REMIXES,Green engineering brands,greengeargrove.com,Green Gear Grove,,A cleaner identity for the practical recycling-automation idea.
+850,85,RECYCLING & MATH REMIXES,Green engineering brands,binhearth.com,Bin Hearth,,A cleaner identity for the practical recycling-automation idea.
+851,86,RECYCLING & MATH REMIXES,Calculus creatures,derivativeduck.com,Derivative Duck,Yes,"A playful remix of your study history, rather than an assumed hobby."
+852,86,RECYCLING & MATH REMIXES,Calculus creatures,integralimp.com,Integral Imp,,"A playful remix of your study history, rather than an assumed hobby."
+853,86,RECYCLING & MATH REMIXES,Calculus creatures,seriessquirrel.com,Series Squirrel,,"A playful remix of your study history, rather than an assumed hobby."
+854,86,RECYCLING & MATH REMIXES,Calculus creatures,tangentturtle.com,Tangent Turtle,,"A playful remix of your study history, rather than an assumed hobby."
+855,86,RECYCLING & MATH REMIXES,Calculus creatures,limitlemur.com,Limit Lemur,,"A playful remix of your study history, rather than an assumed hobby."
+856,86,RECYCLING & MATH REMIXES,Calculus creatures,gradientgoose.com,Gradient Goose,,"A playful remix of your study history, rather than an assumed hobby."
+857,86,RECYCLING & MATH REMIXES,Calculus creatures,calculuscapybara.com,Calculus Capybara,,"A playful remix of your study history, rather than an assumed hobby."
+858,86,RECYCLING & MATH REMIXES,Calculus creatures,vectorvole.com,Vector Vole,,"A playful remix of your study history, rather than an assumed hobby."
+859,86,RECYCLING & MATH REMIXES,Calculus creatures,sigmasparrow.com,Sigma Sparrow,,"A playful remix of your study history, rather than an assumed hobby."
+860,86,RECYCLING & MATH REMIXES,Calculus creatures,slopesalamander.com,Slope Salamander,,"A playful remix of your study history, rather than an assumed hobby."
+861,87,RECYCLING & MATH REMIXES,Math humor,limitdoesnotexist.com,Limit Does Not Exist,Yes,"Names for learning notes, study tools, or a funny personal site."
+862,87,RECYCLING & MATH REMIXES,Math humor,tangenttantrum.com,Tangent Tantrum,,"Names for learning notes, study tools, or a funny personal site."
+863,87,RECYCLING & MATH REMIXES,Math humor,integrateandchill.com,Integrate And Chill,,"Names for learning notes, study tools, or a funny personal site."
+864,87,RECYCLING & MATH REMIXES,Math humor,differentiablydramatic.com,Differentiably Dramatic,,"Names for learning notes, study tools, or a funny personal site."
+865,87,RECYCLING & MATH REMIXES,Math humor,approximatelybrilliant.com,Approximately Brilliant,,"Names for learning notes, study tools, or a funny personal site."
+866,87,RECYCLING & MATH REMIXES,Math humor,lostintheseries.com,Lost In The Series,,"Names for learning notes, study tools, or a funny personal site."
+867,87,RECYCLING & MATH REMIXES,Math humor,morethanonevariable.com,More Than One Variable,,"Names for learning notes, study tools, or a funny personal site."
+868,87,RECYCLING & MATH REMIXES,Math humor,chainrulechaos.com,Chain Rule Chaos,,"Names for learning notes, study tools, or a funny personal site."
+869,87,RECYCLING & MATH REMIXES,Math humor,taylormadetrouble.com,Taylor Made Trouble,,"Names for learning notes, study tools, or a funny personal site."
+870,87,RECYCLING & MATH REMIXES,Math humor,theslopeisslippery.com,The Slope Is Slippery,,"Names for learning notes, study tools, or a funny personal site."
+871,88,RECYCLING & MATH REMIXES,Series and patterns,seriesandsprinkles.com,Series And Sprinkles,Yes,Inspired by your Taylor and Maclaurin study questions.
+872,88,RECYCLING & MATH REMIXES,Series and patterns,infinitesnackseries.com,Infinite Snack Series,,Inspired by your Taylor and Maclaurin study questions.
+873,88,RECYCLING & MATH REMIXES,Series and patterns,taylorteacup.com,Taylor Teacup,,Inspired by your Taylor and Maclaurin study questions.
+874,88,RECYCLING & MATH REMIXES,Series and patterns,polynomialpicnic.com,Polynomial Picnic,,Inspired by your Taylor and Maclaurin study questions.
+875,88,RECYCLING & MATH REMIXES,Series and patterns,expansionorchard.com,Expansion Orchard,,Inspired by your Taylor and Maclaurin study questions.
+876,88,RECYCLING & MATH REMIXES,Series and patterns,termbytermtales.com,Term By Term Tales,,Inspired by your Taylor and Maclaurin study questions.
+877,88,RECYCLING & MATH REMIXES,Series and patterns,remainderraccoon.com,Remainder Raccoon,,Inspired by your Taylor and Maclaurin study questions.
+878,88,RECYCLING & MATH REMIXES,Series and patterns,convergentcuriosity.com,Convergent Curiosity,,Inspired by your Taylor and Maclaurin study questions.
+879,88,RECYCLING & MATH REMIXES,Series and patterns,powerseriesparty.com,Power Series Party,,Inspired by your Taylor and Maclaurin study questions.
+880,88,RECYCLING & MATH REMIXES,Series and patterns,approximationattic.com,Approximation Attic,,Inspired by your Taylor and Maclaurin study questions.
+881,89,RECYCLING & MATH REMIXES,Math meets machines,vectorsandvoltage.com,Vectors And Voltage,Yes,Where your engineering projects and study topics overlap.
+882,89,RECYCLING & MATH REMIXES,Math meets machines,derivativesanddiodes.com,Derivatives And Diodes,,Where your engineering projects and study topics overlap.
+883,89,RECYCLING & MATH REMIXES,Math meets machines,matrixmotorclub.com,Matrix Motor Club,,Where your engineering projects and study topics overlap.
+884,89,RECYCLING & MATH REMIXES,Math meets machines,calculusandcopper.com,Calculus And Copper,,Where your engineering projects and study topics overlap.
+885,89,RECYCLING & MATH REMIXES,Math meets machines,integralsandiron.com,Integrals And Iron,,Where your engineering projects and study topics overlap.
+886,89,RECYCLING & MATH REMIXES,Math meets machines,gradientgear.com,Gradient Gear,,Where your engineering projects and study topics overlap.
+887,89,RECYCLING & MATH REMIXES,Math meets machines,seriesandservos.com,Series And Servos,,Where your engineering projects and study topics overlap.
+888,89,RECYCLING & MATH REMIXES,Math meets machines,tangentsandtorque.com,Tangents And Torque,,Where your engineering projects and study topics overlap.
+889,89,RECYCLING & MATH REMIXES,Math meets machines,sigmaandsolder.com,Sigma And Solder,,Where your engineering projects and study topics overlap.
+890,89,RECYCLING & MATH REMIXES,Math meets machines,equationsonwheels.com,Equations On Wheels,,Where your engineering projects and study topics overlap.
+891,90,RECYCLING & MATH REMIXES,Numerical workshop,matrixmarmalade.com,Matrix Marmalade,Yes,A naming direction inspired by MATLAB and technical learning.
+892,90,RECYCLING & MATH REMIXES,Numerical workshop,numericalnook.dev,Numerical Nook,,A naming direction inspired by MATLAB and technical learning.
+893,90,RECYCLING & MATH REMIXES,Numerical workshop,arrayacorn.com,Array Acorn,,A naming direction inspired by MATLAB and technical learning.
+894,90,RECYCLING & MATH REMIXES,Numerical workshop,plotandponder.com,Plot And Ponder,,A naming direction inspired by MATLAB and technical learning.
+895,90,RECYCLING & MATH REMIXES,Numerical workshop,solversparrow.com,Solver Sparrow,,A naming direction inspired by MATLAB and technical learning.
+896,90,RECYCLING & MATH REMIXES,Numerical workshop,vectorworkbench.dev,Vector Workbench,,A naming direction inspired by MATLAB and technical learning.
+897,90,RECYCLING & MATH REMIXES,Numerical workshop,matrixmeadow.com,Matrix Meadow,,A naming direction inspired by MATLAB and technical learning.
+898,90,RECYCLING & MATH REMIXES,Numerical workshop,algorithmabacus.com,Algorithm Abacus,,A naming direction inspired by MATLAB and technical learning.
+899,90,RECYCLING & MATH REMIXES,Numerical workshop,scalarsprout.com,Scalar Sprout,,A naming direction inspired by MATLAB and technical learning.
+900,90,RECYCLING & MATH REMIXES,Numerical workshop,littlenumberlab.dev,Little Number Lab,,A naming direction inspired by MATLAB and technical learning.
+901,91,CREATIVE CROSSOVERS,"Soft things, hard tech",velvetvoltage.com,Velvet Voltage,Yes,"Unexpected combinations with a warm, memorable sound."
+902,91,CREATIVE CROSSOVERS,"Soft things, hard tech",cottoncompiler.com,Cotton Compiler,,"Unexpected combinations with a warm, memorable sound."
+903,91,CREATIVE CROSSOVERS,"Soft things, hard tech",plushprocessor.com,Plush Processor,,"Unexpected combinations with a warm, memorable sound."
+904,91,CREATIVE CROSSOVERS,"Soft things, hard tech",marshmallowmotor.com,Marshmallow Motor,,"Unexpected combinations with a warm, memorable sound."
+905,91,CREATIVE CROSSOVERS,"Soft things, hard tech",cozycapacitor.com,Cozy Capacitor,,"Unexpected combinations with a warm, memorable sound."
+906,91,CREATIVE CROSSOVERS,"Soft things, hard tech",fuzzyfirmware.com,Fuzzy Firmware,,"Unexpected combinations with a warm, memorable sound."
+907,91,CREATIVE CROSSOVERS,"Soft things, hard tech",woollywire.com,Woolly Wire,,"Unexpected combinations with a warm, memorable sound."
+908,91,CREATIVE CROSSOVERS,"Soft things, hard tech",softservostudio.com,Soft Servo Studio,,"Unexpected combinations with a warm, memorable sound."
+909,91,CREATIVE CROSSOVERS,"Soft things, hard tech",blanketbyte.com,Blanket Byte,,"Unexpected combinations with a warm, memorable sound."
+910,91,CREATIVE CROSSOVERS,"Soft things, hard tech",pillowpowered.com,Pillow Powered,,"Unexpected combinations with a warm, memorable sound."
+911,92,CREATIVE CROSSOVERS,Garden gadgets,mossandmicrochips.com,Moss And Microchips,Yes,Nature imagery as a creative remix of your hardware interests.
+912,92,CREATIVE CROSSOVERS,Garden gadgets,fernfirmware.com,Fern Firmware,,Nature imagery as a creative remix of your hardware interests.
+913,92,CREATIVE CROSSOVERS,Garden gadgets,clovercompiler.dev,Clover Compiler,,Nature imagery as a creative remix of your hardware interests.
+914,92,CREATIVE CROSSOVERS,Garden gadgets,daisydatacenter.com,Daisy Datacenter,,Nature imagery as a creative remix of your hardware interests.
+915,92,CREATIVE CROSSOVERS,Garden gadgets,sproutsocket.com,Sprout Socket,,Nature imagery as a creative remix of your hardware interests.
+916,92,CREATIVE CROSSOVERS,Garden gadgets,petalprocessor.com,Petal Processor,,Nature imagery as a creative remix of your hardware interests.
+917,92,CREATIVE CROSSOVERS,Garden gadgets,willowworkbench.com,Willow Workbench,,Nature imagery as a creative remix of your hardware interests.
+918,92,CREATIVE CROSSOVERS,Garden gadgets,gardengearbox.com,Garden Gearbox,,Nature imagery as a creative remix of your hardware interests.
+919,92,CREATIVE CROSSOVERS,Garden gadgets,circuitseedling.com,Circuit Seedling,,Nature imagery as a creative remix of your hardware interests.
+920,92,CREATIVE CROSSOVERS,Garden gadgets,rosemaryruntime.com,Rosemary Runtime,,Nature imagery as a creative remix of your hardware interests.
+921,93,CREATIVE CROSSOVERS,Kitchen-table technology,teapottelemetry.com,Teapot Telemetry,Yes,Everyday objects paired with your maker and coding themes.
+922,93,CREATIVE CROSSOVERS,Kitchen-table technology,toasterterminal.dev,Toaster Terminal,,Everyday objects paired with your maker and coding themes.
+923,93,CREATIVE CROSSOVERS,Kitchen-table technology,spoonandservo.com,Spoon And Servo,,Everyday objects paired with your maker and coding themes.
+924,93,CREATIVE CROSSOVERS,Kitchen-table technology,kettlekernel.com,Kettle Kernel,,Everyday objects paired with your maker and coding themes.
+925,93,CREATIVE CROSSOVERS,Kitchen-table technology,waffleworkbench.com,Waffle Workbench,,Everyday objects paired with your maker and coding themes.
+926,93,CREATIVE CROSSOVERS,Kitchen-table technology,biscuitbreadboard.com,Biscuit Breadboard,,Everyday objects paired with your maker and coding themes.
+927,93,CREATIVE CROSSOVERS,Kitchen-table technology,pantryprocessor.com,Pantry Processor,,Everyday objects paired with your maker and coding themes.
+928,93,CREATIVE CROSSOVERS,Kitchen-table technology,cupboardcompiler.com,Cupboard Compiler,,Everyday objects paired with your maker and coding themes.
+929,93,CREATIVE CROSSOVERS,Kitchen-table technology,mugandmicrochip.com,Mug And Microchip,,Everyday objects paired with your maker and coding themes.
+930,93,CREATIVE CROSSOVERS,Kitchen-table technology,saucersyntax.com,Saucer Syntax,,Everyday objects paired with your maker and coding themes.
+931,94,CREATIVE CROSSOVERS,Cosmic tinkering,nebulanotebook.dev,Nebula Notebook,Yes,"Space imagery for ambitious little projects, used as a creative direction."
+932,94,CREATIVE CROSSOVERS,Cosmic tinkering,cometcapacitor.com,Comet Capacitor,,"Space imagery for ambitious little projects, used as a creative direction."
+933,94,CREATIVE CROSSOVERS,Cosmic tinkering,orbitandohms.com,Orbit And Ohms,,"Space imagery for ambitious little projects, used as a creative direction."
+934,94,CREATIVE CROSSOVERS,Cosmic tinkering,lunarlogiclodge.com,Lunar Logic Lodge,,"Space imagery for ambitious little projects, used as a creative direction."
+935,94,CREATIVE CROSSOVERS,Cosmic tinkering,stardustsocket.com,Stardust Socket,,"Space imagery for ambitious little projects, used as a creative direction."
+936,94,CREATIVE CROSSOVERS,Cosmic tinkering,asteroidassembler.com,Asteroid Assembler,,"Space imagery for ambitious little projects, used as a creative direction."
+937,94,CREATIVE CROSSOVERS,Cosmic tinkering,saturnsolder.com,Saturn Solder,,"Space imagery for ambitious little projects, used as a creative direction."
+938,94,CREATIVE CROSSOVERS,Cosmic tinkering,rocketresistor.com,Rocket Resistor,,"Space imagery for ambitious little projects, used as a creative direction."
+939,94,CREATIVE CROSSOVERS,Cosmic tinkering,tinycosmiccircuit.com,Tiny Cosmic Circuit,,"Space imagery for ambitious little projects, used as a creative direction."
+940,94,CREATIVE CROSSOVERS,Cosmic tinkering,galaxygearbox.com,Galaxy Gearbox,,"Space imagery for ambitious little projects, used as a creative direction."
+941,95,CREATIVE CROSSOVERS,Adventure in miniature,pocketexpedition.dev,Pocket Expedition,Yes,Small inventions with names that suggest a bigger world.
+942,95,CREATIVE CROSSOVERS,Adventure in miniature,littlelogicvoyage.com,Little Logic Voyage,,Small inventions with names that suggest a bigger world.
+943,95,CREATIVE CROSSOVERS,Adventure in miniature,tinytrailmachine.com,Tiny Trail Machine,,Small inventions with names that suggest a bigger world.
+944,95,CREATIVE CROSSOVERS,Adventure in miniature,thimbletelemetry.com,Thimble Telemetry,,Small inventions with names that suggest a bigger world.
+945,95,CREATIVE CROSSOVERS,Adventure in miniature,miniaturemission.com,Miniature Mission,,Small inventions with names that suggest a bigger world.
+946,95,CREATIVE CROSSOVERS,Adventure in miniature,compassandcode.dev,Compass And Code,,Small inventions with names that suggest a bigger world.
+947,95,CREATIVE CROSSOVERS,Adventure in miniature,smallwonderwander.com,Small Wonder Wander,,Small inventions with names that suggest a bigger world.
+948,95,CREATIVE CROSSOVERS,Adventure in miniature,pocketquestworks.com,Pocket Quest Works,,Small inventions with names that suggest a bigger world.
+949,95,CREATIVE CROSSOVERS,Adventure in miniature,pebblepilotclub.com,Pebble Pilot Club,,Small inventions with names that suggest a bigger world.
+950,95,CREATIVE CROSSOVERS,Adventure in miniature,tinytinkeratlas.com,Tiny Tinker Atlas,,Small inventions with names that suggest a bigger world.
+951,96,CREATIVE CROSSOVERS,Delightfully odd brands,pickleprocessor.com,Pickle Processor,Yes,Unusual combinations for something less obviously technical.
+952,96,CREATIVE CROSSOVERS,Delightfully odd brands,goosepowered.dev,Goose Powered,,Unusual combinations for something less obviously technical.
+953,96,CREATIVE CROSSOVERS,Delightfully odd brands,jellybeanjoystick.com,Jellybean Joystick,,Unusual combinations for something less obviously technical.
+954,96,CREATIVE CROSSOVERS,Delightfully odd brands,wafflewavelength.com,Waffle Wavelength,,Unusual combinations for something less obviously technical.
+955,96,CREATIVE CROSSOVERS,Delightfully odd brands,noodlenavigator.com,Noodle Navigator,,Unusual combinations for something less obviously technical.
+956,96,CREATIVE CROSSOVERS,Delightfully odd brands,puddingprotocol.com,Pudding Protocol,,Unusual combinations for something less obviously technical.
+957,96,CREATIVE CROSSOVERS,Delightfully odd brands,confetticonsole.dev,Confetti Console,,Unusual combinations for something less obviously technical.
+958,96,CREATIVE CROSSOVERS,Delightfully odd brands,turnipterminal.com,Turnip Terminal,,Unusual combinations for something less obviously technical.
+959,96,CREATIVE CROSSOVERS,Delightfully odd brands,pancakepacket.com,Pancake Packet,,Unusual combinations for something less obviously technical.
+960,96,CREATIVE CROSSOVERS,Delightfully odd brands,biscuitbandwidth.com,Biscuit Bandwidth,,Unusual combinations for something less obviously technical.
+961,97,CREATIVE CROSSOVERS,Chaotic but capable,competentchaosclub.com,Competent Chaos Club,Yes,Playful confidence inspired by your many practical projects.
+962,97,CREATIVE CROSSOVERS,Chaotic but capable,mischiefwithmethods.dev,Mischief With Methods,,Playful confidence inspired by your many practical projects.
+963,97,CREATIVE CROSSOVERS,Chaotic but capable,oddlyoperational.com,Oddly Operational,,Playful confidence inspired by your many practical projects.
+964,97,CREATIVE CROSSOVERS,Chaotic but capable,unreasonablyuseful.dev,Unreasonably Useful,,Playful confidence inspired by your many practical projects.
+965,97,CREATIVE CROSSOVERS,Chaotic but capable,mostlyundercontrol.com,Mostly Under Control,,Playful confidence inspired by your many practical projects.
+966,97,CREATIVE CROSSOVERS,Chaotic but capable,delightfullydebuggable.com,Delightfully Debuggable,,Playful confidence inspired by your many practical projects.
+967,97,CREATIVE CROSSOVERS,Chaotic but capable,usefullittlechaos.com,Useful Little Chaos,,Playful confidence inspired by your many practical projects.
+968,97,CREATIVE CROSSOVERS,Chaotic but capable,tinkeringwithintent.com,Tinkering With Intent,,Playful confidence inspired by your many practical projects.
+969,97,CREATIVE CROSSOVERS,Chaotic but capable,mildlymadmachines.com,Mildly Mad Machines,,Playful confidence inspired by your many practical projects.
+970,97,CREATIVE CROSSOVERS,Chaotic but capable,somehowitships.com,Somehow It Ships,,Playful confidence inspired by your many practical projects.
+971,98,CREATIVE CROSSOVERS,Invented brand sounds,cogmello.com,Cogmello / cog-MEL-oh,Yes,Fresh coined-name ideas with suggested readings in the searchable list.
+972,98,CREATIVE CROSSOVERS,Invented brand sounds,voltumble.com,Voltumble / volt-UM-bull,,Fresh coined-name ideas with suggested readings in the searchable list.
+973,98,CREATIVE CROSSOVERS,Invented brand sounds,botterly.com,Botterly / BOT-er-lee,,Fresh coined-name ideas with suggested readings in the searchable list.
+974,98,CREATIVE CROSSOVERS,Invented brand sounds,tickaroo.com,Tickaroo / tick-uh-ROO,,Fresh coined-name ideas with suggested readings in the searchable list.
+975,98,CREATIVE CROSSOVERS,Invented brand sounds,solderoo.com,Solderoo / SOL-der-oo,,Fresh coined-name ideas with suggested readings in the searchable list.
+976,98,CREATIVE CROSSOVERS,Invented brand sounds,bracketto.dev,Bracketto / brack-ET-oh,,Fresh coined-name ideas with suggested readings in the searchable list.
+977,98,CREATIVE CROSSOVERS,Invented brand sounds,roveberry.com,Roveberry / ROVE-bear-ee,,Fresh coined-name ideas with suggested readings in the searchable list.
+978,98,CREATIVE CROSSOVERS,Invented brand sounds,pinoodle.com,Pinoodle / pin-OO-dull,,Fresh coined-name ideas with suggested readings in the searchable list.
+979,98,CREATIVE CROSSOVERS,Invented brand sounds,byteblossom.com,Byteblossom / bite-BLOSS-um,,Fresh coined-name ideas with suggested readings in the searchable list.
+980,98,CREATIVE CROSSOVERS,Invented brand sounds,tinkletop.com,Tinkletop / TINK-ul-top,,Fresh coined-name ideas with suggested readings in the searchable list.
+981,99,CREATIVE CROSSOVERS,Cross-project identities,buttonsbitsandbots.com,Buttons Bits And Bots,Yes,"Broad names that leave room for robots, watches, AI, and software."
+982,99,CREATIVE CROSSOVERS,Cross-project identities,thecuriositycircuit.com,The Curiosity Circuit,,"Broad names that leave room for robots, watches, AI, and software."
+983,99,CREATIVE CROSSOVERS,Cross-project identities,littlemachinesbigideas.com,Little Machines Big Ideas,,"Broad names that leave room for robots, watches, AI, and software."
+984,99,CREATIVE CROSSOVERS,Cross-project identities,codecopperclockwork.com,Code Copper Clockwork,,"Broad names that leave room for robots, watches, AI, and software."
+985,99,CREATIVE CROSSOVERS,Cross-project identities,onemorecontraption.com,One More Contraption,,"Broad names that leave room for robots, watches, AI, and software."
+986,99,CREATIVE CROSSOVERS,Cross-project identities,inventedonthebench.com,Invented On The Bench,,"Broad names that leave room for robots, watches, AI, and software."
+987,99,CREATIVE CROSSOVERS,Cross-project identities,hardwarewithhumor.com,Hardware With Humor,,"Broad names that leave room for robots, watches, AI, and software."
+988,99,CREATIVE CROSSOVERS,Cross-project identities,curiousthingsdepartment.com,Curious Things Department,,"Broad names that leave room for robots, watches, AI, and software."
+989,99,CREATIVE CROSSOVERS,Cross-project identities,workshopofwhatif.com,Workshop Of What If,,"Broad names that leave room for robots, watches, AI, and software."
+990,99,CREATIVE CROSSOVERS,Cross-project identities,theoddprojectsoffice.com,The Odd Projects Office,,"Broad names that leave room for robots, watches, AI, and software."
+991,100,CREATIVE CROSSOVERS,Final wildcard shelf,thewobbleworks.com,The Wobble Works,Yes,"A closing collection of distinctive, flexible maker names."
+992,100,CREATIVE CROSSOVERS,Final wildcard shelf,copperandconfetti.com,Copper And Confetti,,"A closing collection of distinctive, flexible maker names."
+993,100,CREATIVE CROSSOVERS,Final wildcard shelf,littlelogicweather.com,Little Logic Weather,,"A closing collection of distinctive, flexible maker names."
+994,100,CREATIVE CROSSOVERS,Final wildcard shelf,bitsofwonderment.com,Bits Of Wonderment,,"A closing collection of distinctive, flexible maker names."
+995,100,CREATIVE CROSSOVERS,Final wildcard shelf,thegadgetplot.com,The Gadget Plot,,"A closing collection of distinctive, flexible maker names."
+996,100,CREATIVE CROSSOVERS,Final wildcard shelf,aquietlittlerobot.com,A Quiet Little Robot,,"A closing collection of distinctive, flexible maker names."
+997,100,CREATIVE CROSSOVERS,Final wildcard shelf,pocketmischiefworks.com,Pocket Mischief Works,,"A closing collection of distinctive, flexible maker names."
+998,100,CREATIVE CROSSOVERS,Final wildcard shelf,theprototypepost.com,The Prototype Post,,"A closing collection of distinctive, flexible maker names."
+999,100,CREATIVE CROSSOVERS,Final wildcard shelf,wonderwired.dev,Wonder Wired,,"A closing collection of distinctive, flexible maker names."
+1000,100,CREATIVE CROSSOVERS,Final wildcard shelf,builtonadetour.com,Built On A Detour,,"A closing collection of distinctive, flexible maker names."

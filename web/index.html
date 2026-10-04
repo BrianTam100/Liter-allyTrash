@@ -1,13 +1,5 @@
 {% extends 'base.html' %}
 {% block content %}
-<section class="gemini-feature" aria-labelledby="gemini-feature-heading">
-  <div><span class="gemini-badge">{{ icon('spark') }} GEMINI SORT GUIDE</span>
-    <h1 id="gemini-feature-heading">Not sure where it goes?</h1>
-    <p>Show Gemini a photo or describe a tricky item. Get a clear plan for sorting, preparing, and reusing it.</p>
-    <a class="button primary" href="{{ url_for('gemini_guide') }}">{{ icon('spark') }} Explore with Gemini <span aria-hidden="true">↗</span></a>
-  </div>
-  <div class="gemini-feature-detail"><span class="gemini-orbit" aria-hidden="true">✦</span><strong>Look closer. Waste less.</strong><span>Photos · Mixed materials · Second lives</span></div>
-</section>
 <div class="stat-grid">
   <section class="stat-card accent"><div class="stat-label">Recycling points {{ icon('spark') }}</div><strong id="stat-points">{{ stats.points }}</strong></section>
   <section class="stat-card"><div class="stat-label">Items recycled {{ icon('recycle') }}</div><strong id="stat-recycled">{{ stats.recycled }}</strong></section>

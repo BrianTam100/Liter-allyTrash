@@ -55,6 +55,51 @@ class WebsiteTests(unittest.TestCase):
         self.assertIn(b'data-command="z"', controls.data)
         self.assertIn(b'data-command="c"', controls.data)
 
+    def test_detection_log_cache_reuses_data_and_expires(self):
+        db = self.app.extensions["database"]
+        with patch.object(db, "detection_summary", wraps=db.detection_summary) as summary:
+            with patch("website.time.monotonic", return_value=100):
+                self.assertEqual(self.client.get("/log").status_code, 200)
+                self.client.get("/log")
+                self.assertEqual(summary.call_count, 1)
+                self.client.get("/log?period=week")
+                self.assertEqual(summary.call_count, 2)
+            with patch("website.time.monotonic", return_value=131):
+                self.client.get("/log")
+                self.assertEqual(summary.call_count, 3)
+
+    def test_dashboard_cache_reuses_data_on_return_from_controls(self):
+        db = self.app.extensions["database"]
+        with patch.object(db, "stats", wraps=db.stats) as stats:
+            with patch("website.time.monotonic", return_value=100):
+                self.visit()
+                self.client.get("/controls")
+                self.visit()
+                self.assertEqual(stats.call_count, 1)
+                self.drop(2)
+                page = self.visit()
+                self.assertIn(b'id="stat-items">2<', page.data)
+                self.assertEqual(stats.call_count, 3)  # Write response and fresh page.
+            with patch("website.time.monotonic", return_value=131):
+                self.visit()
+                self.assertEqual(stats.call_count, 4)
+
+    def test_detection_log_cache_invalidates_after_writes(self):
+        self.visit()
+        db = self.app.extensions["database"]
+        with patch.object(db, "detection_summary", wraps=db.detection_summary) as summary:
+            self.client.get("/log")
+            scan_id = str(uuid.uuid4())
+            db.add_detection(scan_id, 1, "Can", "recycling", False, 0.8, "browser")
+            self.assertIn(b"Can", self.client.get("/log").data)
+            db.add_collection(1, "recycling", 1, scan_id, "Can")
+            self.client.get("/log")
+            db.empty_bin("recycling")
+            self.client.get("/log")
+            db.clear_all()
+            self.assertIn(b"Nothing scanned", self.client.get("/log").data)
+            self.assertEqual(summary.call_count, 5)
+
     def test_no_account_needed_but_csrf_still_required(self):
         self.visit()
         other = self.app.test_client()

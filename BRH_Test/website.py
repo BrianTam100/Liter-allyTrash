@@ -68,6 +68,7 @@ def create_app(config=None, bridge=None, classifier_service=None):
                 pass
         app.config["SECRET_KEY"] = key_path.read_text(encoding="utf-8").strip()
     db = Database(app.config["DATABASE_URL"], app.config["SQLITE_PATH"])
+    atexit.register(db.close)
     if not db.is_tiger:
         db.initialize()
     rover = bridge or RoverBridge()
@@ -78,13 +79,18 @@ def create_app(config=None, bridge=None, classifier_service=None):
     atexit.register(detector.close)
     pilot_lock = threading.Lock()
     pilot = {}
+    log_cache = {}
+    log_cache_lock = threading.Lock()
+    dashboard_cache = {}
+    dashboard_cache_lock = threading.Lock()
 
     def pilot_user():
         with pilot_lock:
             if "id" not in pilot:
                 account = db.user_by_email(PILOT_EMAIL)
                 pilot["id"] = account["id"] if account else db.create_user(PILOT_EMAIL, PILOT_NAME, "")
-        return db.user(pilot["id"])
+                pilot["user"] = {"id": pilot["id"], "email": PILOT_EMAIL, "display_name": PILOT_NAME}
+        return pilot["user"]
 
     def csrf_token():
         if "csrf_token" not in session:
@@ -145,8 +151,15 @@ def create_app(config=None, bridge=None, classifier_service=None):
 
     @app.get("/")
     def index():
-        return render_template("index.html", stats=db.stats(g.user["id"]),
-            latest=db.detections(limit=5), recent=db.recent(g.user["id"]))
+        with dashboard_cache_lock:
+            revision = db.log_cache_revision
+            cached = dashboard_cache.get(g.user["id"])
+            if cached is None or cached[0] != revision or time.monotonic() - cached[1] >= 30:
+                data = dict(stats=db.stats(g.user["id"]), recent=db.recent(g.user["id"]))
+                dashboard_cache[g.user["id"]] = (revision, time.monotonic(), data)
+            else:
+                data = cached[2]
+        return render_template("index.html", **data)
 
     @app.get("/controls")
     def controls():
@@ -157,8 +170,18 @@ def create_app(config=None, bridge=None, classifier_service=None):
         period = request.args.get("period", "all")
         if period not in {"all", "week", "month"}:
             period = "all"
-        return render_template("detections.html", period=period, summary=db.detection_summary(period),
-            items=db.detection_items(period), log=db.detections(period), bins=db.bin_contents(),
+        # Cache data on the laptop, separately for each time filter. Render the
+        # page per visitor so session/CSRF tokens never enter the shared cache.
+        with log_cache_lock:
+            revision = db.log_cache_revision
+            cached = log_cache.get(period)
+            if cached is None or cached[0] != revision or time.monotonic() - cached[1] >= 30:
+                data = dict(summary=db.detection_summary(period), items=db.detection_items(period),
+                    log=db.detections(period), bins=db.bin_contents())
+                log_cache[period] = (revision, time.monotonic(), data)
+            else:
+                data = cached[2]
+        return render_template("detections.html", period=period, **data,
             lid_available=detector.service.lid is not None)
 
     @app.get("/settings")
