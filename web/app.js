@@ -501,6 +501,8 @@ if ($("#connect-button") && signedIn) {
     $("#active-mode").textContent = (next.mode || "manual").toUpperCase();
     document.querySelectorAll("[data-mode-card]").forEach((card) => card.classList.toggle("selected-mode", owned && card.dataset.modeCard === next.mode));
     $("#voice-status").textContent = next.voice_error ? "Voice session ended. Enable it again to retry." : next.mode === "voice" ? (next.voice_ready ? "Listening on the laptop. Say a direction or “stop.”" : "Starting the voice session…") : "Microphone activates only when enabled.";
+    const gestureButton = $('[data-mode="gesture"]');
+    gestureButton.textContent = owned && next.mode === "gesture" ? "Disable hand tracking" : "Enable hand tracking";
     const camera = $("#camera-panel");
     const cameraActive = owned && next.mode === "gesture";
     if (cameraActive && camera.hidden) $("#camera-view").src = "/api/rover/camera";
@@ -596,11 +598,13 @@ if ($("#connect-button") && signedIn) {
 
   document.querySelectorAll("[data-mode]").forEach((button) => button.addEventListener("click", async () => {
     if (status.busy) { tellBusy(); return; }
+    // Pressing the hand tracking button while it is on turns it off and hides the camera view.
+    const mode = button.dataset.mode === "gesture" && status.mode === "gesture" ? "manual" : button.dataset.mode;
     changingMode = true;
     clearHeld();
     showStatus(status);
-    feedback("Starting " + button.dataset.mode + " controls…");
-    try { showStatus(await api("/api/rover/mode", {mode:button.dataset.mode})); feedback("Control mode updated. Manual input always has priority."); }
+    feedback(mode === "manual" && button.dataset.mode === "gesture" ? "Turning off hand tracking…" : "Starting " + mode + " controls…");
+    try { showStatus(await api("/api/rover/mode", {mode})); feedback(mode === "manual" && button.dataset.mode === "gesture" ? "Hand tracking off. Back to manual controls." : "Control mode updated. Manual input always has priority."); }
     catch (error) { feedback(error.message, true); }
     finally {
       changingMode = false;
