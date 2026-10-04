@@ -257,7 +257,7 @@ if (collectionForm) {
         if (generation !== token) return;
         if (error.status !== 429) { stop(); message(error.name === 'AbortError' ? 'Scanning timed out. Start again or try a photo.' : error.message,true); return; }
       }
-      await new Promise(resolve => setTimeout(resolve,350));
+      await new Promise(resolve => setTimeout(resolve,100));
     }
   }
 
@@ -380,6 +380,12 @@ if ($("#connect-button") && signedIn) {
     $("#rover-feedback").classList.toggle("error", error);
   }
 
+  const busyMessage = "Someone else is driving the rover right now. You can take over when they disconnect.";
+  function tellBusy() {
+    feedback(busyMessage, true);
+    toast(busyMessage, true);
+  }
+
   function showStatus(next) {
     // Ignore responses captured before a newer STOP or mode change.
     if (next.epoch !== undefined && status.epoch !== undefined && next.epoch < status.epoch) return;
@@ -388,14 +394,19 @@ if ($("#connect-button") && signedIn) {
     status = next;
     const owned = next.connected && next.owned;
     const badge = $("#connection-badge");
-    badge.textContent = next.busy ? "ANOTHER PILOT IS DRIVING" : owned ? (next.link === "wifi" ? "WI-FI TARGET SET" : "BLUETOOTH LINK OPEN") : "ROVER OFFLINE";
+    badge.textContent = next.busy ? "SOMEONE ELSE IS DRIVING" : owned ? (next.link === "wifi" ? "WI-FI TARGET SET" : "BLUETOOTH LINK OPEN") : "ROVER OFFLINE";
     badge.classList.toggle("online", owned);
-    $("#connect-button").textContent = owned ? "Disconnect" : "Connect rover";
-    $("#connect-button").disabled = next.busy || changingMode;
+    $("#connect-button").textContent = owned ? "Disconnect" : next.busy ? "Someone else is driving" : "Connect rover";
+    $("#connect-button").disabled = changingMode;
     $("#transport").disabled = next.connected;
     $("#serial-port").disabled = next.connected;
-    document.querySelectorAll(".drive-button, [data-mode], #emergency-stop").forEach((button) => { button.disabled = !owned || changingMode; });
-    $("#connection-note").textContent = next.busy ? "The current pilot must disconnect before you can take control." : owned && next.link === "wifi" ? "Commands target the configured Pi. UDP does not confirm delivery." : owned ? `Bluetooth link open on ${next.port || "the serial port"}. Keep the rover in view.` : "Run this website on the laptop paired with the Pi.";
+    // While someone else drives, controls stay clickable (dimmed) so pressing them explains why nothing happens.
+    $("#connect-button").setAttribute("aria-disabled", String(Boolean(next.busy)));
+    document.querySelectorAll(".drive-button, [data-mode], #emergency-stop").forEach((button) => {
+      button.disabled = changingMode || (!owned && !next.busy);
+      button.setAttribute("aria-disabled", String(!owned));
+    });
+    $("#connection-note").textContent = next.busy ? busyMessage : owned && next.link === "wifi" ? "Commands target the configured Pi. UDP does not confirm delivery." : owned ? `Bluetooth link open on ${next.port || "the serial port"}. Keep the rover in view.` : "Run this website on the laptop paired with the Pi.";
     $("#motion-state").textContent = owned ? (labels[next.command] || `HAND ANGLE ${next.command}°`) : "STANDING BY";
     $("#active-mode").textContent = (next.mode || "manual").toUpperCase();
     document.querySelectorAll("[data-mode-card]").forEach((card) => card.classList.toggle("selected-mode", owned && card.dataset.modeCard === next.mode));
@@ -426,6 +437,7 @@ if ($("#connect-button") && signedIn) {
   }
 
   function begin(command, key = null) {
+    if (status.busy) { tellBusy(); return; }
     if (!status.owned || changingMode) return;
     clearHeld();
     heldCommand = command;
@@ -445,6 +457,7 @@ if ($("#connect-button") && signedIn) {
   }
 
   async function stopAll() {
+    if (status.busy) { tellBusy(); return; }
     clearHeld();
     if (!status.owned) return;
     try { showStatus(await api("/api/rover/stop", {})); feedback("Rover stopped. Assisted controls are off."); }
@@ -452,6 +465,7 @@ if ($("#connect-button") && signedIn) {
   }
 
   $("#connect-button").addEventListener("click", async () => {
+    if (status.busy) { tellBusy(); return; }
     const disconnecting = status.owned;
     const button = $("#connect-button");
     button.disabled = true;
@@ -469,6 +483,7 @@ if ($("#connect-button") && signedIn) {
   });
 
   document.querySelectorAll("[data-mode]").forEach((button) => button.addEventListener("click", async () => {
+    if (status.busy) { tellBusy(); return; }
     changingMode = true;
     clearHeld();
     showStatus(status);
@@ -504,8 +519,13 @@ if ($("#connect-button") && signedIn) {
   $("#center-stop").addEventListener("click", stopAll);
   document.addEventListener("keydown", (event) => {
     if (/^(INPUT|SELECT|TEXTAREA)$/.test(event.target.tagName) || event.target.isContentEditable) return;
-    if (!status.owned || changingMode) return;
     const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+    if (status.busy && (commands[key] || event.key === "Escape" || event.key === " ")) {
+      event.preventDefault();
+      if (!event.repeat) tellBusy();
+      return;
+    }
+    if (!status.owned || changingMode) return;
     if (event.key === "Escape" || (event.key === " " && !event.target.matches("[data-command]"))) { event.preventDefault(); if (!event.repeat) stopAll(); }
     else if (commands[key]) { event.preventDefault(); if (!event.repeat) begin(commands[key], key); }
   });

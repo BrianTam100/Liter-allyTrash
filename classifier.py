@@ -167,7 +167,7 @@ class TrashClassifier:
         self.labels = json.loads((ROOT / "trash_items.json").read_text())
         if not self.labels or len(set(self.labels)) != len(self.labels):
             raise ValueError("trash_items.json must contain unique item names.")
-        self.device = "mps" if torch.backends.mps.is_available() else "cpu"
+        self.device = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
         name = "model-patch16" if MODEL_ID == "openai/clip-vit-base-patch16" else MODEL_ID.split("/")[-1]
         local_model = ROOT / ".model-cache" / ("ready-" + name)
         cached = (local_model / "config.json").exists() and (local_model / "model.safetensors").exists()
@@ -185,14 +185,15 @@ class TrashClassifier:
                 raise RuntimeError("Downloaded weights were not found in the model cache.")
             target = local_model / "model.safetensors"
             cache_weights(weights[-1], target)
-        self.model = self.model.to(self.device)
+        # Half precision roughly halves GPU inference time with no visible change in scores.
+        self.model = self.model.to(self.device, torch.float16 if self.device == "cuda" else torch.float32)
         prompts = [template.format(ALIASES.get(name, name))
                    for name in self.labels + BACKGROUND for template in TEMPLATES]
         chunks = []
         with torch.inference_mode():
             for start in range(0, len(prompts), 48):
                 tokens = self.processor(text=prompts[start:start + 48], return_tensors="pt", padding=True, truncation=True).to(self.device)
-                features = self.model.get_text_features(**tokens)
+                features = self.model.get_text_features(**tokens).float()
                 chunks.append(features / features.norm(dim=-1, keepdim=True))
             features = torch.cat(chunks).reshape(-1, len(TEMPLATES), chunks[0].shape[-1]).mean(dim=1)
             self.text_features = features / features.norm(dim=-1, keepdim=True)
@@ -219,9 +220,9 @@ class TrashClassifier:
             rgb = cv2.copyMakeBorder(rgb, top, side - height - top, left, side - width - left,
                                      cv2.BORDER_CONSTANT, value=(128, 128, 128))
         # Average the frame with its mirror image for a steadier match.
-        inputs = self.processor(images=[rgb, np.ascontiguousarray(rgb[:, ::-1])], return_tensors="pt").to(self.device)
+        inputs = self.processor(images=[rgb, np.ascontiguousarray(rgb[:, ::-1])], return_tensors="pt").to(self.device, self.model.dtype)
         with self.torch.inference_mode():
-            features = self.model.get_image_features(**inputs)
+            features = self.model.get_image_features(**inputs).float()
             features = features / features.norm(dim=-1, keepdim=True)
             features = features.mean(dim=0, keepdim=True)
             features = features / features.norm(dim=-1, keepdim=True)

@@ -15,6 +15,9 @@ import threading
 import time
 
 
+BUSY = "Someone else is driving the rover right now. You can take over when they disconnect."
+
+
 def list_serial_ports():
     """Serial ports on this laptop, flagging outgoing Bluetooth links to a paired device."""
     from serial.tools import list_ports
@@ -89,7 +92,7 @@ class RoverBridge:
         if not self.transport:
             raise ValueError("Connect the rover before using controls.")
         if not owner or self.owner != owner:
-            raise ValueError("Another pilot has control of this rover.")
+            raise ValueError(BUSY)
 
     def _open_serial(self, choice=None, fresh=False):
         """Return the open Bluetooth port, opening it outside the bridge lock so status stays responsive."""
@@ -132,14 +135,14 @@ class RoverBridge:
         for attempt in range(2):
             with self.lock:
                 if self.owner and self.owner != owner:
-                    raise ValueError("Another pilot has control. Wait for them to disconnect.")
+                    raise ValueError(BUSY)
                 if self.transport:
                     raise ValueError("Disconnect before changing the connection.")
             # A cached port can go stale while idle, so a failed first STOP reopens it once.
             transport = self._open_serial(port, fresh=attempt > 0) if kind == "bluetooth" else None
             with self.lock:
                 if self.transport or (self.owner and self.owner != owner):
-                    raise ValueError("Another pilot connected first. Wait for them to disconnect.")
+                    raise ValueError(BUSY)
                 if kind == "wifi":
                     host = os.getenv("PI_IP", "172.20.8.62")
                     ipaddress.ip_address(host)

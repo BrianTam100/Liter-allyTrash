@@ -64,6 +64,7 @@ class DashboardIntegrationTests(unittest.TestCase):
         log = self.app.extensions['database'].detections()
         self.assertEqual([(row['label'],row['source'],row['confirmed']) for row in log],[('plastic water bottle','photo',1)])
 
+    @patch.object(ItemLock, 'LOCK_SECONDS', 0)
     def test_live_frames_share_one_scan_id_and_confirmation_is_idempotent(self):
         self.post('/api/classifier/start',{'source':'server'})
         readings = [self.post('/api/classifier/camera',live=True).get_json() for _ in range(5)]
@@ -82,6 +83,20 @@ class DashboardIntegrationTests(unittest.TestCase):
         with patch('classifier_service.time.monotonic', side_effect=[100,104.3,108.6]):
             states = [item.update(result)['state'] for _ in range(3)]
         self.assertEqual(states, ['checking','checking','locked'])
+
+    def test_brief_gap_or_misreading_does_not_start_a_second_scan(self):
+        item = ItemLock()
+        bottle = {'label':'plastic water bottle', 'category':'Recyclable', 'score':0.8, 'seconds':0.05}
+        bag = {**bottle, 'label':'chip bag', 'category':'Trash'}
+        empty = {**bottle, 'label':'No sorted item detected', 'category':None}
+        readings = [bottle]*5 + [empty]*4 + [bottle] + [bag]*6 + [bottle] + [empty]*8
+        with patch('classifier_service.time.monotonic', side_effect=[100 + 0.15*i for i in range(len(readings))]):
+            results = [item.update(reading) for reading in readings]
+        states = [result['state'] for result in results]
+        self.assertEqual(states[:5], ['checking']*4 + ['locked'])  # locks after 0.5 s, not 3 fast readings
+        self.assertEqual(states[5:17], ['locked']*12)  # a 0.6 s gap or 0.9 s misreading keeps the lock
+        self.assertEqual({result['scan_id'] for result in results[4:17]}, {results[4]['scan_id']})
+        self.assertEqual(states[-1], 'empty')  # gone for over a second clears it
 
     def test_trash_recognition_never_earns_recycling_points(self):
         self.service.model.category = 'Trash'
