@@ -33,7 +33,7 @@ def main():
     args = parser.parse_args()
 
     print(f"Targeting Raspberry Pi at {args.pi_ip}:{UDP_PORT}")
-    print("Hold W/A/S/D (or arrows) to drive. Keyboard always wins over voice.")
+    print("Hold W/A/S/D (or arrows) to drive; Z/C to strafe left/right. Keyboard always wins over voice.")
     print("Press Q to quit.")
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -60,6 +60,10 @@ def main():
                 current_state = "d"
             elif keyboard.is_pressed("s") or keyboard.is_pressed("down"):
                 current_state = "s"
+            elif keyboard.is_pressed("z"):
+                current_state = "z"
+            elif keyboard.is_pressed("c"):
+                current_state = "c"
             elif keyboard.is_pressed("q"):
                 print("Exiting...")
                 sock.sendto(b"x", (args.pi_ip, UDP_PORT))

@@ -76,6 +76,12 @@ class Database:
                 source TEXT NOT NULL CHECK (source IN ('browser', 'server', 'photo')),
                 created_at {timestamp} NOT NULL)""")
             conn.execute("CREATE INDEX IF NOT EXISTS lt_detections_time ON lt_detections(created_at)")
+            conn.execute("""CREATE TABLE IF NOT EXISTS lt_companion_state (
+                conversation_id TEXT PRIMARY KEY, state TEXT NOT NULL)""")
+            conn.execute(f"""CREATE TABLE IF NOT EXISTS lt_companion_events (
+                event_id TEXT PRIMARY KEY, conversation_id TEXT NOT NULL,
+                response TEXT NOT NULL, created_at {timestamp} NOT NULL)""")
+            conn.execute("CREATE INDEX IF NOT EXISTS lt_companion_events_time ON lt_companion_events(created_at)")
 
     def user(self, user_id):
         with self.connect() as conn:

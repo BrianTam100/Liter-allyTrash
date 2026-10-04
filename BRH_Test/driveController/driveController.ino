@@ -79,6 +79,12 @@ void loop()
       else if (cmd == 'd') {
         applyMecanum(0, 0, -1);
       }
+      else if (cmd == 'z') {
+        applyMecanum(0, -1, 0);
+      }
+      else if (cmd == 'c') {
+        applyMecanum(0, 1, 0);
+      }
       else if (cmd == 'x') {
         applyMecanum(0, 0, 0);
       }

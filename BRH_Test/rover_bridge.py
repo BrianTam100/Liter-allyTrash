@@ -13,6 +13,10 @@ import threading
 import time
 
 
+class RoverConnectionError(ConnectionError):
+    """A hardware connection failure with recovery steps for the pilot."""
+
+
 class RoverBridge:
     def __init__(self):
         self.lock = threading.RLock()
@@ -61,8 +65,17 @@ class RoverBridge:
                 raise ValueError("Disconnect before changing the connection.")
             if kind == "bluetooth":
                 import serial
-                self.transport = serial.Serial(os.getenv("ROVER_SERIAL_PORT", "COM8"),
-                    int(os.getenv("ROVER_BAUD", "115200")), timeout=0.2, write_timeout=0.3)
+                port = os.getenv("ROVER_SERIAL_PORT", "COM8")
+                try:
+                    self.transport = serial.Serial(port,
+                        int(os.getenv("ROVER_BAUD", "115200")), timeout=0.2, write_timeout=0.3)
+                except serial.SerialException as exc:
+                    self.error = (f"Could not open Bluetooth port {port}. "
+                        "Check that the Pi is powered on and in range, and its Bluetooth serial service is running. "
+                        "Verify that ROVER_SERIAL_PORT in BRH_Test/.env matches the Pi's outgoing COM port "
+                        "in Windows Bluetooth settings. Close other rover controllers, then retry. "
+                        "Restart the website after changing .env.")
+                    raise RoverConnectionError(self.error) from exc
             elif kind == "wifi":
                 host = os.getenv("PI_IP", "172.20.8.62")
                 ipaddress.ip_address(host)
@@ -79,7 +92,8 @@ class RoverBridge:
             try:
                 self._send("x", force=True)
             except Exception:
-                self.transport.close()
+                if self.transport is not None:
+                    self.transport.close()
                 self.transport, self.owner, self.link = None, None, "offline"
                 raise
 
@@ -107,7 +121,7 @@ class RoverBridge:
             self.heartbeat_at = time.monotonic()
 
     def command(self, owner, command, epoch, sequence):
-        if not isinstance(command, str) or command not in {"w", "a", "s", "d", "x"}:
+        if not isinstance(command, str) or command not in {"w", "a", "s", "d", "z", "c", "x"}:
             raise ValueError("Unknown drive command.")
         if type(epoch) is not int or type(sequence) is not int or sequence < 1:
             raise ValueError("A valid control epoch and sequence are required.")

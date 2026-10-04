@@ -5,3 +5,11 @@ __pycache__/
 key.pem
 ca-key.pem
 cert.pem
+.env
+.env.*
+!.env.example
+.instance/
+node_modules/
+spectrum/dist/
+spectrum/dist-test/
+.npm-cache/
