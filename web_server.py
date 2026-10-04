@@ -1,4 +1,4 @@
-"""Liter-ally Trash: one dashboard for classification, rewards, bins, and the rover."""
+"""Litter-ally Trash: one dashboard for classification, rewards, bins, and the rover."""
 import argparse
 import os
 import socket
@@ -58,7 +58,7 @@ def ensure_ca(ca, ca_key):
     if ca.exists() and ca_key.exists():
         return
     openssl("req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "3650",
-            "-keyout", ca_key, "-out", ca, "-subj", "/O=Liter-ally Trash/CN=Liter-ally Trash Local CA",
+            "-keyout", ca_key, "-out", ca, "-subj", "/O=Litter-ally Trash/CN=Litter-ally Trash Local CA",
             "-addext", "basicConstraints=critical,CA:TRUE,pathlen:0",
             "-addext", "keyUsage=critical,keyCertSign,cRLSign",
             "-addext", f"nameConstraints=critical,{CA_CONSTRAINTS}")
@@ -79,7 +79,7 @@ def ensure_cert(ip, cert, key, ca, ca_key):
             return
     names = "DNS:localhost,IP:127.0.0.1" + (f",IP:{ip}" if ip else "")
     openssl("req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "365",
-            "-keyout", key, "-out", cert, "-CA", ca, "-CAkey", ca_key, "-subj", "/O=Liter-ally Trash",
+            "-keyout", key, "-out", cert, "-CA", ca, "-CAkey", ca_key, "-subj", "/O=Litter-ally Trash",
             "-addext", "basicConstraints=critical,CA:FALSE",
             "-addext", "keyUsage=critical,digitalSignature,keyEncipherment",
             "-addext", "extendedKeyUsage=serverAuth",
@@ -114,7 +114,7 @@ def main():
         app = create_app({"CLASSIFIER_AUTOLOAD": False})
         try:
             app.extensions["database"].initialize()
-            print("Liter-ally Trash database initialized.", flush=True)
+            print("Litter-ally Trash database initialized.", flush=True)
         finally:
             app.extensions["classifier"].close()
             app.extensions["rover"].close()
@@ -168,7 +168,7 @@ def main():
         from werkzeug.serving import make_server
         server = make_server(args.host, args.port, app, threaded=True, ssl_context=context)
         serve, close_server = server.serve_forever, server.server_close
-    print(f"Liter-ally Trash: {scheme}://localhost:{args.port}", flush=True)
+    print(f"Litter-ally Trash: {scheme}://localhost:{args.port}", flush=True)
     print("Accounts: " + ("TigerData" if app.extensions["database"].is_tiger else "local development"), flush=True)
     if ip:
         print(f"On your Wi-Fi:  {scheme}://{ip}:{args.port}", flush=True)

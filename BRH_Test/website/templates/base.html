@@ -4,12 +4,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Liter-ally Trash: identify an item, choose the right bin, track your recycling rewards, and steer the rover from one dashboard.">
+  <meta name="description" content="Litter-ally Trash: identify an item, choose the right bin, track your recycling rewards, and steer the rover from one dashboard.">
   <meta name="theme-color" content="#121517">
   <meta name="color-scheme" content="dark">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>{% block title %}Dashboard{% endblock %} · Liter-ally Trash</title>
-  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <title>{% block title %}Dashboard{% endblock %} · Litter-ally Trash</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" sizes="any">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script src="{{ url_for('static', filename='app.js') }}" defer></script>
   <script src="{{ url_for('static', filename='companion.js') }}" defer></script>
@@ -17,8 +17,8 @@
 <body data-page="{{ request.endpoint }}" data-signed-in="true">
   <a class="skip-link" href="#main">Skip to content</a>
   <aside class="sidebar">
-    <a class="brand" href="{{ url_for('index') }}" aria-label="Liter-ally Trash home">
-      <span class="brand-mark">{{ icon('compass') }}</span><span>liter-ally<span class="brand-second">trash<span class="brand-period">.</span></span></span>
+    <a class="brand" href="{{ url_for('index') }}" aria-label="Litter-ally Trash home">
+      <span class="brand-mark"><img class="brand-logo" src="{{ url_for('static', filename='favicon.ico') }}" alt="" aria-hidden="true"></span><span>litter-ally<span class="brand-second">trash<span class="brand-period">.</span></span></span>
     </a>
     <nav aria-label="Main navigation" class="main-nav">
       <a href="{{ url_for('index') }}" class="nav-item {{ 'active' if request.endpoint == 'index' }}" {% if request.endpoint == 'index' %}aria-current="page"{% endif %}>{{ icon('grid') }}<span>Dashboard</span></a>

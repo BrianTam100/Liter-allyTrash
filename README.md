@@ -1,4 +1,4 @@
-﻿# Liter-ally Trash
+﻿# Litter-ally Trash
 
 One dashboard for joining the project, identifying waste, recording personal
 recycling, earning points, reviewing what the AI detected, and driving the SortRover.

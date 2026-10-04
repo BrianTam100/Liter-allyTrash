@@ -73,7 +73,7 @@ Common variations:
 The terminal should print:
 
 ```
-Liter-ally Trash: http://localhost:8000
+Litter-ally Trash: http://localhost:8000
 Accounts: local development     (or: TigerData)
 Model ready.                    (after the model loads; can take a while on first run)
 ```
@@ -99,7 +99,7 @@ stop the server and run this once:
 .\BRH_Test\.venv\Scripts\python.exe web_server.py --init-db
 ```
 
-It prints `Liter-ally Trash database initialized.` and exits. Then start the server as usual.
+It prints `Litter-ally Trash database initialized.` and exits. Then start the server as usual.
 The local database (`Accounts: local development`) sets itself up on every start.
 
 ## Problems

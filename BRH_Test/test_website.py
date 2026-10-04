@@ -42,7 +42,7 @@ class WebsiteTests(unittest.TestCase):
             self.assertEqual(response.status_code, 200, route)
             self.assertIn(b'lang="en"', response.data)
             self.assertIn(b'id="main"', response.data)
-            self.assertIn(b"Liter-ally Trash", response.data)
+            self.assertIn(b"Litter-ally Trash", response.data)
         self.assertEqual(self.client.get("/unknown").status_code, 404)
 
     def test_scanner_and_rover_console_have_their_own_pages(self):

@@ -1,4 +1,4 @@
-"""Liter-ally Trash dashboard. Run on the laptop paired with the Raspberry Pi."""
+"""Litter-ally Trash dashboard. Run on the laptop paired with the Raspberry Pi."""
 from __future__ import annotations
 
 import argparse
@@ -343,7 +343,7 @@ def create_app(config=None, bridge=None, classifier_service=None):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Liter-ally Trash — unified dashboard")
+    parser = argparse.ArgumentParser(description="Litter-ally Trash — unified dashboard")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--init-db", action="store_true", help="Create the accounts and collection tables, then exit")
@@ -353,10 +353,10 @@ def main():
         app.extensions["database"].initialize()
         app.extensions["classifier"].close()
         app.extensions["rover"].close()
-        print("Liter-ally Trash database initialized.")
+        print("Litter-ally Trash database initialized.")
         return
     from waitress import serve
-    print(f"Liter-ally Trash: http://{args.host}:{args.port}")
+    print(f"Litter-ally Trash: http://{args.host}:{args.port}")
     print("Storage: " + ("TigerData PostgreSQL" if app.extensions["database"].is_tiger else "local development SQLite"))
     try:
         serve(app, host=args.host, port=args.port, threads=8)

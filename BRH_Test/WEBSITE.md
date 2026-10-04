@@ -1,4 +1,4 @@
-# Liter-ally Trash
+# Litter-ally Trash
 
 A laptop-hosted website for the BRH_Test rover, with accounts, disposal history,
 recycling rewards, an AI detection log, and keyboard/touch, Grok voice, and hand controls.

@@ -1,5 +1,5 @@
 # Setting up bluetooth to send commands:
-## Liter-ally Trash dashboard
+## Litter-ally Trash dashboard
 
 The unified dashboard combines the `web` camera/photo classifier with login,
 personal bin history, recycling rewards, a TigerData leaderboard, and rover

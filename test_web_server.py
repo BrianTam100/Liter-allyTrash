@@ -132,7 +132,7 @@ class WebTests(unittest.TestCase):
     def test_home_and_unknown_path(self):
         status, body = self.request('/', method='GET')
         self.assertEqual(status, 200)
-        self.assertIn(b'Liter-ally Trash', body)
+        self.assertIn(b'Litter-ally Trash', body)
         self.assertEqual(self.request('/../classifier.py', method='GET')[0], 404)
 
     def test_camera_stream_requires_own_session(self):

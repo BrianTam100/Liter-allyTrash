@@ -1,10 +1,6 @@
-# SortRover: what we're building
+# Litter-ally Trash: what we're building
 
-**SortRover** (the website is called **Liter-ally Trash**) is a hackathon project: a
-small robot that drives around **carrying a trash can and a recycling can**. You
-hold up an item, an AI model running on a laptop works out which bin it belongs in,
-and the matching lid opens. A website ties it together: you drive the rover, scan
-items, confirm drops, and see what the AI detected.
+**Litter-ally Trash** is a hackathon project that consists of a small robot that drives around **carrying a trash can and a recycling can**. You hold up an item, an AI model running on a laptop works out which bin it belongs in, and the matching lid opens. A website ties it together: you drive the rover, scan items, confirm drops, and see what the AI detected.
 
 **Status (2026-10-03):** the live demo and judging are **within a day**. The priority
 is a **reliable demo**, not new features. See [demo-runbook.md](demo-runbook.md).

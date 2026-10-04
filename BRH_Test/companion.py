@@ -157,7 +157,7 @@ class Companion:
         if self.config.get("XAI_API_KEY"):
             context = {"shared_pilot_progress": self.db.stats(user_id),
                        "recent_drops": self.db.recent(user_id), "latest_detections": self.db.detections(limit=3)}
-            prompt = ("You are Rover, the Liter-ally Trash recycling teammate. Be warm and brief, attuned to the user's tone. "
+            prompt = ("You are Rover, the Litter-ally Trash recycling teammate. Be warm and brief, attuned to the user's tone. "
                       "You may advise but you have NO tools: never claim you recorded a drop, changed points, drove, stopped, "
                       "or opened anything. To record, explain 'log 2 plastic bottles in recycling', then an explicit confirmation. "
                       "All channels share the Pilot's recycling records; conversation memory is private to this sender in this chat. "

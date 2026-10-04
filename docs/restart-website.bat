@@ -1,6 +1,6 @@
 @echo off
 setlocal
-rem Restarts the Liter-ally Trash website: stops every running web_server.py, then starts one.
+rem Restarts the Litter-ally Trash website: stops every running web_server.py, then starts one.
 rem Works from any clone: the repository root is the folder above this script.
 rem Usage: restart-website.bat [web_server.py options]
 rem   No options = --host 0.0.0.0 --no-lid  (HTTPS on the local Wi-Fi, so phones can connect and use their cameras)
