@@ -20,4 +20,6 @@
 @media(max-width:460px){.viewfinder:has(#placeholder:not([hidden])){min-height:260px}}
 .nav-number{opacity:.8}.table-wrap:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:5px}
 @media(max-width:760px){.topbar{flex-wrap:wrap}.topbar-right{margin-left:auto}.mobile-account{display:block}.mobile-account .text-button{min-height:44px;padding:8px 4px;font-size:.8rem}.mobile-account.text-link{font-size:.8rem;min-height:44px;display:flex;align-items:center}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+/* Same-site page changes hold the old page and crossfade, so the browser never paints a blank frame. */
+@view-transition{navigation:auto}.sidebar{view-transition-name:sidebar}::view-transition-old(root),::view-transition-new(root){animation-duration:.12s}
+@media(prefers-reduced-motion:reduce){@view-transition{navigation:none}html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
