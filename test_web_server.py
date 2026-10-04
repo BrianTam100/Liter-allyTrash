@@ -2,15 +2,16 @@ import io
 import json
 import threading
 import unittest
-from http.client import HTTPConnection
-from http.server import ThreadingHTTPServer
+import tempfile
+from pathlib import Path
 from unittest.mock import Mock, call, patch
 
 import numpy as np
 
 from PIL import Image
 from lid import LED0, Lid, set_pulse
-from web_server import CameraStream, Service, make_handler
+from classifier_service import CameraStream, Service
+from BRH_Test.website import create_app
 
 
 class WebTests(unittest.TestCase):
@@ -20,27 +21,41 @@ class WebTests(unittest.TestCase):
         self.service.model.predict.return_value = ('plastic cup', .7)
         self.service.model.alternatives = [('plastic cup', .7)]
         self.service.model.category = 'Trash'
-        self.server = ThreadingHTTPServer(('127.0.0.1', 0), make_handler(self.service))
-        self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
-        self.thread.start()
-        self.client = HTTPConnection(*self.server.server_address)
+        self.service.capture.subscribe = Mock()
+        self.service.capture.unsubscribe = Mock()
+        self.temp = tempfile.TemporaryDirectory()
+        self.app = create_app({'TESTING': True, 'SECRET_KEY': 'classifier-test-key', 'DATABASE_URL': '',
+            'SQLITE_PATH': str(Path(self.temp.name) / 'test.db')}, classifier_service=self.service)
+        self.client = self.app.test_client()
+        self.client.get('/register')
+        with self.client.session_transaction() as state:
+            csrf = state['csrf_token']
+        self.client.post('/register', data={'csrf_token': csrf, 'email':'scanner@example.com',
+            'display_name':'Scanner Pilot', 'password':'test-password-123'})
+        with self.client.session_transaction() as state:
+            self.csrf = state['csrf_token']
+        self.detector = self.app.extensions['classifier']
 
     def tearDown(self):
-        self.service.capture.close()
-        self.client.close()
-        self.server.shutdown()
-        self.server.server_close()
-        self.thread.join()
+        self.detector.close()
+        self.app.extensions['rover'].close()
+        self.temp.cleanup()
 
     def request(self, path, body=b'', method='POST', headers=None):
-        self.client.request(method, path, body, headers or {'X-Trash-UI': '1'})
-        response = self.client.getresponse()
-        return response.status, response.read()
+        actual_headers = headers if headers is not None else {'X-CSRF-Token':self.csrf,
+            'X-Trash-Live':'1', 'X-Trash-Session':str(self.detector.generation)}
+        response = self.client.open(path, method=method, data=body, headers=actual_headers)
+        return response.status_code, response.data
+
+    def start_camera(self):
+        response = self.client.post('/api/classifier/start', json={'source':'server'}, headers={'X-CSRF-Token':self.csrf})
+        self.assertEqual(response.status_code, 200)
+        return response.get_json()
 
     def test_image_round_trip(self):
         buf = io.BytesIO()
         Image.new('RGB', (32, 32), 'red').save(buf, format='PNG')
-        status, body = self.request('/api/predict', buf.getvalue())
+        status, body = self.request('/api/classifier/predict', buf.getvalue(), headers={'X-CSRF-Token':self.csrf})
         self.assertEqual(status, 200)
         self.assertEqual(json.loads(body)['label'], 'plastic cup')
         self.assertEqual(json.loads(body)['category'], 'Trash')
@@ -48,17 +63,19 @@ class WebTests(unittest.TestCase):
         self.assertEqual(frame[0, 0].tolist(), [0, 0, 255])
 
     def test_invalid_image_and_busy_model(self):
-        self.assertEqual(self.request('/api/predict', b'invalid')[0], 400)
+        self.assertEqual(self.request('/api/classifier/predict', b'invalid', headers={'X-CSRF-Token':self.csrf})[0], 400)
         with self.service.lock:
-            self.assertEqual(self.request('/api/predict', b'invalid')[0], 429)
+            self.assertEqual(self.request('/api/classifier/predict', b'invalid')[0], 429)
 
     def test_loading_and_cross_site_request(self):
         self.service.model = None
-        self.assertEqual(self.request('/api/predict', b'x')[0], 503)
-        self.assertEqual(self.request('/api/camera', headers={'Content-Type': 'text/plain'})[0], 403)
+        self.assertEqual(self.request('/api/classifier/predict', b'x')[0], 503)
+        self.assertEqual(self.request('/api/classifier/camera', headers={'Content-Type': 'text/plain'})[0], 403)
 
     def camera_reading(self):
-        status, body = self.request('/api/camera')
+        if not self.detector.owner:
+            self.start_camera()
+        status, body = self.request('/api/classifier/camera')
         self.assertEqual(status, 200)
         return json.loads(body)
 
@@ -117,20 +134,21 @@ class WebTests(unittest.TestCase):
     def test_home_and_unknown_path(self):
         status, body = self.request('/', method='GET')
         self.assertEqual(status, 200)
-        self.assertIn(b'Trash Lens', body)
+        self.assertIn(b'Liter-ally Trash', body)
         self.assertEqual(self.request('/../classifier.py', method='GET')[0], 404)
 
-    def test_camera_stream_requires_token(self):
-        self.assertEqual(self.request('/api/stream', method='GET')[0], 403)
-        status, body = self.request('/api/camera/start')
-        self.assertEqual(status, 200)
-        self.assertIn(self.service.stream_token, json.loads(body)['url'])
+    def test_camera_stream_requires_own_signed_in_session(self):
+        self.assertEqual(self.request('/api/classifier/stream', method='GET')[0], 403)
+        result = self.start_camera()
+        self.assertIn('/api/classifier/stream?generation=', result['url'])
+        guest = self.app.test_client()
+        self.assertEqual(guest.get(result['url']).status_code, 401)
 
-    @patch('web_server.cv2.VideoCapture')
+    @patch('classifier_service.cv2.VideoCapture')
     def test_camera_keeps_capturing_during_inference(self, video_capture):
         cap = video_capture.return_value
         cap.read.return_value = (True, np.zeros((48, 64, 3), dtype=np.uint8))
-        camera = self.service.capture
+        camera = CameraStream(0)
         camera.subscribe()
         try:
             first, frame, jpeg = camera.latest()
@@ -150,7 +168,7 @@ class WebTests(unittest.TestCase):
             camera.close()
         cap.release.assert_called_once()
 
-    @patch('web_server.cv2.VideoCapture')
+    @patch('classifier_service.cv2.VideoCapture')
     def test_camera_failure_releases_device(self, video_capture):
         cap = video_capture.return_value
         cap.read.return_value = (False, None)

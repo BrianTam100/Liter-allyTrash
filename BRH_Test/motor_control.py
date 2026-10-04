@@ -4,7 +4,7 @@ import time
 
 # Arduino USB Port Configuration
 PORT = '/dev/ttyACM0' 
-BAUD = 9600
+BAUD = 115200
 
 # Network Configuration
 UDP_IP = "0.0.0.0" # This means "Listen on all network connections"

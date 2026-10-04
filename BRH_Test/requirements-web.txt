@@ -1,0 +1,11 @@
+Flask>=3.1,<4
+psycopg[binary]>=3.2,<4
+python-dotenv>=1.0,<2
+pyserial>=3.5,<4
+waitress>=3.0,<4
+# Existing laptop voice/gesture controls; retain the solutions.hands API.
+numpy>=1.24,<2
+opencv-contrib-python>=4.8,<4.12
+mediapipe==0.10.21
+sounddevice>=0.4,<1
+websockets>=13,<17

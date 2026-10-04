@@ -1,12 +1,30 @@
 import unittest
+import tempfile
+from pathlib import Path
 from unittest.mock import patch, Mock
 
 import numpy as np
 from classifier import (DISPLAY_NAMES, FAMILIES, TRASH_ITEMS, StablePrediction, TrashClassifier,
-                        category, common_family, display_name, run_camera)
+                        cache_weights, category, common_family, display_name, run_camera)
 
 
 class RecognitionBehaviorTests(unittest.TestCase):
+    def test_model_cache_works_without_windows_symlink_privileges(self):
+        with tempfile.TemporaryDirectory() as directory:
+            source, target = Path(directory)/'downloaded.safetensors', Path(directory)/'cached.safetensors'
+            source.write_bytes(b'cached model weights')
+            with patch.object(Path, 'symlink_to', side_effect=OSError('Privilege not held')):
+                cache_weights(source, target)
+            self.assertEqual(target.read_bytes(), source.read_bytes())
+
+    def test_model_cache_can_cross_filesystems_without_links(self):
+        with tempfile.TemporaryDirectory() as directory:
+            source, target = Path(directory)/'downloaded.safetensors', Path(directory)/'cached.safetensors'
+            source.write_bytes(b'cached model weights')
+            with patch.object(Path, 'symlink_to', side_effect=OSError), patch('classifier.os.link', side_effect=OSError):
+                cache_weights(source, target)
+            self.assertEqual(target.read_bytes(), source.read_bytes())
+
     def test_family_fallback_does_not_merge_different_materials(self):
         self.assertEqual(common_family("cardboard box", "cardboard shoe box"), "cardboard box")
         self.assertIsNone(common_family("plastic cup", "glass drinking cup"))

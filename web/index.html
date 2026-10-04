@@ -1,19 +1,31 @@
-<!doctype html>
-<html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Trash Lens</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
-<body>
-<header><a class="brand" href="/">◈ <span>Trash Lens</span></a><span class="badge">LOCAL AI · CLIP</span></header>
-<main>
-  <div class="intro"><span class="eyebrow">A CLOSER LOOK AT WHAT YOU THROW AWAY</span><h1>One item.<br><span>A little more clarity.</span></h1><p>Show an item to the camera or upload a photo to identify it.</p></div>
-  <div class="workspace">
-    <section class="capture" aria-label="Image input">
-      <div class="toolbar"><label for="source">Image source</label><select id="source"><option value="browser">This device’s camera</option><option value="server">Mac / Pi connected camera</option><option value="upload">Upload a photo</option></select></div>
-      <div class="viewfinder"><video id="video" autoplay muted playsinline hidden></video><img id="preview" alt="Image being classified" hidden><div id="placeholder"><div class="camera-icon">◎</div><h2>Ready when you are</h2><p>Use a plain background and show one item.</p></div><div id="guide" hidden><span>PLACE ONE ITEM INSIDE</span></div><span class="view-tag">IMAGE INPUT</span></div>
-      <div class="controls"><button id="start" disabled>Start camera</button><button id="stop" class="secondary" hidden>Stop</button><label id="upload-label" class="upload" hidden>Choose photo<input id="file" type="file" accept="image/*"></label><span id="capture-note">Frames are processed on your Python server.</span></div>
-    </section>
-    <aside class="results"><div class="status"><span id="dot"></span><span id="status">Loading model…</span></div><div class="result-main" aria-live="polite"><span class="eyebrow">RECYCLABLE OR TRASH</span><h2 id="label">Let’s take<br>a look.</h2><p id="hint">Your result will appear here.</p></div><div class="match"><div><span>Relative match</span><strong id="score">—</strong></div><div class="track"><div id="score-bar"></div></div><p>A comparison with known items, not certainty.</p></div><div class="candidates"><span class="eyebrow">TOP CANDIDATES</span><ul id="candidates"><li>Waiting for an image<span>—</span></li></ul></div><div id="timing">All inference runs locally on the server.</div></aside>
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow"><span class="small-line"></span> MISSION CONTROL</div><h1>{{ 'Welcome back, ' ~ user.display_name ~ '.' if user else 'Get on a cleaner course.' }}</h1><p>{{ 'Scan an item, confirm your drop, and see your recycling add up.' if user else 'One account for scanning, recycling rewards, and your rover.' }}</p></div><a class="button outline" href="{{ url_for('controls') }}">{{ icon('compass') }} Open rover controls</a></div>
+<div class="stat-grid">
+  <section class="stat-card accent"><div class="stat-label">Recycling points {{ icon('spark') }}</div><strong id="stat-points">{{ stats.points }}</strong><span>10 points for every recycled item</span></section>
+  <section class="stat-card"><div class="stat-label">Items recycled {{ icon('recycle') }}</div><strong id="stat-recycled">{{ stats.recycled }}</strong><span>Better destinations for your waste</span></section>
+  <section class="stat-card"><div class="stat-label">Total items dropped {{ icon('trash') }}</div><strong id="stat-items">{{ stats['items'] }}</strong><span>Recycling and trash, accounted for</span></section>
+  <section class="stat-card"><div class="stat-label">{{ 'Your drop-offs' if user else 'Pilots on board' }} {{ icon('route' if user else 'user') }}</div><strong id="stat-collections">{{ stats.collections if user else stats.pilots }}</strong><span>{{ 'Every drop has a story' if user else 'A shared mission. A lighter footprint.' }}</span></section>
+</div>
+{% include 'scanner.html' %}
+<div class="dashboard-grid">
+  <section class="panel drop-panel"><div class="panel-heading"><div><span class="eyebrow">02 / CONFIRM YOUR DROP</span><h2>Give it a better destination.</h2></div><span class="round-icon">{{ icon('recycle') }}</span></div>
+  {% if user %}
+    <p class="muted">Record what you put in the bin. Recycled items earn points; trash is tracked in your history.</p>
+    <form id="collection-form" class="collection-form">
+      <label for="item-name">What are you dropping off?</label><input id="item-name" name="item_name" placeholder="e.g. Plastic bottle, paper, aluminum can" minlength="2" maxlength="80" required>
+      <fieldset class="destination-field"><legend>Destination</legend><div class="destination-options"><label class="destination-option"><input type="radio" name="category" value="recycling" checked><span>{{ icon('recycle') }}<strong>Recycling</strong><small>+10 pts / item</small></span></label><label class="destination-option"><input type="radio" name="category" value="trash"><span>{{ icon('trash') }}<strong>Trash</strong><small>Tracked, 0 points</small></span></label></div></fieldset>
+      <div class="drop-submit"><div><label for="item-count">Number of items</label><input id="item-count" name="count" type="number" value="1" min="1" max="1000" step="1" required></div><button class="button primary" type="submit">{{ icon('plus') }} Record drop</button></div>
+      <p class="form-note" id="entry-source">Manual entry · Confirm only items you have put in the bin.</p><p id="collection-feedback" class="form-feedback" role="status" aria-live="polite"></p>
+    </form>
+  {% else %}
+    <div class="guest-drop"><span class="large-icon">{{ icon('recycle') }}</span><h3>A little recycling goes a long way.</h3><p>Sign in to record your items and build your place on the leaderboard.</p><a class="button primary" href="{{ url_for('register') }}">Create your pilot account</a><span class="form-note">Already on board? <a href="{{ url_for('login') }}">Sign in</a></span></div>
+  {% endif %}
+  </section>
+  <div class="dashboard-side">
+    <section class="route-card"><div class="route-card-top"><span class="eyebrow">03 / EXPLORE THE CONTROLS</span>{{ icon('compass') }}</div><div class="route-grid" aria-hidden="true"><span class="route-start"></span><span class="route-path"></span><span class="route-end">{{ icon('compass') }}</span><span class="map-label">NEXT STOP: A CLEANER SPACE</span></div><h2>Your rover. Your route.</h2><p>Keyboard, touch, voice, or hand gestures. Find the way that works for you.</p><a href="{{ url_for('controls') }}" class="button outline">Find your controls</a></section>
+    <section class="panel leaders-preview"><div class="panel-heading compact"><h2>Leading the way</h2>{{ icon('trophy') }}</div>{% if leaders %}<ol class="mini-leaders">{% for pilot in leaders %}<li><span class="mini-rank">{{ pilot.rank }}</span><span class="avatar small">{{ pilot.display_name[0]|upper }}</span><strong>{{ pilot.display_name }}</strong><span>{{ pilot.points }}<small> pts</small></span></li>{% endfor %}</ol>{% else %}<p class="empty-inline">The first recycling drop sets the course. Your name could be here.</p>{% endif %}<a class="text-link" href="{{ url_for('leaderboard') }}">View leaderboard</a></section>
   </div>
-  <p id="message" role="alert"></p>
-  <footer><span>01 &nbsp; One item at a time</span><span>02 &nbsp; Good light, plain background</span><span>03 &nbsp; Try another angle if unsure</span></footer>
-  <p class="disclaimer">Recognition is a suggestion. Appearance alone cannot determine material or local recycling rules.</p>
-</main></body></html>
+</div>
+{% if user %}<section class="panel history-panel"><div class="panel-heading compact"><div><span class="eyebrow">YOUR TRAIL</span><h2>Recent drops</h2></div><span class="badge">PILOT #{{ user.id }}</span></div>{% if recent %}<div class="table-wrap" tabindex="0" role="region" aria-label="Your disposal history"><table><caption class="sr-only">Your recent disposal history</caption><thead><tr><th scope="col">Item</th><th scope="col">Destination</th><th scope="col">Quantity</th><th scope="col">Points</th><th scope="col">Recorded</th></tr></thead><tbody>{% for entry in recent %}<tr><td>{{ entry.item_name }}</td><td><span class="category-pill {{ entry.category }}">{{ entry.category|capitalize }}</span></td><td>{{ entry.item_count }}</td><td class="points-cell">{{ '+' ~ (entry.item_count * 10) if entry.category == 'recycling' else '0' }}</td><td><time datetime="{{ entry.created_at }}" class="local-time">{{ entry.created_at|string|truncate(10, true, '') }}</time></td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="empty-state compact">{{ icon('route') }}<p>Your trail is clear. Record your first drop above.</p></div>{% endif %}</section>{% endif %}
+{% endblock %}

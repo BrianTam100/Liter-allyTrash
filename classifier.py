@@ -3,6 +3,7 @@ import argparse
 from concurrent.futures import ThreadPoolExecutor
 import json
 import os
+import shutil
 from pathlib import Path
 import sys
 import time
@@ -131,6 +132,17 @@ def common_family(first, second):
     return next((name for name, members in FAMILIES.items() if first in members and second in members), None)
 
 
+def cache_weights(source, target):
+    """Reuse downloaded weights, including on Windows without symlink privileges."""
+    try:
+        target.symlink_to(os.path.relpath(source, target.parent))
+    except OSError:
+        try:
+            os.link(source.resolve(), target)
+        except OSError:
+            shutil.copyfile(source, target)
+
+
 class StablePrediction:
     """Require two successive accepted readings; clear old labels immediately."""
     def __init__(self):
@@ -172,7 +184,7 @@ class TrashClassifier:
             if not weights:
                 raise RuntimeError("Downloaded weights were not found in the model cache.")
             target = local_model / "model.safetensors"
-            target.symlink_to(os.path.relpath(weights[-1], local_model))
+            cache_weights(weights[-1], target)
         self.model = self.model.to(self.device)
         prompts = [template.format(ALIASES.get(name, name))
                    for name in self.labels + BACKGROUND for template in TEMPLATES]

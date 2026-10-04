@@ -1,0 +1,5 @@
+# One environment for classification, accounts, rewards, lids, and rover controls.
+-r BRH_Test/requirements-web.txt
+torch>=2.6
+transformers>=4.50,<5
+Pillow>=10

@@ -1,4 +1,12 @@
 # Setting up bluetooth to send commands:
+## Liter-ally Trash dashboard
+
+The unified dashboard combines the `web` camera/photo classifier with login,
+personal bin history, recycling rewards, a TigerData leaderboard, and rover
+controls. See [the main README](../README.md) for startup and
+[WEBSITE.md](WEBSITE.md) for configuration. Run `python web_server.py` from the
+repository root; `python website.py` here serves the same dashboard over HTTP.
+
 Our project has the capability to run on wifi and bluetooth to control the motors for our drivebase. In this guide we go through how to set up bluetooth first* If you were to do just wifi, ensure you have both your pc and the pi on the same network:
 
 ## Set up Raspberry PI
