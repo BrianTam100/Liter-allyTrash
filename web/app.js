@@ -635,7 +635,8 @@ if ($("#connect-button") && signedIn) {
     sendThrottle();
   });
   document.addEventListener("keydown", (event) => {
-    if (/^(INPUT|SELECT|TEXTAREA)$/.test(event.target.tagName) || event.target.isContentEditable) return;
+    // The throttle slider keeps focus after a drag, so it must not swallow WASD/arrow driving keys.
+    if (event.target.type !== "range" && (/^(INPUT|SELECT|TEXTAREA)$/.test(event.target.tagName) || event.target.isContentEditable)) return;
     const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
     if (status.busy && (commands[key] || event.key === "Escape" || event.key === " ")) {
       event.preventDefault();
