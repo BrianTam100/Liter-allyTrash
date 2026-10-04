@@ -52,7 +52,16 @@ class Detector:
                 "error": self.service.error, "owned": bool(owner and owner == self.owner),
                 "busy": bool(self.owner and owner != self.owner), "source": self.source,
                 "generation": self.generation,
-                "lid_enabled": self.service.lid is not None}
+                "lid_available": self.service.lid is not None,
+                "lid_enabled": self.service.lid is not None and self.service.auto_lid}
+
+    def set_auto_lid(self, enabled):
+        with self.lock:
+            if self.service.lid is None:
+                raise ValueError("Bin lids are not connected to this server.")
+            self.service.auto_lid = enabled
+            if not enabled:
+                self.service.lid.close()
 
     def start(self, owner, source):
         if not isinstance(source, str) or source not in {"browser", "server"}:
@@ -133,11 +142,11 @@ class Detector:
 def mount_classifier(app, service=None, autoload=True):
     if service is None:
         camera = os.getenv("CLASSIFIER_CAMERA", "0")
-        lid = None
-        if os.getenv("CLASSIFIER_LID_ENABLED", "false").lower() == "true":
-            from lid import RemoteLid
-            lid = RemoteLid(os.getenv("LID_HOST") or None, int(os.getenv("LID_PORT", "5006")))
+        from lid import RemoteLid
+        lid = RemoteLid(os.getenv("LID_HOST") or None, int(os.getenv("LID_PORT", "5006")))
         service = Service(int(camera) if camera.isdigit() else camera, lid)
+        # The setting is where automatic opening starts; the dashboard can change it.
+        service.auto_lid = os.getenv("CLASSIFIER_LID_ENABLED", "false").lower() == "true"
     detector = Detector(service, app.extensions["rover"])
     app.extensions["classifier"] = detector
 
@@ -176,6 +185,10 @@ def mount_classifier(app, service=None, autoload=True):
                 if payload.get("generation", detector.generation) != detector.generation:
                     raise ValueError("This camera session ended. Start the scan again.")
                 detector.heartbeat(owner)
+            elif action == "lid":
+                if type(payload.get("enabled")) is not bool:
+                    raise ValueError("Choose whether bin lids open automatically.")
+                detector.set_auto_lid(payload["enabled"])
             elif action == "confirm":
                 count = payload.get("count", 1)
                 if type(count) is not int or not 1 <= count <= 1000:

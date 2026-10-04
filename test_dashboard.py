@@ -98,6 +98,21 @@ class DashboardIntegrationTests(unittest.TestCase):
         self.assertEqual({result['scan_id'] for result in results[4:17]}, {results[4]['scan_id']})
         self.assertEqual(states[-1], 'empty')  # gone for over a second clears it
 
+    @patch.object(ItemLock, 'LOCK_SECONDS', 0)
+    def test_dashboard_switch_turns_automatic_lid_opening_off_and_on(self):
+        self.assertTrue(self.client.get('/api/classifier/status').get_json()['lid_enabled'])
+        off = self.post('/api/classifier/lid',{'enabled':False})
+        self.assertEqual((off.status_code, off.get_json()['lid_enabled']), (200, False))
+        self.service.lid.close.assert_called()
+        self.post('/api/classifier/start',{'source':'server'})
+        for _ in range(4):
+            self.post('/api/classifier/camera',live=True)
+        self.service.lid.open.assert_not_called()  # locked item, but automatic opening is off
+        self.assertTrue(self.post('/api/classifier/lid',{'enabled':True}).get_json()['lid_enabled'])
+        self.post('/api/classifier/camera',live=True)
+        self.service.lid.open.assert_called_with('Recyclable')
+        self.assertEqual(self.post('/api/classifier/lid',{'enabled':'yes'}).status_code, 400)
+
     def test_trash_recognition_never_earns_recycling_points(self):
         self.service.model.category = 'Trash'
         self.service.model.predict.return_value = ('paper towel',0.9)

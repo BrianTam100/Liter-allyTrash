@@ -334,6 +334,17 @@ if (collectionForm) {
     message('Recognized item added to your drop. Confirm it below.');
   });
 
+  let lidSaving = false;
+  $('auto-lid').addEventListener('change',async event => {
+    const enabled = event.target.checked;
+    lidSaving = true; event.target.disabled = true;
+    try {
+      const result = await request('/api/classifier/lid',{enabled});
+      $('lid-status').textContent = result.lid_enabled ? 'Live scanning opens the matching bin lid' : 'Bin lids are controlled manually';
+    } catch (error) { event.target.checked = !enabled; message(error.message,true); }
+    finally { lidSaving = false; event.target.disabled = false; }
+  });
+
   $('model-load').addEventListener('click',async () => {
     $('model-load').disabled = true;
     try { await request('/api/classifier/load',{}); message('Preparing the scanner. You can still record items manually.'); }
@@ -351,6 +362,8 @@ if (collectionForm) {
       $('model-load').hidden = !signedIn || ready || result.loading;
       $('model-load').textContent = result.error ? 'Retry scanner' : 'Prepare scanner';
       $('lid-status').textContent = result.lid_enabled ? 'Live scanning opens the matching bin lid' : 'Bin lids are controlled manually';
+      $('lid-toggle').hidden = !signedIn || !result.lid_available;
+      if (!lidSaving) $('auto-lid').checked = result.lid_enabled;
       if (!running) $('start').disabled = !ready || !signedIn || result.busy;
       $('file').disabled = !ready || !signedIn;
       if (result.error && signedIn) message('The scanner could not load. Retry it or record your item manually.',true);

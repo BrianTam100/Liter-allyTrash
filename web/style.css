@@ -23,3 +23,4 @@
 /* Same-site page changes hold the old page and crossfade, so the browser never paints a blank frame. */
 @view-transition{navigation:auto}.sidebar{view-transition-name:sidebar}::view-transition-old(root),::view-transition-new(root){animation-duration:.12s}
 @media(prefers-reduced-motion:reduce){@view-transition{navigation:none}html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+.lid-toggle{display:inline-flex;align-items:center;gap:8px;color:var(--text);cursor:pointer}.lid-toggle[hidden]{display:none}.lid-toggle input{accent-color:var(--accent);width:16px;height:16px;margin:0}

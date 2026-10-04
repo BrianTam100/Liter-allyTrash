@@ -169,6 +169,7 @@ class Service:
     def __init__(self, camera=0, lid=None):
         self.camera = camera
         self.lid = lid
+        self.auto_lid = True  # the dashboard can switch automatic opening off and on
         self.item = ItemLock()
         self.model = None
         self.error = None
@@ -197,7 +198,7 @@ class Service:
         """Lock live readings onto one item; keep its can's lid open while it stays in view."""
         result = self.item.update(result)
         # Drop-off items (batteries, electronics) do not belong in the curbside recycling can.
-        if self.lid and result["state"] == "locked" and result["category"] in ("Trash", "Recyclable") \
+        if self.lid and self.auto_lid and result["state"] == "locked" and result["category"] in ("Trash", "Recyclable") \
                 and not result["drop_off"]:
             self.lid.open(result["category"])
         return result

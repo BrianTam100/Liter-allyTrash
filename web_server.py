@@ -92,8 +92,8 @@ def main():
     parser.add_argument("--lid-host", default=os.getenv("LID_HOST") or None, help="IP address of the Pi running lid_server.py (default: broadcast to the network)")
     parser.add_argument("--lid-port", type=int, default=int(os.getenv("LID_PORT", "5006")))
     lids = parser.add_mutually_exclusive_group()
-    lids.add_argument("--no-lid", dest="lid_enabled", action="store_false", help="do not send lid commands")
-    lids.add_argument("--enable-lid", dest="lid_enabled", action="store_true", help="enable live recognition bin-lid commands")
+    lids.add_argument("--no-lid", dest="lid_enabled", action="store_false", help="start with automatic lid opening off (the dashboard can turn it on)")
+    lids.add_argument("--enable-lid", dest="lid_enabled", action="store_true", help="start with automatic lid opening on")
     parser.set_defaults(lid_enabled=os.getenv("CLASSIFIER_LID_ENABLED", "false").lower() == "true")
     parser.add_argument("--init-db", action="store_true", help="initialize the TigerData account and collection tables, then exit")
     parser.add_argument("--no-model-load", action="store_true", help="load recognition on demand from the dashboard")
@@ -125,8 +125,10 @@ def main():
         # macOS lets 0.0.0.0 and 127.0.0.1 share a port, hiding an old server on localhost.
         if probe.connect_ex(("127.0.0.1", args.port)) == 0:
             sys.exit(f"Port {args.port} is already in use; stop the other server or pass --port.")
-    lid = RemoteLid(args.lid_host, args.lid_port) if args.lid_enabled else None
+    lid = RemoteLid(args.lid_host, args.lid_port)
     service = Service(int(args.camera) if args.camera.isdigit() else args.camera, lid)
+    service.auto_lid = args.lid_enabled
+    print(f"Automatic lid opening starts {'on' if args.lid_enabled else 'off'}; change it on the dashboard.", flush=True)
     app = create_app({"CLASSIFIER_AUTOLOAD": not args.no_model_load and os.getenv("CLASSIFIER_AUTOLOAD", "true").lower() == "true"}, classifier_service=service)
     scheme = "http"
     context = None
