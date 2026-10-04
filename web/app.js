@@ -377,8 +377,7 @@ if (collectionForm) {
 })();
 
 if ($("#connect-button") && signedIn) {
-  const commands = {w:"w", a:"a", s:"s", d:"d", ArrowUp:"w", ArrowLeft:"a", ArrowDown:"s", ArrowRight:"d"};
-  const labels = {w:"MOVING FORWARD", s:"MOVING BACKWARD", a:"SPINNING LEFT", d:"SPINNING RIGHT", x:"STOPPED"};
+  const commands = {w:"w", a:"a", s:"s", d:"d", z:"z", c:"c", ArrowUp:"w", ArrowLeft:"a", ArrowDown:"s", ArrowRight:"d"};  const labels = {w:"MOVING FORWARD", s:"MOVING BACKWARD", a:"SPINNING LEFT", d:"SPINNING RIGHT", x:"STOPPED"};
   let status = {connected:false, owned:false, mode:"manual", command:"x"};
   let heldCommand = null;
   let heldKey = null;

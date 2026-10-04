@@ -4,8 +4,29 @@
 <section class="panel drive-panel" aria-label="Drive">
   <div class="connection-strip"><div class="transport-select"><label for="transport">Connection</label><select id="transport"><option value="bluetooth">Bluetooth</option><option value="wifi">Wi-Fi</option></select></div><div class="transport-select" id="port-field"><label for="serial-port">Port</label><select id="serial-port"><option value="auto">Auto</option></select></div><button class="button primary" id="connect-button" type="button">Connect rover</button></div>
   <p id="connection-note" class="form-note">Run this website on the laptop paired with the Pi.</p>
-  <div class="console-surface"><div class="dpad" aria-label="Directional controls"><button type="button" class="drive-button drive-up" data-command="w" aria-label="Hold to drive forward" disabled>{{ icon('up') }}<kbd>W</kbd></button><button type="button" class="drive-button drive-left" data-command="a" aria-label="Hold to spin left" disabled>{{ icon('left') }}<kbd>A</kbd></button><button type="button" class="drive-button drive-center" id="center-stop" aria-label="Stop rover" disabled>{{ icon('stop') }}</button><button type="button" class="drive-button drive-right" data-command="d" aria-label="Hold to spin right" disabled>{{ icon('right') }}<kbd>D</kbd></button><button type="button" class="drive-button drive-down" data-command="s" aria-label="Hold to drive backward" disabled>{{ icon('down') }}<kbd>S</kbd></button></div><div class="console-status"><span class="status-crosshair" aria-hidden="true">+</span><span id="motion-state">STANDING BY</span><span class="console-mode" id="active-mode">MANUAL</span></div></div>
-  <p class="control-hint">Hold <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> or arrows · <kbd>Space</kbd>/<kbd>Esc</kbd> stops</p>
+  
+  <div class="console-surface">
+    <div class="dpad" aria-label="Directional controls">
+      <!-- Z button (Left side) -->
+      <button type="button" class="drive-button drive-z" data-command="z" aria-label="Hold to turn left" disabled>{{ icon('rotate-left') }}<kbd>Z</kbd></button>
+      
+      <button type="button" class="drive-button drive-up" data-command="w" aria-label="Hold to drive forward" disabled>{{ icon('up') }}<kbd>W</kbd></button>
+      <button type="button" class="drive-button drive-left" data-command="a" aria-label="Hold to spin left" disabled>{{ icon('left') }}<kbd>A</kbd></button>
+      <button type="button" class="drive-button drive-center" id="center-stop" aria-label="Stop rover" disabled>{{ icon('stop') }}</button>
+      <button type="button" class="drive-button drive-right" data-command="d" aria-label="Hold to spin right" disabled>{{ icon('right') }}<kbd>D</kbd></button>
+      
+      <!-- C button (Right side) -->
+      <button type="button" class="drive-button drive-c" data-command="c" aria-label="Hold to turn right" disabled>{{ icon('rotate-right') }}<kbd>C</kbd></button>
+      
+      <button type="button" class="drive-button drive-down" data-command="s" aria-label="Hold to drive backward" disabled>{{ icon('down') }}<kbd>S</kbd></button>
+    </div>
+    
+    <div class="console-status"><span class="status-crosshair" aria-hidden="true">+</span><span id="motion-state">STANDING BY</span><span class="console-mode" id="active-mode">MANUAL</span></div>
+  </div>
+  
+  <!-- Updated Hint Text -->
+  <p class="control-hint">Hold <kbd>Z</kbd> <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> <kbd>C</kbd> or arrows · <kbd>Space</kbd>/<kbd>Esc</kbd> stops</p>
+  
   <button class="button emergency full" id="emergency-stop" type="button" disabled>{{ icon('stop') }} Stop all motion</button>
   <p class="form-note">Leaving the page or switching modes stops the rover. Keep it in view.</p>
   <p id="rover-feedback" class="form-feedback" role="status" aria-live="polite"></p>

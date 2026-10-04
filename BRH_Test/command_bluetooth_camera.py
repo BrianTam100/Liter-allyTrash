@@ -87,6 +87,10 @@ def main():
                 current_state = "d"
             elif keyboard.is_pressed("s") or keyboard.is_pressed("down"):
                 current_state = "s"
+            elif keyboard.is_pressed("z"):
+                current_state = "z"
+            elif keyboard.is_pressed("c"):
+                current_state = "c"
             elif keyboard.is_pressed("q"):
                 bt.write(b"x")
                 print("Exiting...")

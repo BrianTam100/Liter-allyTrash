@@ -84,7 +84,7 @@ When you call drive_rover, verbally confirm the action with a very short phrase 
 
 
 class VoiceDrive:
-    """Background Grok Voice session. `on_command` receives 'w','a','s','d','x'."""
+    """Background Grok Voice session. `on_command` receives 'w','a','s','d','z','c', 'x'."""
 
     def __init__(self, on_command: Callable[[str], None], api_key: Optional[str] = None):
         self.on_command = on_command

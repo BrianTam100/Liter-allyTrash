@@ -33,7 +33,7 @@ try:
         command = data.decode('utf-8').strip()
 
         # If it's a valid command, send it to the Arduino
-        if command in ['w', 'a', 'd', 's', 'x']:
+        if command in ['w', 'a', 'd', 's', 'x', 'z', 'c']:
             if command != last_state:
                 ser.write(command.encode('utf-8'))
                 print(f"Relayed to Arduino: {command}")
