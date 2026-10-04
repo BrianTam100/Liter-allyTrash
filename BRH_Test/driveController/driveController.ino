@@ -36,8 +36,22 @@ void loop()
     // WASD/Arrow Key Control  
     if (isAlpha(incomingChar)) {
       char cmd = Serial.read();
-      
-      if (cmd == 'w') {
+      if (cmd == 'v') {
+        float newSpeed = Serial.parseFloat(); // Read the number after 'v'
+        if (newSpeed > 0) {                   // Basic safety check
+          maxSpeed = newSpeed;
+          
+          // Update the AccelStepper objects
+          stepperX.setMaxSpeed(maxSpeed);
+          stepperY.setMaxSpeed(maxSpeed);
+          stepperZ.setMaxSpeed(maxSpeed);
+          stepperA.setMaxSpeed(maxSpeed);
+          
+          Serial.print("New Max Speed set to: ");
+          Serial.println(maxSpeed);
+        }
+      }
+      else if (cmd == 'w') {
         stepperX.setSpeed(-maxSpeed);
         stepperY.setSpeed(-maxSpeed);
         stepperZ.setSpeed(-maxSpeed);

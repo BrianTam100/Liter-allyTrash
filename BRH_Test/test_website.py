@@ -145,6 +145,11 @@ class WebsiteTests(unittest.TestCase):
         movement = self.client.post("/api/rover/command", json={"command":"w", "epoch":connection.get_json()["epoch"], "sequence":1}, headers=headers)
         self.assertEqual(movement.status_code, 200)
         self.assertEqual(hardware.payloads[-1], b"w")
+        throttle = self.client.post("/api/rover/speed", json={"speed":2500}, headers=headers)
+        self.assertEqual(throttle.status_code, 200)
+        self.assertEqual(hardware.payloads[-1], b"v2500")
+        self.assertEqual(throttle.get_json()["command"], "w")
+        self.assertEqual(throttle.get_json()["speed"], 2500)
         self.client.post("/api/rover/disconnect", json={}, headers=headers)
         self.assertEqual(hardware.payloads[-1], b"x")
         self.assertFalse(hardware.closed)  # kept open so the next connect is instant
@@ -282,9 +287,18 @@ class RoverTests(unittest.TestCase):
         self.bridge._assisted_command("pilot-a", "gesture", "0\n")
         self.assertEqual(self.hardware.payloads[-1], b"a")
 
+    def test_speed_command_uses_arduino_throttle_protocol(self):
+        self.command("w")
+        self.bridge.set_speed("pilot-a", 2500)
+        self.assertEqual(self.hardware.payloads[-1], b"v2500")
+        self.assertEqual(self.bridge.status("pilot-a")["command"], "w")
+        self.assertEqual(self.bridge.status("pilot-a")["speed"], 2500)
+
     def test_invalid_commands_cannot_reach_hardware(self):
         with self.assertRaises(ValueError):
             self.command("run shell")
+        with self.assertRaises(ValueError):
+            self.bridge.set_speed("pilot-a", 99)
         self.assertEqual(self.hardware.payloads, [b"x"])
 
     def test_lost_transport_releases_assisted_devices(self):

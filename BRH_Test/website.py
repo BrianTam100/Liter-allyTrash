@@ -167,6 +167,8 @@ def create_app(config=None, bridge=None, classifier_service=None):
                 rover.heartbeat(owner)
             elif action == "command":
                 rover.command(owner, payload.get("command", "x"), payload.get("epoch"), payload.get("sequence"))
+            elif action == "speed":
+                rover.set_speed(owner, payload.get("speed"))
             elif action == "stop":
                 rover.stop(owner)
             elif action == "mode":

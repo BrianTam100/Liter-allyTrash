@@ -377,7 +377,7 @@ if (collectionForm) {
 })();
 
 if ($("#connect-button") && signedIn) {
-  const commands = {w:"w", a:"a", s:"s", d:"d", z:"z", c:"c", ArrowUp:"w", ArrowLeft:"a", ArrowDown:"s", ArrowRight:"d"};  const labels = {w:"MOVING FORWARD", s:"MOVING BACKWARD", a:"SPINNING LEFT", d:"SPINNING RIGHT", x:"STOPPED"};
+  const commands = {w:"w", a:"a", s:"s", d:"d", z:"z", c:"c", ArrowUp:"w", ArrowLeft:"a", ArrowDown:"s", ArrowRight:"d"};  const labels = {w:"MOVING FORWARD", s:"MOVING BACKWARD", a:"SPINNING LEFT", d:"SPINNING RIGHT", z:"TURNING LEFT", c:"TURNING RIGHT", x:"STOPPED"};
   let status = {connected:false, owned:false, mode:"manual", command:"x"};
   let heldCommand = null;
   let heldKey = null;
@@ -385,6 +385,7 @@ if ($("#connect-button") && signedIn) {
   let sending = false;
   let leaving = false;
   let changingMode = false;
+  let throttleTimer;
   let sequence = 0;
 
   function feedback(message, error = false) {
@@ -418,6 +419,13 @@ if ($("#connect-button") && signedIn) {
       button.disabled = changingMode || (!owned && !next.busy);
       button.setAttribute("aria-disabled", String(!owned));
     });
+    const throttle = $("#speed-throttle");
+    throttle.disabled = changingMode || !owned || next.link !== "bluetooth";
+    throttle.setAttribute("aria-disabled", String(throttle.disabled));
+    if (Number.isFinite(Number(next.speed)) && document.activeElement !== throttle) {
+      throttle.value = String(next.speed);
+      showThrottle(next.speed);
+    }
     $("#connection-note").textContent = next.busy ? busyMessage : owned && next.link === "wifi" ? "Commands target the configured Pi. UDP does not confirm delivery." : owned ? `Bluetooth link open on ${next.port || "the serial port"}. Keep the rover in view.` : "Run this website on the laptop paired with the Pi.";
     $("#motion-state").textContent = owned ? (labels[next.command] || `HAND ANGLE ${next.command}°`) : "STANDING BY";
     $("#active-mode").textContent = (next.mode || "manual").toUpperCase();
@@ -431,6 +439,28 @@ if ($("#connect-button") && signedIn) {
     if (!owned) clearHeld();
     if (next.error) feedback(next.error, true);
     else if (next.camera_error) feedback(next.camera_error, true);
+  }
+
+  function showThrottle(speed) {
+    $("#speed-value").textContent = `${Number(speed).toLocaleString()} steps/s`;
+  }
+
+  async function sendThrottle() {
+    if (status.busy) { tellBusy(); return; }
+    if (!status.owned || changingMode) return;
+    const speed = Number($("#speed-throttle").value);
+    if (!Number.isInteger(speed)) return;
+    try {
+      showStatus(await api("/api/rover/speed", {speed}));
+      feedback(`Throttle set to ${speed.toLocaleString()} steps/s.`);
+    } catch (error) { feedback(error.message, true); }
+  }
+
+  function queueThrottle() {
+    const speed = Number($("#speed-throttle").value);
+    showThrottle(speed);
+    clearTimeout(throttleTimer);
+    throttleTimer = setTimeout(sendThrottle, 180);
   }
 
   function clearHeld() {
@@ -529,6 +559,11 @@ if ($("#connect-button") && signedIn) {
 
   $("#emergency-stop").addEventListener("click", stopAll);
   $("#center-stop").addEventListener("click", stopAll);
+  $("#speed-throttle").addEventListener("input", queueThrottle);
+  $("#speed-throttle").addEventListener("change", () => {
+    clearTimeout(throttleTimer);
+    sendThrottle();
+  });
   document.addEventListener("keydown", (event) => {
     if (/^(INPUT|SELECT|TEXTAREA)$/.test(event.target.tagName) || event.target.isContentEditable) return;
     const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;

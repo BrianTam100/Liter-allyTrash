@@ -61,6 +61,7 @@ class RoverBridge:
         self.owner = None
         self.mode = "manual"
         self.last_command = "x"
+        self.speed = 5000
         self.error = None
         self.heartbeat_at = 0.0
         self.manual_until = 0.0
@@ -82,6 +83,7 @@ class RoverBridge:
             return {"link": self.link, "connected": self.transport is not None,
                     "owned": bool(owner and owner == self.owner), "busy": bool(self.owner and owner != self.owner),
                     "mode": self.mode, "command": self.last_command.strip(), "error": self.error,
+                    "speed": self.speed,
                     "voice_ready": bool(self.voice and self.voice.ready.is_set() and not voice_error),
                     "voice_error": voice_error, "camera_error": self.camera_error,
                     "camera_active": bool(self.camera_thread and self.camera_thread.is_alive()),
@@ -163,17 +165,18 @@ class RoverBridge:
                         raise
                     self.error = None
 
-    def _send(self, command, force=False):
+    def _send(self, command, force=False, remember=True):
         if self.transport is None:
             return
-        if command != self.last_command or force:
+        if command != self.last_command or force or not remember:
             payload = command.encode("ascii")
             try:
                 if self.link == "wifi":
                     self.transport.sendto(payload, self.target)
                 else:
                     self.transport.write(payload)
-                self.last_command = command
+                if remember:
+                    self.last_command = command
             except Exception:
                 self.error = "The rover connection was lost. Reconnect before driving."
                 if self.transport is self.serial:
@@ -188,7 +191,7 @@ class RoverBridge:
             self.heartbeat_at = time.monotonic()
 
     def command(self, owner, command, epoch, sequence):
-        if not isinstance(command, str) or command not in {"w", "a", "s", "d", "x"}:
+        if not isinstance(command, str) or command not in {"w", "a", "s", "d", "z", "c", "x"}:
             raise ValueError("Unknown drive command.")
         if type(epoch) is not int or type(sequence) is not int or sequence < 1:
             raise ValueError("A valid control epoch and sequence are required.")
@@ -202,6 +205,17 @@ class RoverBridge:
             self.last_manual_at = time.monotonic()
             self.manual_until = self.last_manual_at + 0.7 if command != "x" else 0.0
             self._send(command, force=command == "x")
+
+    def set_speed(self, owner, speed):
+        if type(speed) is not int or not 100 <= speed <= 12000:
+            raise ValueError("Choose a throttle value from 100 to 12,000 steps per second.")
+        with self.lock:
+            self._require_owner(owner)
+            if self.link != "bluetooth":
+                raise ValueError("Throttle updates need the Bluetooth Arduino link.")
+            self.heartbeat_at = time.monotonic()
+            self.speed = speed
+            self._send(f"v{speed}", force=True, remember=False)
 
     def _assisted_command(self, owner, mode, command):
         with self.lock:

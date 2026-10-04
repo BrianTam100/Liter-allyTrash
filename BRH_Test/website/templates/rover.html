@@ -23,6 +23,11 @@
     
     <div class="console-status"><span class="status-crosshair" aria-hidden="true">+</span><span id="motion-state">STANDING BY</span><span class="console-mode" id="active-mode">MANUAL</span></div>
   </div>
+
+  <div class="throttle-control" aria-label="Speed throttle">
+    <div class="throttle-heading"><label for="speed-throttle">Throttle</label><output id="speed-value" for="speed-throttle">5000 steps/s</output></div>
+    <input id="speed-throttle" type="range" min="100" max="12000" step="100" value="5000" disabled>
+  </div>
   
   <!-- Updated Hint Text -->
   <p class="control-hint">Hold <kbd>Z</kbd> <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> <kbd>C</kbd> or arrows · <kbd>Space</kbd>/<kbd>Esc</kbd> stops</p>
