@@ -2,6 +2,10 @@
 {% block title %}Settings{% endblock %}
 {% block content %}
 <div class="page-heading"><h1>Settings</h1></div>
+<section id="storage" class="panel storage-panel">
+  <div class="panel-heading compact"><h2>Storage</h2><span class="storage-tag">{{ storage_label }}</span></div>
+  <p class="muted">{% if storage_label == 'TigerData' %}Your recycling records and detections are stored in TigerData.{% else %}Your recycling records and detections are stored locally on this computer.{% endif %}</p>
+</section>
 <section class="panel danger-panel"><div class="panel-heading compact"><h2>Clear all data</h2></div>
   <p class="muted">Deletes every detection, can count, bin-empty record and point. The database tables stay, so the site keeps working. This can't be undone.</p>
   <form id="clear-data-form" class="clear-form">

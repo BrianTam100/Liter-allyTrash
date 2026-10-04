@@ -28,7 +28,6 @@
     <div class="sidebar-bottom">
       <a href="{{ url_for('gemini_guide') }}" class="nav-item gemini-nav {{ 'active' if request.endpoint == 'gemini_guide' }}" {% if request.endpoint == 'gemini_guide' %}aria-current="page"{% endif %}>{{ icon('spark') }}<span>Gemini Sort Guide</span></a>
       <a href="{{ url_for('settings') }}" class="nav-item settings-link {{ 'active' if request.endpoint == 'settings' }}" {% if request.endpoint == 'settings' %}aria-current="page"{% endif %}>{{ icon('gear') }}<span>Settings</span></a>
-      <span class="storage-tag">{{ storage_label }}</span>
     </div>
   </aside>
   <div class="workspace">

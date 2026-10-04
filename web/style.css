@@ -42,4 +42,5 @@
 .fullscreen-button{position:absolute;top:10px;right:10px;z-index:2;display:grid;place-items:center;width:40px;height:40px;padding:0;border-radius:9px;border:1px solid #4d5a65;background:#161c22e6;color:#c3cdd5}.fullscreen-button:hover{color:var(--text)}.fullscreen-button .icon{width:20px;height:20px}.viewfinder:has(>#placeholder:not([hidden])) .fullscreen-button{display:none}.viewfinder:fullscreen{height:100vh;border:0;border-radius:0;background:#000}.camera-actions{display:flex;align-items:center;gap:8px}.camera-heading .fullscreen-button{position:static;width:34px;height:34px}.camera-heading .fullscreen-button .icon{margin:0;width:18px;height:18px}.camera-panel:fullscreen{display:flex;flex-direction:column;border:0;border-radius:0}.camera-panel:fullscreen img{flex:1;min-height:0;height:auto;aspect-ratio:auto}
 
 .sidebar-bottom .gemini-nav{align-self:stretch;margin-bottom:0}
+.storage-panel{max-width:640px;margin-bottom:24px;scroll-margin-top:24px}.storage-panel>p{margin-bottom:0}
 @media(max-width:760px){.sidebar-bottom{flex-wrap:wrap}.sidebar-bottom .gemini-nav{flex:0 0 auto;align-self:auto}}
