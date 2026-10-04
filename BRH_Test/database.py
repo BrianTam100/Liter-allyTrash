@@ -9,9 +9,12 @@ from pathlib import Path
 
 class Database:
     def __init__(self, url: str, local_path: str):
-        self.url = url
+        self.url = (url or "").strip()
         self.local_path = local_path
-        self.is_tiger = bool(url)
+        self.is_tiger = bool(self.url)
+        # Prepare shared storage before the dashboard accepts any visitors.
+        if self.is_tiger:
+            self.initialize()
 
     @contextmanager
     def connect(self):
@@ -24,7 +27,8 @@ class Database:
             # Preserve verify-full/verify-ca if supplied; always require TLS.
             if settings.get("sslmode") not in {"require", "verify-ca", "verify-full"}:
                 settings["sslmode"] = "require"
-            conn = psycopg.connect(**settings, connect_timeout=5, row_factory=dict_row)
+            settings.setdefault("connect_timeout", "5")
+            conn = psycopg.connect(**settings, row_factory=dict_row)
         else:
             Path(self.local_path).parent.mkdir(parents=True, exist_ok=True)
             conn = sqlite3.connect(self.local_path, timeout=10)
@@ -44,6 +48,10 @@ class Database:
 
     def initialize(self):
         with self.connect() as conn:
+            if self.is_tiger:
+                # Serialize schema setup across servers sharing the database.
+                # The transaction releases this lock on commit or rollback.
+                conn.execute("SELECT pg_advisory_xact_lock(1936683636, 1)")
             identity = "BIGSERIAL PRIMARY KEY" if self.is_tiger else "INTEGER PRIMARY KEY AUTOINCREMENT"
             timestamp = "TIMESTAMPTZ" if self.is_tiger else "TEXT"
             conn.execute(f"""CREATE TABLE IF NOT EXISTS lt_users (
@@ -81,9 +89,14 @@ class Database:
 
     def create_user(self, email, name, password_hash):
         with self.connect() as conn:
+            # Passwordless visitors share the Pilot account. Two servers may
+            # create it simultaneously; reuse its ID without changing its data.
+            conflict = " ON CONFLICT(email) DO NOTHING" if not password_hash else ""
             row = self.execute(conn, """INSERT INTO lt_users
-                (email, display_name, password_hash, created_at) VALUES (?, ?, ?, ?) RETURNING id""",
+                (email, display_name, password_hash, created_at) VALUES (?, ?, ?, ?)""" + conflict + " RETURNING id",
                 (email, name, password_hash, self.now())).fetchone()
+            if row is None:
+                row = self.execute(conn, "SELECT id FROM lt_users WHERE email = ?", (email,)).fetchone()
             return row["id"]
 
     @staticmethod
