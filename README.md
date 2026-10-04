@@ -161,6 +161,16 @@ channel 0 and recycling on channel 3. Pulse calibration is in
 `servo_calibration.json`. Stop the receiver before running `calibrate_lids.py`;
 use `o`/`c` to save open/closed positions. `--lid-port` must match the Pi receiver.
 
+## Spectrum / Telegram and iMessage companion
+
+Rover participates in Telegram or iMessage through Photon's Spectrum SDK and in the dashboard
+chat. It can read the shared Pilot's recycling progress, explain sorting, and
+record a drop after an expiring confirmation. Conversation memory survives
+restarts; group chats require addressing Rover. See
+[spectrum/README.md](spectrum/README.md) for connecting your existing Photon
+account, starting the worker, and running the integration checks.
+For Telegram account creation and bot setup, use [the Telegram guide](spectrum/TELEGRAM.md).
+
 ## Code layout and verification
 
 - `web/index.html`, `web/scanner.html`, `web/app.js`, `web/style.css`: dashboard and shared browser assets.

@@ -15,6 +15,10 @@ import threading
 import time
 
 
+class RoverConnectionError(ConnectionError):
+    """A hardware connection failure with recovery steps for the pilot."""
+
+
 BUSY = "Someone else is driving the rover right now. You can take over when they disconnect."
 
 
@@ -112,7 +116,10 @@ class RoverBridge:
                 try:
                     self.serial = serial.Serial(port, int(os.getenv("ROVER_BAUD", "115200")), timeout=0.2, write_timeout=0.3)
                 except serial.SerialException as exc:
-                    raise ValueError(f"Could not open {port}. Check the rover is on and paired, then try again. ({exc})") from exc
+                    self.error = (f"Could not open {port}. Check the rover is on and paired, "
+                                  "check the Pi Bluetooth serial service and outgoing COM port in the Port menu "
+                                  "(or ROVER_SERIAL_PORT in BRH_Test/.env), close other apps using it, then try again.")
+                    raise RoverConnectionError(self.error) from exc
                 self.serial_port = port
             return self.serial
 

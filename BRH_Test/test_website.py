@@ -52,6 +52,8 @@ class WebsiteTests(unittest.TestCase):
         controls = self.client.get("/controls")
         self.assertEqual(controls.status_code, 200)
         self.assertIn(b'id="connect-button"', controls.data)
+        self.assertIn(b'data-command="z"', controls.data)
+        self.assertIn(b'data-command="c"', controls.data)
 
     def test_no_account_needed_but_csrf_still_required(self):
         self.visit()
@@ -142,7 +144,11 @@ class WebsiteTests(unittest.TestCase):
             connection = self.client.post("/api/rover/connect", json={"transport": "bluetooth"}, headers=headers)
         self.assertEqual(connection.status_code, 200)
         self.assertTrue(connection.get_json()["owned"])
-        movement = self.client.post("/api/rover/command", json={"command":"w", "epoch":connection.get_json()["epoch"], "sequence":1}, headers=headers)
+        for sequence, command in enumerate(["w", "z", "x", "c", "x"], 1):
+            movement = self.client.post("/api/rover/command", json={"command":command, "epoch":connection.get_json()["epoch"], "sequence":sequence}, headers=headers)
+            self.assertEqual(movement.status_code, 200)
+            self.assertEqual(hardware.payloads[-1], command.encode("ascii"))
+        movement = self.client.post("/api/rover/command", json={"command":"w", "epoch":connection.get_json()["epoch"], "sequence":6}, headers=headers)
         self.assertEqual(movement.status_code, 200)
         self.assertEqual(hardware.payloads[-1], b"w")
         throttle = self.client.post("/api/rover/speed", json={"speed":2500}, headers=headers)
@@ -155,6 +161,36 @@ class WebsiteTests(unittest.TestCase):
         self.assertFalse(hardware.closed)  # kept open so the next connect is instant
         self.bridge.close()
         self.assertTrue(hardware.closed)
+
+    def test_bluetooth_open_failure_is_actionable_persists_and_can_retry(self):
+        from serial import SerialException
+
+        self.visit()
+        headers = {"X-CSRF-Token": self.csrf()}
+        with patch.dict("os.environ", {"ROVER_SERIAL_PORT": "COM3"}), patch(
+            "serial.Serial", side_effect=SerialException(
+                "could not open port 'COM3': OSError(22, 'The remote system is not available.', None, 1256)")):
+            response = self.client.post("/api/rover/connect", json={"transport": "bluetooth"}, headers=headers)
+        self.assertEqual(response.status_code, 503)
+        message = response.get_json()["error"]
+        for text in ["COM3", "Pi", "Bluetooth serial service", "outgoing COM port", "BRH_Test/.env"]:
+            self.assertIn(text, message)
+        state = self.client.get("/api/rover").get_json()
+        self.assertEqual(state["error"], message)
+        self.assertEqual(state["link"], "offline")
+        self.assertFalse(state["connected"])
+        self.assertFalse(state["owned"])
+        self.assertFalse(state["busy"])
+        rejected = self.client.post("/api/rover/command", json={
+            "command": "w", "epoch": state["epoch"], "sequence": 1}, headers=headers)
+        self.assertEqual(rejected.status_code, 400)
+        hardware = FakeSerial()
+        with patch("serial.Serial", return_value=hardware):
+            response = self.client.post("/api/rover/connect", json={"transport": "bluetooth"}, headers=headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNone(response.get_json()["error"])
+        self.assertTrue(response.get_json()["owned"])
+        self.assertEqual(hardware.payloads, [b"x"])
 
 
 class PortDetectionTests(unittest.TestCase):
@@ -246,12 +282,32 @@ class RoverTests(unittest.TestCase):
         self.bridge.command("pilot-a", "s", epoch, 4)
         self.assertEqual(self.bridge.last_command, "x")
 
+    def test_strafe_commands_use_both_transports_and_release_stops(self):
+        for link in ["bluetooth", "wifi"]:
+            with self.subTest(link=link), self.bridge.lock:
+                self.bridge.link = link
+                self.bridge.target = ("127.0.0.1", 5005)
+                with patch.object(self.hardware, "sendto", create=True) as sendto:
+                    for sequence, command in enumerate(["z", "x", "c", "x"], 1):
+                        self.command(command, sequence)
+                        self.assertEqual(self.bridge.last_command, command)
+                        if link == "wifi":
+                            sendto.assert_called_with(command.encode("ascii"), self.bridge.target)
+                        else:
+                            self.assertEqual(self.hardware.payloads[-1], command.encode("ascii"))
+                    self.command("z", 3)
+                    self.assertEqual(self.bridge.last_command, "x")
+                    self.bridge.sequence = 0
+        self.bridge.link = "bluetooth"
+
     def test_manual_command_times_out_even_with_browser_heartbeat(self):
-        self.command("w")
-        with self.bridge.lock:
-            self.bridge.manual_until = time.monotonic() - 1
-        time.sleep(0.2)
-        self.assertEqual(self.bridge.last_command, "x")
+        for sequence, command in enumerate(["w", "z", "c"], 1):
+            with self.subTest(command=command):
+                self.command(command, sequence)
+                with self.bridge.lock:
+                    self.bridge.manual_until = time.monotonic() - 1
+                time.sleep(0.2)
+                self.assertEqual(self.bridge.last_command, "x")
         self.assertIsNotNone(self.bridge.transport)
 
     def test_browser_lease_expiry_stops_and_releases(self):
@@ -318,6 +374,22 @@ class RoverTests(unittest.TestCase):
         time.sleep(0.2)
         self.assertTrue(voice.stopped)
         self.assertIsNone(self.bridge.transport)
+
+    def test_failed_initial_stop_preserves_error_and_releases_connection(self):
+        self.bridge.disconnect("pilot-a")
+        self.bridge._close_serial()  # A fresh failed link, not the healthy cached port.
+        hardware = FakeSerial()
+        failure = OSError("Bluetooth link lost during initial STOP")
+        with patch("serial.Serial", return_value=hardware), patch.object(
+            hardware, "write", side_effect=failure):
+            with self.assertRaises(OSError) as caught:
+                self.bridge.connect("pilot-a", "bluetooth")
+        self.assertIs(caught.exception, failure)
+        self.assertTrue(hardware.closed)
+        state = self.bridge.status("pilot-a")
+        self.assertFalse(state["connected"])
+        self.assertFalse(state["owned"])
+        self.assertEqual(state["link"], "offline")
 
 
 if __name__ == "__main__":

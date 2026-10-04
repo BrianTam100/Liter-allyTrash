@@ -18,10 +18,10 @@ from jinja2 import ChoiceLoader, FileSystemLoader
 
 if __package__:
     from .database import Database
-    from .rover_bridge import RoverBridge, list_serial_ports
+    from .rover_bridge import RoverBridge, RoverConnectionError, list_serial_ports
 else:
     from database import Database
-    from rover_bridge import RoverBridge, list_serial_ports
+    from rover_bridge import RoverBridge, RoverConnectionError, list_serial_ports
 
 ROOT = Path(__file__).resolve().parent
 # Accounts are not used: every visitor's can counts go to this one local pilot.
@@ -41,6 +41,16 @@ def create_app(config=None, bridge=None, classifier_service=None):
     app.config.update(SECRET_KEY=os.getenv("SECRET_KEY", ""), DATABASE_URL=os.getenv("DATABASE_URL", "").strip(),
         SQLITE_PATH=str(ROOT / ".instance" / "literally-trash.db"), SESSION_COOKIE_HTTPONLY=True,
         COLLECTION_API_KEY=os.getenv("COLLECTION_API_KEY", ""),
+        SPECTRUM_BRIDGE_KEY=os.getenv("SPECTRUM_BRIDGE_KEY", ""),
+        SPECTRUM_PROJECT_ID=os.getenv("SPECTRUM_PROJECT_ID", ""),
+        SPECTRUM_PROJECT_SECRET=os.getenv("SPECTRUM_PROJECT_SECRET", ""),
+        SPECTRUM_ALLOWED_SENDERS=os.getenv("SPECTRUM_ALLOWED_SENDERS", ""),
+        SPECTRUM_TELEGRAM_ALLOWED_SENDERS=os.getenv("SPECTRUM_TELEGRAM_ALLOWED_SENDERS", ""),
+        SPECTRUM_PROVIDER=os.getenv("SPECTRUM_PROVIDER", "imessage"),
+        GEMINI_API_KEY=os.getenv("GEMINI_API_KEY", ""),
+        GEMINI_CHAT_MODEL=os.getenv("GEMINI_CHAT_MODEL", "gemini-3.7-flash"),
+        XAI_API_KEY=os.getenv("XAI_API_KEY", ""),
+        XAI_CHAT_MODEL=os.getenv("XAI_CHAT_MODEL", "grok-4.7"),
         SESSION_COOKIE_SAMESITE="Strict", SESSION_COOKIE_SECURE=os.getenv("COOKIE_SECURE", "false").lower() == "true",
         MAX_CONTENT_LENGTH=8 * 1024 * 1024,
         CLASSIFIER_AUTOLOAD=os.getenv("CLASSIFIER_AUTOLOAD", "true").lower() == "true",
@@ -93,6 +103,13 @@ def create_app(config=None, bridge=None, classifier_service=None):
     @app.before_request
     def prepare_request():
         if request.endpoint == "static":
+            return
+        if request.path.startswith("/api/integrations/spectrum/"):
+            configured = app.config["SPECTRUM_BRIDGE_KEY"]
+            supplied = request.headers.get("Authorization", "")
+            if not configured or not hmac.compare_digest(supplied, "Bearer " + configured):
+                return jsonify(error="A valid Spectrum bridge key is required."), 401
+            g.user = None
             return
         if request.endpoint == "bin_event":
             configured = app.config["COLLECTION_API_KEY"]
@@ -210,6 +227,9 @@ def create_app(config=None, bridge=None, classifier_service=None):
                 rover.set_mode(owner, payload.get("mode", "manual"))
             else:
                 return jsonify(error="Unknown rover action."), 404
+        except RoverConnectionError as exc:
+            app.logger.warning("Rover connection failed: %s", exc.__cause__ or exc)
+            return jsonify(error=str(exc)), 503
         except (ValueError, ImportError) as exc:
             return jsonify(error=str(exc)), 400
         except Exception:
@@ -286,6 +306,16 @@ def create_app(config=None, bridge=None, classifier_service=None):
             return jsonify(error="Could not save that action. Check the database connection and retry."), 500
         return render_template("error.html", message="We could not load this page. Check the database connection and try again."), 500
 
+    if __package__:
+        from .companion import mount_companion
+    else:
+        from companion import mount_companion
+    mount_companion(app, pilot_user)
+    if __package__:
+        from .gemini_guide import mount_gemini_guide
+    else:
+        from gemini_guide import mount_gemini_guide
+    mount_gemini_guide(app)
     return app
 
 

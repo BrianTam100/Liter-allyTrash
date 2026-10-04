@@ -12,6 +12,7 @@
   <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='companion.js') }}" defer></script>
 </head>
 <body data-page="{{ request.endpoint }}" data-signed-in="true">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -20,6 +21,7 @@
       <span class="brand-mark">{{ icon('compass') }}</span><span>liter-ally<span class="brand-second">trash<span class="brand-period">.</span></span></span>
     </a>
     <nav aria-label="Main navigation" class="main-nav">
+      <a href="{{ url_for('gemini_guide') }}" class="nav-item gemini-nav {{ 'active' if request.endpoint == 'gemini_guide' }}" {% if request.endpoint == 'gemini_guide' %}aria-current="page"{% endif %}>{{ icon('spark') }}<span>Gemini Sort Guide</span></a>
       <a href="{{ url_for('index') }}" class="nav-item {{ 'active' if request.endpoint == 'index' }}" {% if request.endpoint == 'index' %}aria-current="page"{% endif %}>{{ icon('grid') }}<span>Dashboard</span></a>
       <a href="{{ url_for('controls') }}" class="nav-item {{ 'active' if request.endpoint == 'controls' }}" {% if request.endpoint == 'controls' %}aria-current="page"{% endif %}>{{ icon('compass') }}<span>Rover controls</span></a>
       <a href="{{ url_for('detection_log') }}" class="nav-item {{ 'active' if request.endpoint == 'detection_log' }}" {% if request.endpoint == 'detection_log' %}aria-current="page"{% endif %}>{{ icon('route') }}<span>Detection log</span></a>

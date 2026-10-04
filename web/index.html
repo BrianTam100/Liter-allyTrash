@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
+<section class="gemini-feature" aria-labelledby="gemini-feature-heading">
+  <div><span class="gemini-badge">{{ icon('spark') }} GEMINI SORT GUIDE</span>
+    <h1 id="gemini-feature-heading">Not sure where it goes?</h1>
+    <p>Show Gemini a photo or describe a tricky item. Get a clear plan for sorting, preparing, and reusing it.</p>
+    <a class="button primary" href="{{ url_for('gemini_guide') }}">{{ icon('spark') }} Explore with Gemini <span aria-hidden="true">↗</span></a>
+  </div>
+  <div class="gemini-feature-detail"><span class="gemini-orbit" aria-hidden="true">✦</span><strong>Look closer. Waste less.</strong><span>Photos · Mixed materials · Second lives</span></div>
+</section>
 <div class="stat-grid">
   <section class="stat-card accent"><div class="stat-label">Recycling points {{ icon('spark') }}</div><strong id="stat-points">{{ stats.points }}</strong></section>
   <section class="stat-card"><div class="stat-label">Items recycled {{ icon('recycle') }}</div><strong id="stat-recycled">{{ stats.recycled }}</strong></section>
@@ -7,5 +15,16 @@
   <section class="stat-card"><div class="stat-label">Lid openings {{ icon('route') }}</div><strong id="stat-collections">{{ stats.collections }}</strong></section>
 </div>
 {% include 'scanner.html' %}
+<section class="panel companion-panel" aria-labelledby="companion-heading">
+  <div class="panel-heading compact"><h2 id="companion-heading">Your recycling teammate</h2><span class="storage-tag" id="spectrum-status" role="status">Checking iMessage…</span></div>
+  <div id="companion-transcript" class="companion-transcript" role="log" aria-label="Conversation with Rover" aria-live="polite" tabindex="0"></div>
+  <form id="companion-form" class="companion-form">
+    <label class="sr-only" for="companion-input">Message Rover</label>
+    <input id="companion-input" name="message" placeholder="Ask Rover, or try: progress" maxlength="2000" required autocomplete="off">
+    <button class="button primary" type="submit">Send</button>
+  </form>
+  <p id="companion-feedback" class="form-feedback" role="status"></p>
+  <p class="form-note">The dashboard and messaging companion share Pilot's drops. Rover asks before recording and keeps each conversation separate. Send “forget” to clear its memory.</p>
+</section>
 <section class="panel history-panel"><div class="panel-heading compact"><h2>Recently in the cans</h2></div>{% if recent %}<div class="table-wrap" tabindex="0" role="region" aria-label="Your disposal history"><table><caption class="sr-only">Your recent disposal history</caption><thead><tr><th scope="col">Item</th><th scope="col">Destination</th><th scope="col">Quantity</th><th scope="col">Points</th><th scope="col">Recorded</th></tr></thead><tbody>{% for entry in recent %}<tr><td>{{ entry.item_name }}</td><td><span class="category-pill {{ entry.category }}">{{ entry.category|capitalize }}</span></td><td>{{ entry.item_count }}</td><td class="points-cell">{{ '+' ~ (entry.item_count * 10) if entry.category == 'recycling' else '0' }}</td><td><time datetime="{{ entry.created_at }}" class="local-time">{{ entry.created_at|string|truncate(10, true, '') }}</time></td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="empty-state compact">{{ icon('route') }}<p>Nothing in the cans yet.</p></div>{% endif %}</section>
 {% endblock %}

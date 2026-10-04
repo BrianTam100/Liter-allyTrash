@@ -33,7 +33,7 @@ def main():
     args = parser.parse_args()
 
     print(f"Targeting Raspberry Pi at {args.pi_ip}:{UDP_PORT}")
-    print("Hold W/A/S/D/Z/C (or arrows) to drive. Keyboard always wins over voice.")
+    print("Hold W/A/S/D (or arrows) to drive; Z/C to turn left/right. Keyboard always wins over voice.")
     print("Press Q to quit.")
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

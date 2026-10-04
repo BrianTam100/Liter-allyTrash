@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Gemini Sort Guide{% endblock %}
+{% block content %}
+<header class="gemini-intro">
+  <span class="gemini-badge">{{ icon('spark') }} POWERED BY GEMINI</span>
+  <h1>A second look.<br>A better next step.</h1>
+  <p>From mixed packaging to mystery materials, turn a photo or a question into a practical disposal plan.</p>
+</header>
+<div class="gemini-layout">
+  <section class="panel gemini-input-panel" aria-labelledby="guide-input-heading">
+    <h2 id="guide-input-heading">What are you sorting?</h2>
+    <form id="gemini-form">
+      <label for="gemini-photo">Add a photo <span class="form-note">(optional)</span></label>
+      <div class="gemini-upload">
+        {{ icon('spark') }}
+        <p>Show the item, its label, or its different parts.</p>
+        <input type="file" id="gemini-photo" name="photo" accept="image/jpeg,image/png,image/webp" aria-describedby="photo-hint">
+        <small id="photo-hint">JPEG, PNG, or WebP · up to 5 MB</small>
+        <img id="gemini-preview" alt="Selected item for analysis" hidden>
+        <button class="text-button" id="gemini-remove" type="button" hidden>Remove photo</button>
+      </div>
+      <label for="gemini-description">Describe the item or ask a question</label>
+      <textarea id="gemini-description" name="description" rows="4" maxlength="2000" placeholder="A greasy pizza box with a plastic window — which parts can I recycle?"></textarea>
+      <div class="gemini-examples" aria-label="Example questions">
+        <button type="button" data-example="How should I sort a greasy pizza box?">Pizza box</button>
+        <button type="button" data-example="How do I dispose of an old rechargeable battery safely?">Old battery</button>
+        <button type="button" data-example="Can I separate a paper coffee cup, plastic lid, and cardboard sleeve for recycling?">Coffee cup</button>
+      </div>
+      <label for="gemini-location">City or region <span class="form-note">(optional)</span></label>
+      <input id="gemini-location" name="location" maxlength="120" placeholder="Helps frame what to check locally">
+      <p class="form-note">Your question and selected photo are sent to Google when you analyze. Photos aren't saved by this app. Local collection rules still need checking.</p>
+      <button class="button primary gemini-submit" type="submit" {% if not gemini_configured %}disabled{% endif %}>{{ icon('spark') }} Get a sorting plan</button>
+      <p id="gemini-feedback" class="form-feedback" role="status" aria-live="polite">{% if not gemini_configured %}Gemini needs an API key on the server before it can analyze items.{% endif %}</p>
+    </form>
+  </section>
+  <section class="panel gemini-result-panel" id="gemini-result-panel" aria-labelledby="guide-result-heading" aria-busy="false">
+    <div class="panel-heading compact"><h2 id="guide-result-heading">Your sorting plan</h2><span class="gemini-badge">GEMINI</span></div>
+    <div id="gemini-empty" class="gemini-empty">
+      <span class="gemini-orbit" aria-hidden="true">✦</span>
+      <h3>A little clarity before the bin.</h3>
+      <p>Get help identifying materials, separating components, and finding a useful second life.</p>
+      <ol><li>Understand what you're holding</li><li>Know what to do before disposal</li><li>See what needs local verification</li></ol>
+    </div>
+    <div id="gemini-result" class="gemini-answer" tabindex="-1" hidden></div>
+    <p id="gemini-result-note" class="form-note" hidden>AI guidance can be mistaken. Check labels and local rules before disposal. This analysis does not record a drop or award points.</p>
+    <button id="gemini-reset" class="button" type="button" hidden>Start a new item</button>
+  </section>
+</div>
+<script src="{{ url_for('static', filename='gemini.js') }}" defer></script>
+{% endblock %}

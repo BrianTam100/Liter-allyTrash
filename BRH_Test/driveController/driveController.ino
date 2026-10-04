@@ -1,6 +1,6 @@
 #include <AccelStepper.h>
 
-const int enPin = 8;  
+const int enPin = 8;
 
 // Initialize steppers (DRIVER mode, Step Pin, Dir Pin)
 AccelStepper stepperX(AccelStepper::DRIVER, 2, 5);  // X-Axis (Motor 1)
@@ -10,10 +10,10 @@ AccelStepper stepperA(AccelStepper::DRIVER, 9, 10); // A-Axis (Motor 4)
 
 float maxSpeed = 5000.0; // Maximum steps per second
 
-void setup() 
+void setup()
 {
   pinMode(enPin, OUTPUT);
-  digitalWrite(enPin, LOW); 
+  digitalWrite(enPin, LOW);
 
   // Configure max speeds for all motors
   stepperX.setMaxSpeed(maxSpeed);
@@ -27,26 +27,26 @@ void setup()
   Serial.setTimeout(10);
 }
 
-void loop() 
+void loop()
 {
-  if (Serial.available() > 0) 
+  if (Serial.available() > 0)
   {
-    char incomingChar = Serial.peek(); 
-    
-    // WASD/Arrow Key Control  
+    char incomingChar = Serial.peek();
+
+    // WASD/Arrow Key Control
     if (isAlpha(incomingChar)) {
       char cmd = Serial.read();
       if (cmd == 'v') {
         float newSpeed = Serial.parseFloat(); // Read the number after 'v'
         if (newSpeed > 0) {                   // Basic safety check
           maxSpeed = newSpeed;
-          
+
           // Update the AccelStepper objects
           stepperX.setMaxSpeed(maxSpeed);
           stepperY.setMaxSpeed(maxSpeed);
           stepperZ.setMaxSpeed(maxSpeed);
           stepperA.setMaxSpeed(maxSpeed);
-          
+
           Serial.print("New Max Speed set to: ");
           Serial.println(maxSpeed);
         }
@@ -56,19 +56,19 @@ void loop()
         stepperY.setSpeed(-maxSpeed);
         stepperZ.setSpeed(-maxSpeed);
         stepperA.setSpeed(-maxSpeed);
-      } 
+      }
       else if (cmd == 'a') {
         stepperX.setSpeed(-maxSpeed);
         stepperY.setSpeed(-maxSpeed);
         stepperZ.setSpeed(maxSpeed);
         stepperA.setSpeed(maxSpeed);
-      } 
+      }
       else if (cmd == 'd') {
         stepperX.setSpeed(maxSpeed);
         stepperY.setSpeed(maxSpeed);
         stepperZ.setSpeed(-maxSpeed);
         stepperA.setSpeed(-maxSpeed);
-      } 
+      }
       else if (cmd == 's') {
         stepperX.setSpeed(maxSpeed);
         stepperY.setSpeed(maxSpeed);
@@ -94,29 +94,29 @@ void loop()
         stepperZ.setSpeed(0);
         stepperA.setSpeed(0);
       }
-    } 
+    }
     // MECANUM ANGLE CONTROL
     else if (isDigit(incomingChar) || incomingChar == '-') {
       float angle = Serial.parseFloat(); // Parses the full number
-      
+
       float rad = angle * (PI / 180.0);
-      
+
       // Calculate speeds based on mecanum wheel kinematics
-      float speedFL = sin(rad + PI / 4.0); 
-      float speedFR = cos(rad + PI / 4.0); 
-      float speedBL = cos(rad + PI / 4.0); 
+      float speedFL = sin(rad + PI / 4.0);
+      float speedFR = cos(rad + PI / 4.0);
+      float speedBL = cos(rad + PI / 4.0);
       float speedBR = sin(rad + PI / 4.0);
 
-      // Apply the speeds. 
-      // Note: Depending on which axis (X,Y,Z,A) correlates to which wheel 
+      // Apply the speeds.
+      // Note: Depending on which axis (X,Y,Z,A) correlates to which wheel
       // (FL, FR, BL, BR), you may need to shuffle these assignments.
       stepperX.setSpeed(speedFL * maxSpeed);
       stepperY.setSpeed(speedFR * maxSpeed);
       stepperZ.setSpeed(speedBL * maxSpeed);
       stepperA.setSpeed(speedBR * maxSpeed);
-    } 
+    }
     else {
-      Serial.read(); 
+      Serial.read();
     }
   }
 

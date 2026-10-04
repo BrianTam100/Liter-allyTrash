@@ -118,6 +118,11 @@ No motors, cameras, or microphones activate just by opening a page. The connecte
 scanner and hand tracker coordinate ownership of camera 0; enabling hand tracking
 releases your own scan or rejects a camera another person is using.
 
+Hold W/S to drive forward/backward, A/D to spin, and Z/C to strafe left/right.
+Release a direction to stop, or press Space/Esc to stop all motion.
+For Z/C support on existing hardware, upload the updated `driveController.ino`
+to the Arduino and copy the updated `motor_control.py` to the Pi for Wi-Fi.
+
 ### Bluetooth
 
 Pair laptop/Pi and follow `README.md` to enable RFCOMM. Run
@@ -126,8 +131,25 @@ Pair laptop/Pi and follow `README.md` to enable RFCOMM. Run
 `ROVER_SERIAL_PORT` from `.env` (default `auto`: the one paired outgoing Bluetooth port).
 The baud rate defaults to `115200`. The port stays open after you disconnect, so
 reconnecting is instant; only the first connection waits for Windows to open the link.
-The website sends the same `w`, `a`, `s`, `d`, `x` bytes and newline-terminated
+The website sends the same `w`, `a`, `s`, `d`, `z`, `c`, `x` bytes and newline-terminated
 hand angles as `command_bluetooth_camera.py`.
+
+If opening a port fails with Windows error **1256** ("The remote system is not
+available"), Windows cannot reach the remote Bluetooth device through that port.
+The website returns HTTP 503 and keeps the rover offline; later status requests
+returning HTTP 200 only mean the website itself is responding.
+
+1. Power on the Pi, keep it in range, and enable Bluetooth on both devices.
+2. Check **Bluetooth settings > More Bluetooth settings > COM Ports** on Windows.
+   Set `ROVER_SERIAL_PORT` in `BRH_Test/.env` to the Pi's **Outgoing** port, then
+   restart the website. Listing a port does not prove the Pi is reachable:
+   `.\BRH_Test\.venv\Scripts\python.exe -m serial.tools.list_ports -v`.
+3. On the Pi, complete the Serial Port Profile setup in [README.md](README.md).
+   Keep `sudo rfcomm watch 0 1` running in one terminal; in another, run
+   `sudo python3 motor_control_bluetooth_camera.py` from its directory.
+4. Close desktop rover controllers and serial monitors, then retry **Connect rover**.
+   If the pairing is stale, remove and pair the Pi again and recheck the outgoing
+   port number.
 
 ### Wi-Fi
 
@@ -135,7 +157,7 @@ Set `PI_IP` and `PI_UDP_PORT` (default `5005`), and run `motor_control.py` on th
 The Wi-Fi receiver now uses Arduino baud **115200**, matching the checked-in
 Arduino sketch and Bluetooth receiver. Copy the updated receiver to the Pi and
 restart it if it still has the older 9600-baud version.
-The Wi-Fi receiver only accepts WASD/stop, so hand angles require Bluetooth.
+The Wi-Fi receiver accepts WASD, Z/C, and stop, so hand angles require Bluetooth.
 UDP provides no acknowledgement; the interface says the target is set rather
 than claiming the Pi confirmed a connection.
 

@@ -446,7 +446,8 @@ document.addEventListener("trash:auto-recorded", (event) => {
 })();
 
 if ($("#connect-button") && signedIn) {
-  const commands = {w:"w", a:"a", s:"s", d:"d", z:"z", c:"c", ArrowUp:"w", ArrowLeft:"a", ArrowDown:"s", ArrowRight:"d"};  const labels = {w:"MOVING FORWARD", s:"MOVING BACKWARD", a:"SPINNING LEFT", d:"SPINNING RIGHT", z:"TURNING LEFT", c:"TURNING RIGHT", x:"STOPPED"};
+  const commands = {w:"w", a:"a", s:"s", d:"d", z:"z", c:"c", ArrowUp:"w", ArrowLeft:"a", ArrowDown:"s", ArrowRight:"d"};
+  const labels = {w:"MOVING FORWARD", s:"MOVING BACKWARD", a:"SPINNING LEFT", d:"SPINNING RIGHT", z:"TURNING LEFT", c:"TURNING RIGHT", x:"STOPPED"};
   let status = {connected:false, owned:false, mode:"manual", command:"x"};
   const toggleNames = {voice:"voice", gesture:"hand tracking"};
   let heldCommand = null;
