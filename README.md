@@ -1,9 +1,64 @@
-﻿# Litter-ally Trash
+# Litter-ally Trash
 
-One dashboard for joining the project, identifying waste, recording personal
-recycling, earning points, reviewing what the AI detected, and driving the SortRover.
-The original `web` classifier interface and `BRH_Test` account/control application
-now run together, with shared login and navigation.
+## Inspiration
+
+Throwing away trash is an afterthought until getting to the bin becomes a
+challenge. After one of our teammates broke his foot, helping him navigate a
+long dorm hallway to throw away a piece of trash made us rethink an everyday
+task. Instead of asking people with limited mobility to reach stationary bins,
+why not bring the bin to them? **Litter-ally Trash** grew from that idea: making
+waste disposal more accessible through a moving trash bin.
+
+## What it does
+
+Litter-ally Trash combines AI with multiple ways to control a moving bin. Users
+can steer it toward them through Grok voice commands, hand gestures, keyboard
+inputs, or touch controls. A web dashboard accessible from a phone or computer
+brings together rover controls, waste identification, personal disposal history,
+recycling points, and detection logs. The Gemini Sort Guide offers disposal and
+reuse advice from an item description or photo, while Photon's Spectrum
+integration lets users talk with the Rover companion through Telegram or iMessage.
+
+## How we built it
+
+We started with a responsive drive base and an accessible interface. Wi-Fi and
+Bluetooth connect users' controls to a Raspberry Pi and an Arduino-powered
+mecanum drive base, allowing the bin to move in any direction. Voice commands,
+hand tracking, and messaging give users several ways to interact with the robot.
+
+Next, we built the waste-sorting infrastructure. OpenAI's CLIP helps classify
+supported items into trash or recycling, and servos open and close the appropriate
+bin lids. We brought the controls and classifier together in a web app so users
+can operate the system without the command line. TigerData stores disposal
+records and recycling progress, helping users see what they have thrown away
+and how they can continue to be sustainable.
+
+## Challenges we ran into
+
+Our biggest hurdles were learning unfamiliar hardware, resolving motor power
+and torque issues, and reducing camera inference latency. Many of us had no
+robotics experience, so building the drive base and getting the motors to spin
+in the right direction took experimentation. Raspberry Pis and Arduinos were
+also new environments: we learned to connect remotely and exchange commands
+between the devices and our laptops.
+
+To make the application responsive, we moved model inference to a GPU and
+simplified the camera and communication paths. Balancing hardware reliability,
+network latency, and recognition speed became a central part of the prototype.
+
+## What we learned
+
+We learned embedded programming, network programming, and how to build a moving
+vehicle from scratch. Sending commands to the Pi, connecting hardware to the
+web dashboard, and troubleshooting the complete system gave us practical
+experience across software and robotics.
+
+## What's next for Litter-ally Trash
+
+Our next steps are autonomous navigation so users can summon the bin without
+steering it themselves, obstacle avoidance, and navigation to the requester.
+We also want to add heat sinks and better cooling to address persistent heat
+issues in the robot's electronics.
 
 ## Run the unified dashboard
 
