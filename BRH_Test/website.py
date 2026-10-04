@@ -41,7 +41,8 @@ def create_app(config=None, bridge=None, classifier_service=None):
         COLLECTION_API_KEY=os.getenv("COLLECTION_API_KEY", ""),
         SESSION_COOKIE_SAMESITE="Strict", SESSION_COOKIE_SECURE=os.getenv("COOKIE_SECURE", "false").lower() == "true",
         MAX_CONTENT_LENGTH=8 * 1024 * 1024,
-        CLASSIFIER_AUTOLOAD=os.getenv("CLASSIFIER_AUTOLOAD", "true").lower() == "true")
+        CLASSIFIER_AUTOLOAD=os.getenv("CLASSIFIER_AUTOLOAD", "true").lower() == "true",
+        SEND_FILE_MAX_AGE_DEFAULT=31536000)
     if config:
         app.config.update(config)
     if not app.config["SECRET_KEY"]:
@@ -79,6 +80,13 @@ def create_app(config=None, bridge=None, classifier_service=None):
         return session["csrf_token"]
 
     app.jinja_env.globals["csrf_token"] = csrf_token
+
+    @app.url_defaults
+    def static_version(endpoint, values):
+        # Assets are cached for a year; the file's timestamp in the URL fetches a new copy after edits.
+        if endpoint == "static" and "filename" in values:
+            asset = Path(app.static_folder) / values["filename"]
+            values["v"] = int(asset.stat().st_mtime) if asset.is_file() else 0
 
     @app.before_request
     def prepare_request():

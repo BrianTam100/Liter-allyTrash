@@ -121,8 +121,10 @@ releases your own scan or rejects a camera another person is using.
 ### Bluetooth
 
 Pair laptop/Pi and follow `README.md` to enable RFCOMM. Run
-`motor_control_bluetooth_camera.py` on the Pi. Set `ROVER_SERIAL_PORT` in `.env`
-to your outgoing port (default `COM8`); the baud rate defaults to `115200`.
+`motor_control_bluetooth_camera.py` on the Pi. `ROVER_SERIAL_PORT=auto` (the default)
+picks the paired rover's outgoing Bluetooth port; set a port such as `COM3` to force one.
+The baud rate defaults to `115200`. The port stays open after you disconnect, so
+reconnecting is instant; only the first connection waits for Windows to open the link.
 The website sends the same `w`, `a`, `s`, `d`, `x` bytes and newline-terminated
 hand angles as `command_bluetooth_camera.py`.
 

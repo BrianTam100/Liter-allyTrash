@@ -136,13 +136,27 @@ def main():
         context.load_cert_chain(args.cert, args.key)
         scheme = "https"
         app.config["SESSION_COOKIE_SECURE"] = True
-    from werkzeug.serving import make_server
     from flask import send_file
     if CA_CERT.exists():
         @app.get("/ca.crt")
         def ca_certificate():
             return send_file(CA_CERT, mimetype="application/x-x509-ca-cert")
-    server = make_server(args.host, args.port, app, threaded=True, ssl_context=context)
+    if context is None:
+        # Waitress keeps connections alive; Werkzeug's development server reconnects for every request.
+        from waitress import create_server
+        listen = f"{args.host}:{args.port}"
+        if args.host in ("127.0.0.1", "localhost"):
+            # Browsers try localhost's IPv6 address first; answering there avoids a fallback delay.
+            listen = f"127.0.0.1:{args.port} [::1]:{args.port}"
+        try:
+            server = create_server(app, listen=listen, threads=16)
+        except OSError:
+            server = create_server(app, listen=f"{args.host}:{args.port}", threads=16)
+        serve, close_server = server.run, server.close
+    else:
+        from werkzeug.serving import make_server
+        server = make_server(args.host, args.port, app, threaded=True, ssl_context=context)
+        serve, close_server = server.serve_forever, server.server_close
     print(f"Liter-ally Trash: {scheme}://localhost:{args.port}", flush=True)
     print("Accounts: " + ("TigerData" if app.extensions["database"].is_tiger else "local development"), flush=True)
     if ip:
@@ -153,7 +167,7 @@ def main():
     elif args.host not in ("127.0.0.1", "localhost"):
         print(f"On your network: {scheme}://{args.host}:{args.port}", flush=True)
     try:
-        server.serve_forever()
+        serve()
     except KeyboardInterrupt:
         pass
     finally:
@@ -161,7 +175,7 @@ def main():
         app.extensions["rover"].close()
         if lid:
             lid.close()
-        server.server_close()
+        close_server()
 
 
 if __name__ == "__main__":

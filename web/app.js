@@ -5,9 +5,9 @@ const csrf = document.querySelector('meta[name="csrf-token"]').content;
 const signedIn = document.body.dataset.signedIn === "true";
 const $ = (selector) => document.querySelector(selector);
 
-async function api(path, data) {
+async function api(path, data, wait = 5000) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 5000);
+  const timeout = setTimeout(() => controller.abort(), wait);
   try {
     const response = await fetch(path, {
       method: data === undefined ? "GET" : "POST",
@@ -455,9 +455,11 @@ if ($("#connect-button") && signedIn) {
     const button = $("#connect-button");
     button.disabled = true;
     button.textContent = disconnecting ? "Disconnecting…" : "Connecting…";
+    if (!disconnecting && $("#transport").value === "bluetooth") feedback("Opening the Bluetooth link. The first connection can take a few seconds.");
     clearHeld();
     try {
-      showStatus(await api("/api/rover/" + (disconnecting ? "disconnect" : "connect"), {transport:$("#transport").value}));
+      // Opening a Bluetooth serial port can take several seconds on Windows.
+      showStatus(await api("/api/rover/" + (disconnecting ? "disconnect" : "connect"), {transport:$("#transport").value}, disconnecting ? 5000 : 20000));
       feedback(disconnecting ? "Rover stopped and disconnected." : "Ready. Hold a direction to drive.");
     } catch (error) {
       feedback(error.message, true);
@@ -519,7 +521,10 @@ if ($("#connect-button") && signedIn) {
       showStatus({...status, owned:false, connected:false});
     }
   }
-  window.addEventListener("blur", leave);
+  // Losing focus can swallow a key release, so stop the rover but stay connected.
+  window.addEventListener("blur", () => { if (heldCommand) release(); });
+  try { const saved = localStorage.getItem("rover-transport"); if (saved) $("#transport").value = saved; } catch (_) {}
+  $("#transport").addEventListener("change", () => { try { localStorage.setItem("rover-transport", $("#transport").value); } catch (_) {} });
   window.addEventListener("pagehide", leave);
   document.addEventListener("visibilitychange", () => { if (document.hidden) leave(); else leaving = false; });
   window.addEventListener("focus", () => { leaving = false; });
