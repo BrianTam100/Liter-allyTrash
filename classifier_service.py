@@ -118,9 +118,16 @@ class ItemLock:
         self.reset()
         self.last = 0.0
 
+    # Fast GPU readings would meet the counts above in a fraction of a second, so a hand
+    # passing in front of the item would start a second scan. These times must also pass.
+    LOCK_SECONDS = 0.5    # readings must span this long before locking
+    CLEAR_SECONDS = 1.0   # the item must be gone this long before the lock clears
+    SWITCH_SECONDS = 1.0  # a different item must be seen this long before replacing the lock
+
     def reset(self):
         self.samples, self.locked, self.misses, self.others = [], None, 0, 0
         self.scan_id = None
+        self.first = self.miss_since = self.other_since = None
 
     def update(self, result):
         now = time.monotonic()
@@ -130,20 +137,24 @@ class ItemLock:
         self.last = now
         empty = result["category"] is None
         if self.locked:
+            other = not empty and result["label"] != self.locked["label"]
             self.misses = self.misses + 1 if empty else 0
-            self.others = self.others + 1 if not empty and result["label"] != self.locked["label"] else 0
-            if self.misses >= self.CLEAR_AFTER:
+            self.others = self.others + 1 if other else 0
+            self.miss_since = (self.miss_since or now) if empty else None
+            self.other_since = (self.other_since or now) if other else None
+            if self.misses >= self.CLEAR_AFTER and now - self.miss_since >= self.CLEAR_SECONDS:
                 self.reset()
                 return {**result, "state": "empty"}
-            if self.others < self.SWITCH_AFTER:
+            if self.others < self.SWITCH_AFTER or now - self.other_since < self.SWITCH_SECONDS:
                 return {**self.locked, "state": "locked", "seconds": result["seconds"], "scan_id": self.scan_id}
             self.reset()
         if empty:
-            self.samples = []
+            self.samples, self.first = [], None
             return {**result, "state": "empty"}
         self.samples.append(result)
-        if len(self.samples) < self.READINGS:
-            return {**result, "state": "checking", "checks": len(self.samples), "of": self.READINGS}
+        self.first = self.first or now
+        if len(self.samples) < self.READINGS or now - self.first < self.LOCK_SECONDS:
+            return {**result, "state": "checking", "checks": min(len(self.samples), self.READINGS), "of": self.READINGS}
         totals = {}
         for sample in self.samples:
             totals[sample["label"]] = totals.get(sample["label"], 0) + sample["score"]
@@ -158,6 +169,7 @@ class Service:
     def __init__(self, camera=0, lid=None):
         self.camera = camera
         self.lid = lid
+        self.auto_lid = True  # the dashboard can switch automatic opening off and on
         self.item = ItemLock()
         self.model = None
         self.error = None
@@ -186,7 +198,9 @@ class Service:
         """Lock live readings onto one item; keep its can's lid open while it stays in view."""
         result = self.item.update(result)
         # Drop-off items (batteries, electronics) do not belong in the curbside recycling can.
-        if self.lid and result["state"] == "locked" and result["category"] in ("Trash", "Recyclable") \
+        if self.lid and self.auto_lid and result["state"] == "locked" and result["category"] in ("Trash", "Recyclable") \
                 and not result["drop_off"]:
             self.lid.open(result["category"])
+            # The lid opening is the confirmation: the item is counted in that can.
+            result = {**result, "lid_opened": True}
         return result

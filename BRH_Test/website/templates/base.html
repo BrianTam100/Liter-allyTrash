@@ -5,7 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Liter-ally Trash: identify an item, choose the right bin, track your recycling rewards, and steer the rover from one dashboard.">
-  <meta name="theme-color" content="#101519">
+  <meta name="theme-color" content="#121517">
+  <meta name="color-scheme" content="dark">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{% block title %}Dashboard{% endblock %} · Liter-ally Trash</title>
   <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
@@ -25,7 +26,7 @@
       <a href="{{ url_for('controls') }}" class="nav-item {{ 'active' if request.endpoint == 'controls' }}" {% if request.endpoint == 'controls' %}aria-current="page"{% endif %}>{{ icon('compass') }}<span>Rover controls</span></a>
       <a href="{{ url_for('detection_log') }}" class="nav-item {{ 'active' if request.endpoint == 'detection_log' }}" {% if request.endpoint == 'detection_log' %}aria-current="page"{% endif %}>{{ icon('route') }}<span>Detection log</span></a>
     </nav>
-    <div class="sidebar-bottom"><span class="storage-tag">{{ storage_label }}</span></div>
+    <div class="sidebar-bottom"><a href="{{ url_for('settings') }}" class="nav-item settings-link {{ 'active' if request.endpoint == 'settings' }}" {% if request.endpoint == 'settings' %}aria-current="page"{% endif %}>{{ icon('gear') }}<span>Settings</span></a><span class="storage-tag">{{ storage_label }}</span></div>
   </aside>
   <div class="workspace">
     <main id="main" tabindex="-1">

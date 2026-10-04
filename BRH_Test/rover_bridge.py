@@ -2,12 +2,14 @@
 
 No hardware is opened until a signed-in pilot explicitly connects.
 The browser owns a short renewable lease; losing it sends STOP.
+The Bluetooth serial port stays open between pilots, because opening it takes seconds.
 """
 from __future__ import annotations
 
 import ipaddress
 import math
 import os
+import re
 import socket
 import threading
 import time
@@ -17,14 +19,53 @@ class RoverConnectionError(ConnectionError):
     """A hardware connection failure with recovery steps for the pilot."""
 
 
+BUSY = "Someone else is driving the rover right now. You can take over when they disconnect."
+
+
+def list_serial_ports():
+    """Serial ports on this laptop, flagging outgoing Bluetooth links to a paired device."""
+    from serial.tools import list_ports
+    ports = []
+    for port in sorted(list_ports.comports(), key=lambda p: p.device):
+        hwid = (port.hwid or "").upper()
+        # Windows tags each paired device's outgoing port with its address; incoming ports use zeros.
+        address = re.search(r"&([0-9A-F]{12})_", hwid) if "BTHENUM" in hwid else None
+        paired = bool(address and address.group(1) != "0" * 12)
+        kind = "paired Bluetooth" if paired else "incoming Bluetooth" if "BTHENUM" in hwid else \
+            re.sub(r"\s*\(COM\d+\)$", "", port.description or "serial")
+        ports.append({"device": port.device, "kind": kind, "paired": paired})
+    return ports
+
+
+def find_serial_port(configured, strict=False):
+    """Use the chosen port if it exists, else the one outgoing Bluetooth port. Strict choices never fall back."""
+    ports = list_serial_ports()
+    found = ", ".join(f"{p['device']} ({p['kind']})" for p in ports) or "none"
+    if configured and configured.lower() != "auto":
+        for port in ports:
+            if port["device"].upper() == configured.upper():
+                return port["device"]
+        if strict:
+            raise ValueError(f"{configured} isn't available on this laptop. Ports found: {found}.")
+    paired = [p["device"] for p in ports if p["paired"]]
+    if len(paired) == 1:
+        return paired[0]
+    missing = f"{configured} was not found. " if configured and configured.lower() != "auto" else ""
+    raise ValueError(f"{missing}Choose the rover's port in the Port menu. Ports found: {found}.")
+
+
 class RoverBridge:
     def __init__(self):
         self.lock = threading.RLock()
+        self.port_lock = threading.Lock()
+        self.serial = None
+        self.serial_port = None
         self.transport = None
         self.link = "offline"
         self.owner = None
         self.mode = "manual"
         self.last_command = "x"
+        self.speed = 5000
         self.error = None
         self.heartbeat_at = 0.0
         self.manual_until = 0.0
@@ -46,72 +87,108 @@ class RoverBridge:
             return {"link": self.link, "connected": self.transport is not None,
                     "owned": bool(owner and owner == self.owner), "busy": bool(self.owner and owner != self.owner),
                     "mode": self.mode, "command": self.last_command.strip(), "error": self.error,
+                    "speed": self.speed,
                     "voice_ready": bool(self.voice and self.voice.ready.is_set() and not voice_error),
                     "voice_error": voice_error, "camera_error": self.camera_error,
                     "camera_active": bool(self.camera_thread and self.camera_thread.is_alive()),
+                    "port": self.serial_port if self.link == "bluetooth" else None,
                     "epoch": self.epoch, "sequence": self.sequence}
 
     def _require_owner(self, owner):
         if not self.transport:
             raise ValueError("Connect the rover before using controls.")
         if not owner or self.owner != owner:
-            raise ValueError("Another pilot has control of this rover.")
+            raise ValueError(BUSY)
 
-    def connect(self, owner, kind):
-        with self.lock:
-            if self.owner and self.owner != owner:
-                raise ValueError("Another pilot has control. Wait for them to disconnect.")
-            if self.transport:
-                raise ValueError("Disconnect before changing the connection.")
-            if kind == "bluetooth":
-                import serial
-                port = os.getenv("ROVER_SERIAL_PORT", "COM8")
-                try:
-                    self.transport = serial.Serial(port,
-                        int(os.getenv("ROVER_BAUD", "115200")), timeout=0.2, write_timeout=0.3)
-                except serial.SerialException as exc:
-                    self.error = (f"Could not open Bluetooth port {port}. "
-                        "Check that the Pi is powered on and in range, and its Bluetooth serial service is running. "
-                        "Verify that ROVER_SERIAL_PORT in BRH_Test/.env matches the Pi's outgoing COM port "
-                        "in Windows Bluetooth settings. Close other rover controllers, then retry. "
-                        "Restart the website after changing .env.")
-                    raise RoverConnectionError(self.error) from exc
-            elif kind == "wifi":
-                host = os.getenv("PI_IP", "172.20.8.62")
-                ipaddress.ip_address(host)
-                self.target = (host, int(os.getenv("PI_UDP_PORT", "5005")))
-                self.transport = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    def _open_serial(self, choice=None, fresh=False):
+        """Return the open Bluetooth port, opening it outside the bridge lock so status stays responsive."""
+        if choice is not None and (not isinstance(choice, str) or len(choice) > 64):
+            raise ValueError("Choose a serial port from the list.")
+        with self.port_lock:
+            if choice and choice.lower() != "auto":
+                port = find_serial_port(choice, strict=True)
             else:
-                raise ValueError("Choose Bluetooth or Wi-Fi.")
-            self.link, self.owner = kind, owner
-            self.error = None
-            self.mode = "manual"
-            self.epoch += 1
-            self.sequence = 0
-            self.heartbeat_at = time.monotonic()
-            try:
-                self._send("x", force=True)
-            except Exception:
-                if self.transport is not None:
-                    self.transport.close()
-                self.transport, self.owner, self.link = None, None, "offline"
-                raise
+                port = find_serial_port(os.getenv("ROVER_SERIAL_PORT", "auto"))
+            if fresh or port != self.serial_port:
+                self._close_serial()
+            if self.serial is None:
+                import serial
+                try:
+                    self.serial = serial.Serial(port, int(os.getenv("ROVER_BAUD", "115200")), timeout=0.2, write_timeout=0.3)
+                except serial.SerialException as exc:
+                    self.error = (f"Could not open {port}. Check the rover is on and paired, "
+                                  "check the Pi Bluetooth serial service and outgoing COM port in the Port menu "
+                                  "(or ROVER_SERIAL_PORT in BRH_Test/.env), close other apps using it, then try again.")
+                    raise RoverConnectionError(self.error) from exc
+                self.serial_port = port
+            return self.serial
 
-    def _send(self, command, force=False):
+    def _close_serial(self):
+        self.serial_port = None
+        port, self.serial = self.serial, None
+        if port:
+            try:
+                port.close()
+            except Exception:
+                pass
+
+    def _release(self):
+        """Drop the link. Bluetooth stays open for the next pilot; a Wi-Fi socket is closed."""
+        if self.transport is not None and self.transport is not self.serial:
+            self.transport.close()
+        self.transport, self.owner, self.link = None, None, "offline"
+
+    def connect(self, owner, kind, port=None):
+        if kind not in {"bluetooth", "wifi"}:
+            raise ValueError("Choose Bluetooth or Wi-Fi.")
+        for attempt in range(2):
+            with self.lock:
+                if self.owner and self.owner != owner:
+                    raise ValueError(BUSY)
+                if self.transport:
+                    raise ValueError("Disconnect before changing the connection.")
+            # A cached port can go stale while idle, so a failed first STOP reopens it once.
+            transport = self._open_serial(port, fresh=attempt > 0) if kind == "bluetooth" else None
+            with self.lock:
+                if self.transport or (self.owner and self.owner != owner):
+                    raise ValueError(BUSY)
+                if kind == "wifi":
+                    host = os.getenv("PI_IP", "172.20.8.62")
+                    ipaddress.ip_address(host)
+                    self.target = (host, int(os.getenv("PI_UDP_PORT", "5005")))
+                    transport = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                self.transport = transport
+                self.link, self.owner = kind, owner
+                self.error = None
+                self.mode = "manual"
+                self.epoch += 1
+                self.sequence = 0
+                self.heartbeat_at = time.monotonic()
+                try:
+                    self._send("x", force=True)
+                    return
+                except Exception:
+                    if kind == "wifi" or attempt:
+                        raise
+                    self.error = None
+
+    def _send(self, command, force=False, remember=True):
         if self.transport is None:
             return
-        if command != self.last_command or force:
+        if command != self.last_command or force or not remember:
             payload = command.encode("ascii")
             try:
                 if self.link == "wifi":
                     self.transport.sendto(payload, self.target)
                 else:
                     self.transport.write(payload)
-                self.last_command = command
+                if remember:
+                    self.last_command = command
             except Exception:
                 self.error = "The rover connection was lost. Reconnect before driving."
-                self.transport.close()
-                self.transport, self.owner, self.link = None, None, "offline"
+                if self.transport is self.serial:
+                    self._close_serial()
+                self._release()
                 self.last_command = "x"
                 raise
 
@@ -135,6 +212,17 @@ class RoverBridge:
             self.last_manual_at = time.monotonic()
             self.manual_until = self.last_manual_at + 0.7 if command != "x" else 0.0
             self._send(command, force=command == "x")
+
+    def set_speed(self, owner, speed):
+        if type(speed) is not int or not 100 <= speed <= 12000:
+            raise ValueError("Choose a throttle value from 100 to 12,000 steps per second.")
+        with self.lock:
+            self._require_owner(owner)
+            if self.link != "bluetooth":
+                raise ValueError("Throttle updates need the Bluetooth Arduino link.")
+            self.heartbeat_at = time.monotonic()
+            self.speed = speed
+            self._send(f"v{speed}", force=True, remember=False)
 
     def _assisted_command(self, owner, mode, command):
         with self.lock:
@@ -249,9 +337,7 @@ class RoverBridge:
                 self._send("x", force=True)
             except Exception:
                 pass
-            if self.transport:
-                self.transport.close()
-            self.transport, self.owner, self.link = None, None, "offline"
+            self._release()
             self.last_command = "x"
             self.manual_until = 0.0
         self._stop_assistance()
@@ -287,3 +373,5 @@ class RoverBridge:
     def close(self):
         self.closed.set()
         self.disconnect()
+        with self.port_lock:
+            self._close_serial()

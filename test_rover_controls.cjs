@@ -12,18 +12,19 @@ test("strafe keys and buttons send commands, renew holds, and stop on release", 
       classList:{add:value => classes.add(value), remove:value => classes.delete(value),
         toggle:() => {}, contains:value => classes.has(value)},
       addEventListener(name, callback) { this.listeners[name] = callback; },
-      matches:() => false, setPointerCapture:() => {}, removeAttribute:() => {}};
+      matches:() => false, setPointerCapture:() => {}, removeAttribute:() => {}, setAttribute:() => {}, replaceChildren:() => {}};
   }
   const ids = new Map();
   for (const id of ["connect-button", "rover-feedback", "connection-badge", "transport",
     "connection-note", "motion-state", "active-mode", "voice-status", "camera-panel",
-    "camera-view", "emergency-stop", "center-stop"]) ids.set(id, element());
+    "camera-view", "emergency-stop", "center-stop", "speed-throttle", "speed-value", "serial-port", "port-field"]) ids.set(id, element());
   const buttons = ["w", "a", "s", "d", "z", "c"].map(command => element({command}));
   const document = element();
   document.body = {dataset:{signedIn:"true"}};
   document.hidden = false;
   document.getElementById = id => ids.get(id) || null;
   document.querySelector = selector => {
+    if (selector.startsWith("[data-mode=")) return element();
     if (selector.startsWith("meta")) return {content:"test-token"};
     if (selector.startsWith("#")) return ids.get(selector.slice(1)) || null;
     const match = selector.match(/^\[data-command="(\w)"\]$/);
@@ -33,7 +34,7 @@ test("strafe keys and buttons send commands, renew holds, and stop on release", 
   const payloads = [], intervals = new Map();
   let timerId = 0;
   let status = {connected:true, owned:true, mode:"manual", command:"x", epoch:1, sequence:0};
-  const context = {document, window:element(), AbortController,
+  const context = {document, window:element(), AbortController, Option: function(text, value) { this.text=text; this.value=value; },
     setTimeout:() => 0, clearTimeout:() => {},
     setInterval:callback => { intervals.set(++timerId, callback); return timerId; },
     clearInterval:id => intervals.delete(id),
@@ -43,7 +44,7 @@ test("strafe keys and buttons send commands, renew holds, and stop on release", 
         payloads.push(payload);
         status = {...status, ...payload};
       }
-      return {ok:true, json:async () => ({...status})};
+      return {ok:true, json:async () => (path === "/api/rover/ports" ? {ports:[]} : {...status})};
     }};
   vm.runInNewContext(readFileSync(join(__dirname, "web/app.js"), "utf8"), context);
   const settle = () => new Promise(resolve => setImmediate(resolve));
@@ -58,7 +59,7 @@ test("strafe keys and buttons send commands, renew holds, and stop on release", 
     document.listeners.keydown(event(key));
     await settle();
     assert.equal(payloads.at(-1).command, command);
-    assert.equal(ids.get("motion-state").textContent, command === "z" ? "STRAFING LEFT" : "STRAFING RIGHT");
+    assert.equal(ids.get("motion-state").textContent, command === "z" ? "TURNING LEFT" : "TURNING RIGHT");
     assert.ok(button.classList.contains("pressed"));
     const previousSequence = payloads.at(-1).sequence;
     for (const renew of intervals.values()) renew();

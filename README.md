@@ -77,6 +77,14 @@ connected camera captures a preview independently from inference. Actual speed
 depends on the machine. Images are processed locally and are not stored.
 Relative match scores compare model candidates; they are not accuracy probabilities.
 
+Recognition uses an NVIDIA GPU automatically when PyTorch has CUDA support
+(about 50 ms per reading on an RTX 4070 versus about 1.5 s on the CPU). The
+default `pip install torch` on Windows is CPU-only; install the CUDA build with:
+
+```powershell
+.\BRH_Test\.venv\Scripts\python.exe -m pip install torch --index-url https://download.pytorch.org/whl/cu128 --force-reinstall --no-deps
+```
+
 The large CLIP model is the default. For a smaller model on Windows:
 
 ```powershell

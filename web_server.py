@@ -14,6 +14,14 @@ ROOT = Path(__file__).resolve().parent
 CA_CERT = ROOT / "ca.pem"
 
 
+def is_ipv4(text):
+    try:
+        socket.inet_aton(text)
+        return text.count(".") == 3
+    except OSError:
+        return False
+
+
 def lan_ip():
     """Return this machine's Wi-Fi/LAN address, or None if offline."""
     # Ask the OS for the Wi-Fi address first; a VPN can hijack the default route.
@@ -22,7 +30,8 @@ def lan_ip():
             out = subprocess.run(cmd, capture_output=True, text=True, timeout=2).stdout.split()
         except (OSError, subprocess.SubprocessError):
             continue
-        if out:
+        # Windows has its own ipconfig, which prints an error message instead of an address.
+        if out and is_ipv4(out[0]):
             return out[0]
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         try:
@@ -92,8 +101,8 @@ def main():
     parser.add_argument("--lid-host", default=os.getenv("LID_HOST") or None, help="IP address of the Pi running lid_server.py (default: broadcast to the network)")
     parser.add_argument("--lid-port", type=int, default=int(os.getenv("LID_PORT", "5006")))
     lids = parser.add_mutually_exclusive_group()
-    lids.add_argument("--no-lid", dest="lid_enabled", action="store_false", help="do not send lid commands")
-    lids.add_argument("--enable-lid", dest="lid_enabled", action="store_true", help="enable live recognition bin-lid commands")
+    lids.add_argument("--no-lid", dest="lid_enabled", action="store_false", help="start with automatic lid opening off (the dashboard can turn it on)")
+    lids.add_argument("--enable-lid", dest="lid_enabled", action="store_true", help="start with automatic lid opening on")
     parser.set_defaults(lid_enabled=os.getenv("CLASSIFIER_LID_ENABLED", "false").lower() == "true")
     parser.add_argument("--init-db", action="store_true", help="initialize the TigerData account and collection tables, then exit")
     parser.add_argument("--no-model-load", action="store_true", help="load recognition on demand from the dashboard")
@@ -125,8 +134,10 @@ def main():
         # macOS lets 0.0.0.0 and 127.0.0.1 share a port, hiding an old server on localhost.
         if probe.connect_ex(("127.0.0.1", args.port)) == 0:
             sys.exit(f"Port {args.port} is already in use; stop the other server or pass --port.")
-    lid = RemoteLid(args.lid_host, args.lid_port) if args.lid_enabled else None
+    lid = RemoteLid(args.lid_host, args.lid_port)
     service = Service(int(args.camera) if args.camera.isdigit() else args.camera, lid)
+    service.auto_lid = args.lid_enabled
+    print(f"Automatic lid opening starts {'on' if args.lid_enabled else 'off'}; change it on the dashboard.", flush=True)
     app = create_app({"CLASSIFIER_AUTOLOAD": not args.no_model_load and os.getenv("CLASSIFIER_AUTOLOAD", "true").lower() == "true"}, classifier_service=service)
     scheme = "http"
     context = None
@@ -136,13 +147,27 @@ def main():
         context.load_cert_chain(args.cert, args.key)
         scheme = "https"
         app.config["SESSION_COOKIE_SECURE"] = True
-    from werkzeug.serving import make_server
     from flask import send_file
     if CA_CERT.exists():
         @app.get("/ca.crt")
         def ca_certificate():
             return send_file(CA_CERT, mimetype="application/x-x509-ca-cert")
-    server = make_server(args.host, args.port, app, threaded=True, ssl_context=context)
+    if context is None:
+        # Waitress keeps connections alive; Werkzeug's development server reconnects for every request.
+        from waitress import create_server
+        listen = f"{args.host}:{args.port}"
+        if args.host in ("127.0.0.1", "localhost"):
+            # Browsers try localhost's IPv6 address first; answering there avoids a fallback delay.
+            listen = f"127.0.0.1:{args.port} [::1]:{args.port}"
+        try:
+            server = create_server(app, listen=listen, threads=16)
+        except OSError:
+            server = create_server(app, listen=f"{args.host}:{args.port}", threads=16)
+        serve, close_server = server.run, server.close
+    else:
+        from werkzeug.serving import make_server
+        server = make_server(args.host, args.port, app, threaded=True, ssl_context=context)
+        serve, close_server = server.serve_forever, server.server_close
     print(f"Liter-ally Trash: {scheme}://localhost:{args.port}", flush=True)
     print("Accounts: " + ("TigerData" if app.extensions["database"].is_tiger else "local development"), flush=True)
     if ip:
@@ -153,7 +178,7 @@ def main():
     elif args.host not in ("127.0.0.1", "localhost"):
         print(f"On your network: {scheme}://{args.host}:{args.port}", flush=True)
     try:
-        server.serve_forever()
+        serve()
     except KeyboardInterrupt:
         pass
     finally:
@@ -161,7 +186,7 @@ def main():
         app.extensions["rover"].close()
         if lid:
             lid.close()
-        server.server_close()
+        close_server()
 
 
 if __name__ == "__main__":

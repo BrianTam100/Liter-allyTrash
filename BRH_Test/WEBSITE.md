@@ -126,8 +126,11 @@ to the Arduino and copy the updated `motor_control.py` to the Pi for Wi-Fi.
 ### Bluetooth
 
 Pair laptop/Pi and follow `README.md` to enable RFCOMM. Run
-`motor_control_bluetooth_camera.py` on the Pi. Set `ROVER_SERIAL_PORT` in `.env`
-to your outgoing port (default `COM8`); the baud rate defaults to `115200`.
+`motor_control_bluetooth_camera.py` on the Pi. Choose the rover's COM port in the
+**Port** menu on Rover controls; each browser remembers its choice. **Auto** uses
+`ROVER_SERIAL_PORT` from `.env` (default `auto`: the one paired outgoing Bluetooth port).
+The baud rate defaults to `115200`. The port stays open after you disconnect, so
+reconnecting is instant; only the first connection waits for Windows to open the link.
 The website sends the same `w`, `a`, `s`, `d`, `z`, `c`, `x` bytes and newline-terminated
 hand angles as `command_bluetooth_camera.py`.
 

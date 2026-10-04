@@ -5,9 +5,9 @@ const csrf = document.querySelector('meta[name="csrf-token"]').content;
 const signedIn = document.body.dataset.signedIn === "true";
 const $ = (selector) => document.querySelector(selector);
 
-async function api(path, data) {
+async function api(path, data, wait = 5000) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 5000);
+  const timeout = setTimeout(() => controller.abort(), wait);
   try {
     const response = await fetch(path, {
       method: data === undefined ? "GET" : "POST",
@@ -48,67 +48,101 @@ formatTimes(document);
 
 // Swap in fresh history and detections without a full page reload.
 async function refreshPanels() {
-  const response = await fetch(location.pathname, {headers:{"Accept":"text/html"}});
+  const response = await fetch(location.pathname + location.search, {headers:{"Accept":"text/html"}});
   if (!response.ok) return;
   const fresh = new DOMParser().parseFromString(await response.text(), "text/html");
-  for (const selector of [".history-panel", ".detections-preview"]) {
+  for (const selector of [".stat-grid", ".history-panel", ".bins-panel"]) {
     const current = $(selector), next = fresh.querySelector(selector);
     if (current && next) { current.replaceWith(next); formatTimes(next); }
   }
 }
 
-const collectionForm = $("#collection-form");
-if (collectionForm) {
-  let requestId = null;
-  let attemptedPayload = null;
-  collectionForm.addEventListener("submit", async (event) => {
+// Emptying a bin: the first press opens its lid and keeps it open; Done closes it and clears the contents.
+const binPings = new Map();
+function stopBin(card, close) {
+  clearInterval(binPings.get(card));
+  binPings.delete(card);
+  card.classList.remove("open");
+  card.querySelector(".bin-empty").hidden = false;
+  card.querySelector(".bin-emptying").hidden = true;
+  if (close) api(`/api/bins/${card.dataset.bin}/close`, {}).catch(() => {});
+}
+document.addEventListener("click", async (event) => {
+  const card = event.target.closest(".bin-card");
+  if (!card || !event.target.closest("button")) return;
+  const bin = card.dataset.bin;
+  if (event.target.closest(".bin-empty")) {
+    document.querySelectorAll(".bin-card.open").forEach((other) => stopBin(other, true));
+    try { await api(`/api/bins/${bin}/open`, {}); } catch (error) { toast(error.message, true); return; }
+    card.classList.add("open");
+    card.querySelector(".bin-empty").hidden = true;
+    card.querySelector(".bin-emptying").hidden = false;
+    card.querySelector(".bin-done").focus();
+    const started = Date.now();
+    // The Pi closes an idle lid after 5 s; give up after 3 minutes so it is never left open.
+    binPings.set(card, setInterval(() => {
+      if (Date.now() - started > 180000) { stopBin(card, true); toast("Lid closed after 3 minutes. The bin was not cleared."); return; }
+      api(`/api/bins/${bin}/open`, {}).catch(() => {});
+    }, 2000));
+  } else if (event.target.closest(".bin-cancel")) {
+    stopBin(card, true);
+  } else if (event.target.closest(".bin-done")) {
+    stopBin(card, false);
+    try {
+      const result = await api(`/api/bins/${bin}/done`, {});
+      toast(`${bin === "trash" ? "Trash" : "Recycling"} emptied: ${result.cleared} item${result.cleared === 1 ? "" : "s"} cleared.`);
+      await refreshPanels();
+    } catch (error) { toast(error.message, true); }
+  }
+});
+window.addEventListener("pagehide", () => {
+  for (const card of binPings.keys()) {
+    fetch(`/api/bins/${card.dataset.bin}/close`, {method:"POST", keepalive:true, headers:{"Content-Type":"application/json", "X-CSRF-Token":csrf}, body:"{}"}).catch(() => {});
+  }
+});
+
+// Camera views can go full screen; the same button or Esc exits.
+if (document.fullscreenEnabled) {
+  document.querySelectorAll("[data-fullscreen]").forEach((button) => { button.hidden = false; });
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-fullscreen]");
+    if (!button) return;
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    else document.getElementById(button.dataset.fullscreen).requestFullscreen().catch(() => toast("Full screen isn't available in this browser.", true));
+  });
+  document.addEventListener("fullscreenchange", () => {
+    document.querySelectorAll("[data-fullscreen]").forEach((button) => button.setAttribute("aria-label", document.fullscreenElement ? "Exit full screen" : "Full screen camera"));
+  });
+}
+
+const clearForm = $("#clear-data-form");
+if (clearForm) {
+  clearForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const button = collectionForm.querySelector('button[type="submit"]');
-    const feedback = $("#collection-feedback");
-    const fields = new FormData(collectionForm);
-    const payload = {item_name: fields.get("item_name").trim(), category: fields.get("category"), count: Number(fields.get("count"))};
-    const signature = JSON.stringify(payload);
-    if (!requestId || signature !== attemptedPayload) requestId = crypto.randomUUID();
-    attemptedPayload = signature;
+    const button = clearForm.querySelector("button"), feedback = $("#clear-feedback");
     button.disabled = true;
     feedback.classList.remove("error");
-    feedback.textContent = "Recording your drop…";
     try {
-      const scanId = collectionForm.dataset.scanId;
-      const result = await api(scanId ? "/api/classifier/confirm" : "/api/collections", {...payload, request_id: requestId, scan_id:scanId});
-      requestId = null;
-      const points = payload.category === "recycling" ? payload.count * 10 : 0;
-      feedback.textContent = result.saved ? (points ? `Drop recorded. +${points} recycling points!` : "Trash drop recorded in your history.") : "This drop was already recorded. Your score is up to date.";
-      for (const name of ["points", "recycled", "items", "collections"]) $("#stat-" + name).textContent = result.stats[name];
-      collectionForm.reset();
-      delete collectionForm.dataset.scanId;
-      $("#entry-source").textContent = "Manual entry · Confirm only items you have put in the bin.";
-      button.disabled = false;
-      refreshPanels().catch(() => {});
+      await api("/api/settings/clear-data", {confirm: $("#clear-confirm").value.trim()});
+      clearForm.reset();
+      feedback.textContent = "All detections, can counts and bin history were deleted.";
     } catch (error) {
       feedback.textContent = error.message;
       feedback.classList.add("error");
-      button.disabled = false;
-    }
-  });
-  document.addEventListener("trash:recognized", (event) => {
-    const result = event.detail;
-    $("#item-name").value = result.label;
-    const category = result.category === "Recyclable" ? "recycling" : "trash";
-    collectionForm.querySelector(`[name="category"][value="${category}"]`).checked = true;
-    $("#item-count").value = "1";
-    collectionForm.dataset.scanId = result.scan_id;
-    $("#entry-source").textContent = "Recognized item · Confirm after putting it in the correct bin.";
-    $("#collection-feedback").textContent = "Item added below. Confirm your drop to update your score.";
-    collectionForm.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'center'});
-    $("#item-name").focus({preventScroll:true});
-  });
-  collectionForm.addEventListener("input", (event) => {
-    if (event.target.name === "count") return;
-    delete collectionForm.dataset.scanId;
-    $("#entry-source").textContent = "Manual entry · Confirm only items you have put in the bin.";
+    } finally { button.disabled = false; }
   });
 }
+
+// A lid opening counts the item in its can on the server; show the new totals right away.
+document.addEventListener("trash:auto-recorded", (event) => {
+  const result = event.detail;
+  for (const name of ["points", "recycled", "items", "collections"]) {
+    const stat = $("#stat-" + name);
+    if (stat) stat.textContent = result.stats[name];
+  }
+  toast(result.category === "Recyclable" ? `${result.label} added to recycling. +10 points!` : `${result.label} added to trash.`);
+  refreshPanels().catch(() => {});
+});
 
 (() => {
   "use strict";
@@ -118,8 +152,9 @@ if (collectionForm) {
   const csrf = document.querySelector('meta[name="csrf-token"]').content;
   const canvas = document.createElement('canvas');
   let ready = false, running = false, stream = null, generation = 0;
-  let cameraGeneration = null, owned = false, latestResult = null;
+  let cameraGeneration = null, owned = false;
   let heartbeatTimer = null, requestController = null, statusTimer = null, objectUrl = null;
+  let watching = null, liveTimer = null, lastActivity = null;
 
   function message(text, error = false) {
     $('message').textContent = text;
@@ -155,14 +190,12 @@ if (collectionForm) {
   }
 
   function resetResult() {
-    latestResult = null;
     $('label').textContent = 'Ready for an item';
     $('result-bin').hidden = true;
     $('score').textContent = '—';
     $('score-bar').value = 0;
     $('candidates').replaceChildren();
     $('hint').textContent = 'Show one item against a plain background.';
-    $('use-result').disabled = true;
   }
 
   function stop(notify = true) {
@@ -193,8 +226,44 @@ if (collectionForm) {
     cameraGeneration = null;
   }
 
+  // While someone else scans with the connected camera, this screen shows the same video and readings.
+  function watch(url) {
+    if (url === watching) return;
+    unwatch();
+    watching = url;
+    $('preview').src = url;
+    $('preview').hidden = false; $('video').hidden = true; $('placeholder').hidden = true;
+    resetResult();
+    message('Watching a live scan from another screen.');
+    const poll = async () => {
+      if (watching !== url) return;
+      try {
+        const response = await fetch('/api/classifier/live');
+        const live = await response.json();
+        if (watching !== url) return;
+        if (live.result) {
+          // Stats belong to the scanning account; this screen refreshes its own when the activity count changes.
+          show({...live.result, stats:undefined});
+        }
+      } catch (_) {}
+      liveTimer = setTimeout(poll, 300);
+    };
+    poll();
+  }
+
+  function unwatch() {
+    if (!watching) return;
+    watching = null;
+    clearTimeout(liveTimer);
+    $('preview').removeAttribute('src');
+    $('preview').hidden = true;
+    $('placeholder').hidden = false;
+    resetResult();
+    message('');
+  }
+
   function sourceChanged() {
-    stop(); resetResult(); message('');
+    unwatch(); stop(); resetResult(); message('');
     if (objectUrl) URL.revokeObjectURL(objectUrl);
     objectUrl = null;
     $('preview').removeAttribute('src');
@@ -206,8 +275,8 @@ if (collectionForm) {
 
   function show(result) {
     const checking = result.state === 'checking';
-    const recognized = !checking && ['Trash','Recyclable'].includes(result.category) && !result.drop_off && result.scan_id;
-    latestResult = recognized ? result : null;
+    const recognized = !checking && ['Trash','Recyclable'].includes(result.category) && !result.drop_off && !result.auto_recorded;
+    if (result.stats) document.dispatchEvent(new CustomEvent('trash:auto-recorded',{detail:result}));
     const label = checking ? 'Checking item…' : result.label;
     if ($('label').textContent !== label) $('label').textContent = label;
     $('result-bin').hidden = !result.category || checking;
@@ -215,8 +284,9 @@ if (collectionForm) {
     $('result-bin').classList.toggle('is-recycling', result.category === 'Recyclable');
     const hint = checking ? `Hold still — comparing readings (${result.checks}/${result.of}).`
       : result.drop_off ? 'Take this item to a drop-off site. It does not belong in the regular bin.'
-      : recognized ? 'Check the result, then use it to confirm your drop below.'
-      : 'No supported item found. Try another angle or enter your item below.';
+      : result.auto_recorded ? `Lid opened. Counted in the ${result.category === 'Recyclable' ? 'recycling' : 'trash'} can.`
+      : recognized ? `Put it in the ${result.category === 'Recyclable' ? 'recycling' : 'trash'} can.`
+      : 'No supported item found. Try another angle.';
     if ($('hint').textContent !== hint) $('hint').textContent = hint;
     const score = Math.max(0,Math.min(1,Number(result.score) || 0));
     $('score').textContent = Math.round(score*100)+'%';
@@ -229,7 +299,6 @@ if (collectionForm) {
       return li;
     }));
     $('timing').textContent = `Last recognition: ${Number(result.seconds || 0).toFixed(2)}s · Processed locally`;
-    $('use-result').disabled = !recognized;
   }
 
   async function frameBlob() {
@@ -257,12 +326,13 @@ if (collectionForm) {
         if (generation !== token) return;
         if (error.status !== 429) { stop(); message(error.name === 'AbortError' ? 'Scanning timed out. Start again or try a photo.' : error.message,true); return; }
       }
-      await new Promise(resolve => setTimeout(resolve,350));
+      await new Promise(resolve => setTimeout(resolve,100));
     }
   }
 
   $('start').addEventListener('click',async () => {
     if (!signedIn || !ready) return;
+    unwatch();
     message(''); $('start').disabled = true;
     const token = ++generation;
     try {
@@ -326,12 +396,15 @@ if (collectionForm) {
     event.target.value='';
   });
 
-  $('use-result').addEventListener('click',()=> {
-    if (!latestResult) return;
-    const result = {...latestResult};
-    stop();
-    document.dispatchEvent(new CustomEvent('trash:recognized',{detail:result}));
-    message('Recognized item added to your drop. Confirm it below.');
+  let lidSaving = false;
+  $('auto-lid').addEventListener('change',async event => {
+    const enabled = event.target.checked;
+    lidSaving = true; event.target.disabled = true;
+    try {
+      const result = await request('/api/classifier/lid',{enabled});
+      $('lid-status').textContent = result.lid_enabled ? 'Live scanning opens the matching bin lid' : 'Bin lids are controlled manually';
+    } catch (error) { event.target.checked = !enabled; message(error.message,true); }
+    finally { lidSaving = false; event.target.disabled = false; }
   });
 
   $('model-load').addEventListener('click',async () => {
@@ -351,33 +424,50 @@ if (collectionForm) {
       $('model-load').hidden = !signedIn || ready || result.loading;
       $('model-load').textContent = result.error ? 'Retry scanner' : 'Prepare scanner';
       $('lid-status').textContent = result.lid_enabled ? 'Live scanning opens the matching bin lid' : 'Bin lids are controlled manually';
+      $('lid-toggle').hidden = !signedIn || !result.lid_available;
+      if (!lidSaving) $('auto-lid').checked = result.lid_enabled;
       if (!running) $('start').disabled = !ready || !signedIn || result.busy;
       $('file').disabled = !ready || !signedIn;
       if (result.error && signedIn) message('The scanner could not load. Retry it or record your item manually.',true);
+      // An item counted in a can on any screen changes the stats and bins, so refresh them here too.
+      if (lastActivity !== null && result.activity !== lastActivity) refreshPanels().catch(() => {});
+      lastActivity = result.activity;
+      if (signedIn && !running) {
+        if (result.watch_url && !result.owned && !document.hidden && $('source').value === 'server') watch(result.watch_url);
+        else unwatch();
+      }
     } catch (_) { $('detector-status').textContent = 'Connecting to scanner…'; }
     statusTimer = setTimeout(status,2000);
   }
   window.addEventListener('resize',sizeGuide);
-  window.addEventListener('pagehide',()=> { stop(); clearTimeout(statusTimer); if(objectUrl) URL.revokeObjectURL(objectUrl); });
-  document.addEventListener('visibilitychange',()=> { if(document.hidden) stop(); });
+  window.addEventListener('pagehide',()=> { unwatch(); stop(); clearTimeout(statusTimer); if(objectUrl) URL.revokeObjectURL(objectUrl); });
+  document.addEventListener('visibilitychange',()=> { if(document.hidden) { unwatch(); stop(); } });
   status();
 })();
 
 if ($("#connect-button") && signedIn) {
   const commands = {w:"w", a:"a", s:"s", d:"d", z:"z", c:"c", ArrowUp:"w", ArrowLeft:"a", ArrowDown:"s", ArrowRight:"d"};
-  const labels = {w:"MOVING FORWARD", s:"MOVING BACKWARD", a:"SPINNING LEFT", d:"SPINNING RIGHT", z:"STRAFING LEFT", c:"STRAFING RIGHT", x:"STOPPED"};
+  const labels = {w:"MOVING FORWARD", s:"MOVING BACKWARD", a:"SPINNING LEFT", d:"SPINNING RIGHT", z:"TURNING LEFT", c:"TURNING RIGHT", x:"STOPPED"};
   let status = {connected:false, owned:false, mode:"manual", command:"x"};
+  const toggleNames = {voice:"voice", gesture:"hand tracking"};
   let heldCommand = null;
   let heldKey = null;
   let sendTimer;
   let sending = false;
   let leaving = false;
   let changingMode = false;
+  let throttleTimer;
   let sequence = 0;
 
   function feedback(message, error = false) {
     $("#rover-feedback").textContent = message;
     $("#rover-feedback").classList.toggle("error", error);
+  }
+
+  const busyMessage = "Someone else is driving the rover right now. You can take over when they disconnect.";
+  function tellBusy() {
+    feedback(busyMessage, true);
+    toast(busyMessage, true);
   }
 
   function showStatus(next) {
@@ -388,17 +478,33 @@ if ($("#connect-button") && signedIn) {
     status = next;
     const owned = next.connected && next.owned;
     const badge = $("#connection-badge");
-    badge.textContent = next.busy ? "ANOTHER PILOT IS DRIVING" : owned ? (next.link === "wifi" ? "WI-FI TARGET SET" : "BLUETOOTH LINK OPEN") : "ROVER OFFLINE";
+    badge.textContent = next.busy ? "SOMEONE ELSE IS DRIVING" : owned ? (next.link === "wifi" ? "WI-FI TARGET SET" : "BLUETOOTH LINK OPEN") : "ROVER OFFLINE";
     badge.classList.toggle("online", owned);
-    $("#connect-button").textContent = owned ? "Disconnect" : "Connect rover";
-    $("#connect-button").disabled = next.busy || changingMode;
+    $("#connect-button").textContent = owned ? "Disconnect" : next.busy ? "Someone else is driving" : "Connect rover";
+    $("#connect-button").disabled = changingMode;
     $("#transport").disabled = next.connected;
-    document.querySelectorAll(".drive-button, [data-mode], #emergency-stop").forEach((button) => { button.disabled = !owned || changingMode; });
-    $("#connection-note").textContent = next.busy ? "The current pilot must disconnect before you can take control." : owned && next.link === "wifi" ? "Commands target the configured Pi. UDP does not confirm delivery." : owned ? "Bluetooth serial link is open. Keep the rover in view." : "Run this website on the laptop paired with the Pi.";
+    $("#serial-port").disabled = next.connected;
+    // While someone else drives, controls stay clickable (dimmed) so pressing them explains why nothing happens.
+    $("#connect-button").setAttribute("aria-disabled", String(Boolean(next.busy)));
+    document.querySelectorAll(".drive-button, [data-mode], #emergency-stop").forEach((button) => {
+      button.disabled = changingMode || (!owned && !next.busy);
+      button.setAttribute("aria-disabled", String(!owned));
+    });
+    const throttle = $("#speed-throttle");
+    throttle.disabled = changingMode || !owned || next.link !== "bluetooth";
+    throttle.setAttribute("aria-disabled", String(throttle.disabled));
+    if (Number.isFinite(Number(next.speed)) && document.activeElement !== throttle) {
+      throttle.value = String(next.speed);
+      showThrottle(next.speed);
+    }
+    $("#connection-note").textContent = next.busy ? busyMessage : owned && next.link === "wifi" ? "Commands target the configured Pi. UDP does not confirm delivery." : owned ? `Bluetooth link open on ${next.port || "the serial port"}. Keep the rover in view.` : "Run this website on the laptop paired with the Pi.";
     $("#motion-state").textContent = owned ? (labels[next.command] || `HAND ANGLE ${next.command}°`) : "STANDING BY";
     $("#active-mode").textContent = (next.mode || "manual").toUpperCase();
     document.querySelectorAll("[data-mode-card]").forEach((card) => card.classList.toggle("selected-mode", owned && card.dataset.modeCard === next.mode));
     $("#voice-status").textContent = next.voice_error ? "Voice session ended. Enable it again to retry." : next.mode === "voice" ? (next.voice_ready ? "Listening on the laptop. Say a direction or “stop.”" : "Starting the voice session…") : "Microphone activates only when enabled.";
+    for (const [mode, name] of Object.entries(toggleNames)) {
+      $(`[data-mode="${mode}"]`).textContent = (owned && next.mode === mode ? "Disable " : "Enable ") + name;
+    }
     const camera = $("#camera-panel");
     const cameraActive = owned && next.mode === "gesture";
     if (cameraActive && camera.hidden) $("#camera-view").src = "/api/rover/camera";
@@ -407,6 +513,28 @@ if ($("#connect-button") && signedIn) {
     if (!owned) clearHeld();
     if (next.error) feedback(next.error, true);
     else if (next.camera_error) feedback(next.camera_error, true);
+  }
+
+  function showThrottle(speed) {
+    $("#speed-value").textContent = `${Number(speed).toLocaleString()} steps/s`;
+  }
+
+  async function sendThrottle() {
+    if (status.busy) { tellBusy(); return; }
+    if (!status.owned || changingMode) return;
+    const speed = Number($("#speed-throttle").value);
+    if (!Number.isInteger(speed)) return;
+    try {
+      showStatus(await api("/api/rover/speed", {speed}));
+      feedback(`Throttle set to ${speed.toLocaleString()} steps/s.`);
+    } catch (error) { feedback(error.message, true); }
+  }
+
+  function queueThrottle() {
+    const speed = Number($("#speed-throttle").value);
+    showThrottle(speed);
+    clearTimeout(throttleTimer);
+    throttleTimer = setTimeout(sendThrottle, 180);
   }
 
   function clearHeld() {
@@ -425,6 +553,7 @@ if ($("#connect-button") && signedIn) {
   }
 
   function begin(command, key = null) {
+    if (status.busy) { tellBusy(); return; }
     if (!status.owned || changingMode) return;
     clearHeld();
     heldCommand = command;
@@ -444,6 +573,7 @@ if ($("#connect-button") && signedIn) {
   }
 
   async function stopAll() {
+    if (status.busy) { tellBusy(); return; }
     clearHeld();
     if (!status.owned) return;
     try { showStatus(await api("/api/rover/stop", {})); feedback("Rover stopped. Assisted controls are off."); }
@@ -451,13 +581,16 @@ if ($("#connect-button") && signedIn) {
   }
 
   $("#connect-button").addEventListener("click", async () => {
+    if (status.busy) { tellBusy(); return; }
     const disconnecting = status.owned;
     const button = $("#connect-button");
     button.disabled = true;
     button.textContent = disconnecting ? "Disconnecting…" : "Connecting…";
+    if (!disconnecting && $("#transport").value === "bluetooth") feedback("Opening the Bluetooth link. The first connection can take a few seconds.");
     clearHeld();
     try {
-      showStatus(await api("/api/rover/" + (disconnecting ? "disconnect" : "connect"), {transport:$("#transport").value}));
+      // Opening a Bluetooth serial port can take several seconds on Windows.
+      showStatus(await api("/api/rover/" + (disconnecting ? "disconnect" : "connect"), {transport:$("#transport").value, port:$("#serial-port").value}, disconnecting ? 5000 : 20000));
       feedback(disconnecting ? "Rover stopped and disconnected." : "Ready. Hold a direction to drive.");
     } catch (error) {
       feedback(error.message, true);
@@ -466,11 +599,16 @@ if ($("#connect-button") && signedIn) {
   });
 
   document.querySelectorAll("[data-mode]").forEach((button) => button.addEventListener("click", async () => {
+    if (status.busy) { tellBusy(); return; }
+    // Pressing Voice or Hand tracking again while it is on turns it off and goes back to manual.
+    const turningOff = button.dataset.mode in toggleNames && status.mode === button.dataset.mode;
+    const mode = turningOff ? "manual" : button.dataset.mode;
+    const name = toggleNames[button.dataset.mode];
     changingMode = true;
     clearHeld();
     showStatus(status);
-    feedback("Starting " + button.dataset.mode + " controls…");
-    try { showStatus(await api("/api/rover/mode", {mode:button.dataset.mode})); feedback("Control mode updated. Manual input always has priority."); }
+    feedback(turningOff ? `Turning off ${name}…` : "Starting " + mode + " controls…");
+    try { showStatus(await api("/api/rover/mode", {mode})); feedback(turningOff ? `${name[0].toUpperCase() + name.slice(1)} off. Back to manual controls.` : "Control mode updated. Manual input always has priority."); }
     catch (error) { feedback(error.message, true); }
     finally {
       changingMode = false;
@@ -499,10 +637,21 @@ if ($("#connect-button") && signedIn) {
 
   $("#emergency-stop").addEventListener("click", stopAll);
   $("#center-stop").addEventListener("click", stopAll);
+  $("#speed-throttle").addEventListener("input", queueThrottle);
+  $("#speed-throttle").addEventListener("change", () => {
+    clearTimeout(throttleTimer);
+    sendThrottle();
+  });
   document.addEventListener("keydown", (event) => {
-    if (/^(INPUT|SELECT|TEXTAREA)$/.test(event.target.tagName) || event.target.isContentEditable) return;
-    if (!status.owned || changingMode) return;
+    // The throttle slider keeps focus after a drag, so it must not swallow WASD/arrow driving keys.
+    if (event.target.type !== "range" && (/^(INPUT|SELECT|TEXTAREA)$/.test(event.target.tagName) || event.target.isContentEditable)) return;
     const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+    if (status.busy && (commands[key] || event.key === "Escape" || event.key === " ")) {
+      event.preventDefault();
+      if (!event.repeat) tellBusy();
+      return;
+    }
+    if (!status.owned || changingMode) return;
     if (event.key === "Escape" || (event.key === " " && !event.target.matches("[data-command]"))) { event.preventDefault(); if (!event.repeat) stopAll(); }
     else if (commands[key]) { event.preventDefault(); if (!event.repeat) begin(commands[key], key); }
   });
@@ -519,7 +668,32 @@ if ($("#connect-button") && signedIn) {
       showStatus({...status, owned:false, connected:false});
     }
   }
-  window.addEventListener("blur", leave);
+  // Losing focus can swallow a key release, so stop the rover but stay connected.
+  window.addEventListener("blur", () => { if (heldCommand) release(); });
+  try { const saved = localStorage.getItem("rover-transport"); if (saved) $("#transport").value = saved; } catch (_) {}
+  $("#transport").addEventListener("change", () => { try { localStorage.setItem("rover-transport", $("#transport").value); } catch (_) {} });
+
+  // Each laptop has its own COM numbers, so the list comes from the server and the choice is kept per browser.
+  async function loadPorts() {
+    const select = $("#serial-port");
+    let wanted = select.value;
+    try { wanted = localStorage.getItem("rover-port") || wanted; } catch (_) {}
+    try {
+      const {ports} = await api("/api/rover/ports");
+      const paired = ports.filter((port) => port.paired);
+      const options = [new Option(paired.length === 1 ? `Auto (${paired[0].device})` : "Auto", "auto"),
+        ...ports.map((port) => new Option(`${port.device} · ${port.kind}`, port.device))];
+      if (wanted !== "auto" && !ports.some((port) => port.device === wanted)) options.push(new Option(`${wanted} · not found`, wanted));
+      select.replaceChildren(...options);
+      select.value = wanted;
+    } catch (_) {}
+  }
+  function showPortField() { $("#port-field").hidden = $("#transport").value !== "bluetooth"; }
+  $("#serial-port").addEventListener("change", () => { try { localStorage.setItem("rover-port", $("#serial-port").value); } catch (_) {} });
+  $("#serial-port").addEventListener("focus", loadPorts);
+  $("#transport").addEventListener("change", showPortField);
+  showPortField();
+  loadPorts();
   window.addEventListener("pagehide", leave);
   document.addEventListener("visibilitychange", () => { if (document.hidden) leave(); else leaving = false; });
   window.addEventListener("focus", () => { leaving = false; });

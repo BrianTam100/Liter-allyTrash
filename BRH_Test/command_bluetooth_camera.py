@@ -55,7 +55,7 @@ def main():
         cap = cv2.VideoCapture(0)
 
     print("Ready. Priority: keyboard, then voice, then hand angle.")
-    print("Hold W/A/S/D (or arrows) to drive; Z/C to strafe left/right.")
+    print("Hold W/A/S/D (or arrows) to drive; Z/C to turn left/right.")
     print("Say go forward / back up / left / right / stop. Press Q to quit.")
 
     voice = None

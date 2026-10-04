@@ -82,6 +82,10 @@ class Database:
                 event_id TEXT PRIMARY KEY, conversation_id TEXT NOT NULL,
                 response TEXT NOT NULL, created_at {timestamp} NOT NULL)""")
             conn.execute("CREATE INDEX IF NOT EXISTS lt_companion_events_time ON lt_companion_events(created_at)")
+            # Each row marks a bin as emptied; items counted after the latest one are what the bin holds now.
+            conn.execute(f"""CREATE TABLE IF NOT EXISTS lt_bin_empties (
+                id {identity}, category TEXT NOT NULL CHECK (category IN ('trash', 'recycling')),
+                item_count INTEGER NOT NULL, emptied_at {timestamp} NOT NULL)""")
 
     def user(self, user_id):
         with self.connect() as conn:
@@ -162,7 +166,9 @@ class Database:
     def detections(self, period="all", limit=100):
         with self.connect() as conn:
             rows = self.execute(conn, """SELECT d.label, d.category, d.drop_off, d.score, d.source, d.created_at,
-                CASE WHEN c.id IS NULL THEN 0 ELSE 1 END AS confirmed
+                CASE WHEN c.id IS NULL THEN 0 ELSE 1 END AS confirmed,
+                CASE WHEN c.created_at <= (SELECT MAX(e.emptied_at) FROM lt_bin_empties e
+                    WHERE e.category = c.category) THEN 1 ELSE 0 END AS emptied
                 FROM lt_detections d LEFT JOIN lt_collections c ON c.request_id = d.scan_id
                 WHERE d.created_at >= ? ORDER BY d.created_at DESC, d.id DESC LIMIT ?""",
                 (self.since(period), limit)).fetchall()
@@ -183,3 +189,34 @@ class Database:
             rows = self.execute(conn, """SELECT category, item_name, item_count, created_at FROM lt_collections
                 WHERE user_id = ? ORDER BY created_at DESC, id DESC LIMIT 6""", (user_id,)).fetchall()
             return [dict(row) for row in rows]
+
+    def bin_contents(self):
+        """What each bin holds now: items counted since that bin was last emptied."""
+        bins = {}
+        with self.connect() as conn:
+            for category in ("trash", "recycling"):
+                last = self.execute(conn, """SELECT MAX(emptied_at) AS emptied_at FROM lt_bin_empties
+                    WHERE category = ?""", (category,)).fetchone()["emptied_at"]
+                since = last or "1970-01-01T00:00:00+00:00"
+                rows = self.execute(conn, """SELECT item_name, SUM(item_count) AS count, MAX(created_at) AS last_at
+                    FROM lt_collections WHERE category = ? AND created_at > ?
+                    GROUP BY item_name ORDER BY last_at DESC LIMIT 50""", (category, since)).fetchall()
+                items = [{"item_name": row["item_name"], "count": int(row["count"])} for row in rows]
+                total = self.execute(conn, """SELECT COALESCE(SUM(item_count), 0) AS total FROM lt_collections
+                    WHERE category = ? AND created_at > ?""", (category, since)).fetchone()["total"]
+                bins[category] = {"items": items, "total": int(total),
+                    "emptied_at": last.isoformat() if hasattr(last, "isoformat") else last}
+        return bins
+
+    def empty_bin(self, category):
+        total = self.bin_contents()[category]["total"]
+        with self.connect() as conn:
+            self.execute(conn, "INSERT INTO lt_bin_empties (category, item_count, emptied_at) VALUES (?, ?, ?)",
+                (category, total, self.now()))
+        return total
+
+    def clear_all(self):
+        """Delete every detection, can count and bin-empty record. Tables and the Pilot account stay."""
+        with self.connect() as conn:
+            for table in ("lt_detections", "lt_collections", "lt_bin_empties"):
+                self.execute(conn, f"DELETE FROM {table}")

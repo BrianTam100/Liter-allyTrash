@@ -18,15 +18,17 @@ from jinja2 import ChoiceLoader, FileSystemLoader
 
 if __package__:
     from .database import Database
-    from .rover_bridge import RoverBridge, RoverConnectionError
+    from .rover_bridge import RoverBridge, RoverConnectionError, list_serial_ports
 else:
     from database import Database
-    from rover_bridge import RoverBridge, RoverConnectionError
+    from rover_bridge import RoverBridge, RoverConnectionError, list_serial_ports
 
 ROOT = Path(__file__).resolve().parent
-# Accounts are not used: every visitor records drops as this one local pilot.
+# Accounts are not used: every visitor's can counts go to this one local pilot.
 PILOT_EMAIL = "pilot@literally-trash.local"
 PILOT_NAME = "Pilot"
+# Dashboard bin name -> lid name used by lid.py.
+BIN_LIDS = {"trash": "Trash", "recycling": "Recyclable"}
 PROJECT_ROOT = ROOT.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -51,7 +53,8 @@ def create_app(config=None, bridge=None, classifier_service=None):
         XAI_CHAT_MODEL=os.getenv("XAI_CHAT_MODEL", "grok-4.7"),
         SESSION_COOKIE_SAMESITE="Strict", SESSION_COOKIE_SECURE=os.getenv("COOKIE_SECURE", "false").lower() == "true",
         MAX_CONTENT_LENGTH=8 * 1024 * 1024,
-        CLASSIFIER_AUTOLOAD=os.getenv("CLASSIFIER_AUTOLOAD", "true").lower() == "true")
+        CLASSIFIER_AUTOLOAD=os.getenv("CLASSIFIER_AUTOLOAD", "true").lower() == "true",
+        SEND_FILE_MAX_AGE_DEFAULT=31536000)
     if config:
         app.config.update(config)
     if not app.config["SECRET_KEY"]:
@@ -89,6 +92,13 @@ def create_app(config=None, bridge=None, classifier_service=None):
         return session["csrf_token"]
 
     app.jinja_env.globals["csrf_token"] = csrf_token
+
+    @app.url_defaults
+    def static_version(endpoint, values):
+        # Assets are cached for a year; the file's timestamp in the URL fetches a new copy after edits.
+        if endpoint == "static" and "filename" in values:
+            asset = Path(app.static_folder) / values["filename"]
+            values["v"] = int(asset.stat().st_mtime) if asset.is_file() else 0
 
     @app.before_request
     def prepare_request():
@@ -148,11 +158,49 @@ def create_app(config=None, bridge=None, classifier_service=None):
         if period not in {"all", "week", "month"}:
             period = "all"
         return render_template("detections.html", period=period, summary=db.detection_summary(period),
-            items=db.detection_items(period), log=db.detections(period))
+            items=db.detection_items(period), log=db.detections(period), bins=db.bin_contents(),
+            lid_available=detector.service.lid is not None)
+
+    @app.get("/settings")
+    def settings():
+        return render_template("settings.html")
+
+    @app.post("/api/settings/clear-data")
+    def clear_data():
+        payload = request.get_json(silent=True) or {}
+        if not isinstance(payload, dict) or payload.get("confirm") != "DELETE":
+            return jsonify(error="Type DELETE to confirm."), 400
+        db.clear_all()
+        return jsonify(cleared=True)
+
+    @app.post("/api/bins/<category>/<action>")
+    def bin_action(category, action):
+        # open: the browser repeats this every few seconds while someone empties the bin,
+        # because the Pi closes an idle lid after 5 s. done: close it and clear the contents.
+        if category not in BIN_LIDS or action not in {"open", "close", "done"}:
+            return jsonify(error="Unknown bin action."), 404
+        lid = detector.service.lid
+        if action == "open":
+            if lid:
+                lid.open(BIN_LIDS[category])
+            return jsonify(lid=lid is not None)
+        if lid:
+            lid.close(BIN_LIDS[category])
+        if action == "close":
+            return jsonify(closed=True)
+        cleared = db.empty_bin(category)
+        return jsonify(cleared=cleared, bins=db.bin_contents())
 
     @app.get("/api/rover")
     def rover_status():
         return jsonify(rover.status(session.get("pilot_token")))
+
+    @app.get("/api/rover/ports")
+    def rover_ports():
+        try:
+            return jsonify(ports=list_serial_ports())
+        except ImportError:
+            return jsonify(ports=[])
 
     @app.post("/api/rover/<action>")
     def rover_action(action):
@@ -162,13 +210,15 @@ def create_app(config=None, bridge=None, classifier_service=None):
         owner = session["pilot_token"]
         try:
             if action == "connect":
-                rover.connect(owner, payload.get("transport", "bluetooth"))
+                rover.connect(owner, payload.get("transport", "bluetooth"), payload.get("port"))
             elif action == "disconnect":
                 rover.disconnect(owner)
             elif action == "heartbeat":
                 rover.heartbeat(owner)
             elif action == "command":
                 rover.command(owner, payload.get("command", "x"), payload.get("epoch"), payload.get("sequence"))
+            elif action == "speed":
+                rover.set_speed(owner, payload.get("speed"))
             elif action == "stop":
                 rover.stop(owner)
             elif action == "mode":

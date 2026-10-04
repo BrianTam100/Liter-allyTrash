@@ -10,7 +10,7 @@ import numpy as np
 
 from PIL import Image
 from lid import LED0, Lid, set_pulse
-from classifier_service import CameraStream, Service
+from classifier_service import CameraStream, ItemLock, Service
 from BRH_Test.website import create_app
 
 
@@ -75,6 +75,8 @@ class WebTests(unittest.TestCase):
         self.assertEqual(status, 200)
         return json.loads(body)
 
+    # Instant test readings would never meet the timing rules; this checks the reading counts.
+    @patch.multiple(ItemLock, LOCK_SECONDS=0, CLEAR_SECONDS=0, SWITCH_SECONDS=0)
     def test_live_item_locks_until_removed(self):
         self.service.lid = Mock()
         self.service.capture.latest = Mock(return_value=(1, np.zeros((8, 8, 3), np.uint8), b''))

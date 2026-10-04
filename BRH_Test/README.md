@@ -22,7 +22,7 @@ Our project has the capability to run on wifi and bluetooth to control the motor
 1. Open a terminal in the BRH_Test folder and run ``conda create -n rover python=3.11 -y`` and ``conda activate rover``, this is to activate a virtual environment named rover to avoid library issues.
 2. Install laptop-side libraries with ``pip install -r requirements.txt``.
 3. Once all downloads for libraries are good, running ``python command_bluetooth_camera.py`` should set up interface nicely.
-4. Hand signs for angles are set in unit circle format (90 = forward, 0 = right, 180 = left, 270 = back) and you can use wasd or the arrow keys to move/turn in place.
+4. Hand signs for angles are set in unit circle format (90 = forward, 0 = right, 180 = left, 270 = back) and you can use wasd or the arrow keys to move forward, backward, left and right (type z or c to turn left and right respectively).
 5. After changing `driveController/driveController.ino`, re-upload it to the Arduino. Left/right spins use a different wheel mix than forward/back; the old mix drove the front pair against the rear pair and stalled the X-axis motor.
 
 ## Grok Voice drive commands

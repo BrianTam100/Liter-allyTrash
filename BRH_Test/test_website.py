@@ -4,7 +4,7 @@ import time
 import unittest
 import uuid
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from rover_bridge import RoverBridge
 from website import create_app
@@ -140,7 +140,7 @@ class WebsiteTests(unittest.TestCase):
         self.visit()
         hardware = FakeSerial()
         headers = {"X-CSRF-Token": self.csrf()}
-        with patch("serial.Serial", return_value=hardware):
+        with patch("serial.Serial", return_value=hardware), patch("rover_bridge.find_serial_port", return_value="COM9"):
             connection = self.client.post("/api/rover/connect", json={"transport": "bluetooth"}, headers=headers)
         self.assertEqual(connection.status_code, 200)
         self.assertTrue(connection.get_json()["owned"])
@@ -148,8 +148,18 @@ class WebsiteTests(unittest.TestCase):
             movement = self.client.post("/api/rover/command", json={"command":command, "epoch":connection.get_json()["epoch"], "sequence":sequence}, headers=headers)
             self.assertEqual(movement.status_code, 200)
             self.assertEqual(hardware.payloads[-1], command.encode("ascii"))
+        movement = self.client.post("/api/rover/command", json={"command":"w", "epoch":connection.get_json()["epoch"], "sequence":6}, headers=headers)
+        self.assertEqual(movement.status_code, 200)
+        self.assertEqual(hardware.payloads[-1], b"w")
+        throttle = self.client.post("/api/rover/speed", json={"speed":2500}, headers=headers)
+        self.assertEqual(throttle.status_code, 200)
+        self.assertEqual(hardware.payloads[-1], b"v2500")
+        self.assertEqual(throttle.get_json()["command"], "w")
+        self.assertEqual(throttle.get_json()["speed"], 2500)
         self.client.post("/api/rover/disconnect", json={}, headers=headers)
         self.assertEqual(hardware.payloads[-1], b"x")
+        self.assertFalse(hardware.closed)  # kept open so the next connect is instant
+        self.bridge.close()
         self.assertTrue(hardware.closed)
 
     def test_bluetooth_open_failure_is_actionable_persists_and_can_retry(self):
@@ -183,6 +193,45 @@ class WebsiteTests(unittest.TestCase):
         self.assertEqual(hardware.payloads, [b"x"])
 
 
+class PortDetectionTests(unittest.TestCase):
+    def test_chosen_port_is_used_strictly_and_switching_reopens(self):
+        ports = [{"device": "COM3", "kind": "paired Bluetooth", "paired": True},
+                 {"device": "COM8", "kind": "paired Bluetooth", "paired": True}]
+        bridge = RoverBridge()
+        opened = []
+        def open_port(port, *args, **kwargs):
+            opened.append(FakeSerial())
+            opened[-1].port = port
+            return opened[-1]
+        try:
+            with patch("rover_bridge.list_serial_ports", return_value=ports), patch("serial.Serial", side_effect=open_port):
+                bridge.connect("pilot", "bluetooth", "COM8")
+                self.assertEqual(bridge.status("pilot")["port"], "COM8")
+                bridge.disconnect("pilot")
+                bridge.connect("pilot", "bluetooth", "com3")
+                self.assertEqual([port.port for port in opened], ["COM8", "COM3"])
+                self.assertTrue(opened[0].closed)
+                bridge.disconnect("pilot")
+                with self.assertRaisesRegex(ValueError, "COM5 isn't available"):
+                    bridge.connect("pilot", "bluetooth", "COM5")
+                with self.assertRaisesRegex(ValueError, "Choose the rover's port"):
+                    bridge.connect("pilot", "bluetooth", "auto")  # two paired ports: auto can't guess
+        finally:
+            bridge.close()
+
+    def test_port_detection_prefers_outgoing_bluetooth_port(self):
+        from rover_bridge import find_serial_port
+        port = lambda device, hwid: Mock(device=device, description="Serial over Bluetooth", hwid=hwid)
+        ports = [port("COM3", r"BTHENUM\{1101}_VID&1D6B\9&20FE&0&2CCF6755D333_C00000000"),
+                 port("COM4", r"BTHENUM\{1101}_LOCALMFG\9&20FE&0&000000000000_00000000")]
+        with patch("serial.tools.list_ports.comports", return_value=ports):
+            self.assertEqual(find_serial_port("COM8"), "COM3")
+            self.assertEqual(find_serial_port("COM4"), "COM4")
+        with patch("serial.tools.list_ports.comports", return_value=[]):
+            with self.assertRaisesRegex(ValueError, "COM8 was not found"):
+                find_serial_port("COM8")
+
+
 class FakeSerial:
     def __init__(self, *args, **kwargs):
         self.payloads = []
@@ -201,11 +250,14 @@ class RoverTests(unittest.TestCase):
         self.hardware = FakeSerial()
         self.serial_patch = patch("serial.Serial", return_value=self.hardware)
         self.serial_patch.start()
+        self.port_patch = patch("rover_bridge.find_serial_port", return_value="COM9")
+        self.port_patch.start()
         self.bridge.connect("pilot-a", "bluetooth")
 
     def tearDown(self):
         self.bridge.close()
         self.serial_patch.stop()
+        self.port_patch.stop()
 
     def command(self, value, sequence=1):
         self.bridge.command("pilot-a", value, self.bridge.epoch, sequence)
@@ -258,14 +310,30 @@ class RoverTests(unittest.TestCase):
                 self.assertEqual(self.bridge.last_command, "x")
         self.assertIsNotNone(self.bridge.transport)
 
-    def test_browser_lease_expiry_stops_and_closes(self):
+    def test_browser_lease_expiry_stops_and_releases(self):
         self.command("w")
         with self.bridge.lock:
             self.bridge.heartbeat_at = time.monotonic() - 2
         time.sleep(0.2)
         self.assertIsNone(self.bridge.transport)
         self.assertEqual(self.hardware.payloads[-1], b"x")
+        self.assertFalse(self.hardware.closed)
+
+    def test_reconnect_reuses_open_port_and_reopens_a_stale_one(self):
+        opened = []
+        def open_port(*args, **kwargs):
+            opened.append(FakeSerial())
+            return opened[-1]
+        self.bridge.disconnect("pilot-a")
+        with patch("serial.Serial", side_effect=open_port):
+            self.bridge.connect("pilot-b", "bluetooth")
+            self.assertEqual(opened, [])  # warm port reused
+            self.bridge.disconnect("pilot-b")
+            self.hardware.write = Mock(side_effect=OSError("link dropped"))
+            self.bridge.connect("pilot-b", "bluetooth")
+        self.assertEqual(len(opened), 1)
         self.assertTrue(self.hardware.closed)
+        self.assertEqual(opened[0].payloads, [b"x"])
 
     def test_gesture_angle_and_manual_priority(self):
         self.bridge.mode = "gesture"
@@ -275,9 +343,18 @@ class RoverTests(unittest.TestCase):
         self.bridge._assisted_command("pilot-a", "gesture", "0\n")
         self.assertEqual(self.hardware.payloads[-1], b"a")
 
+    def test_speed_command_uses_arduino_throttle_protocol(self):
+        self.command("w")
+        self.bridge.set_speed("pilot-a", 2500)
+        self.assertEqual(self.hardware.payloads[-1], b"v2500")
+        self.assertEqual(self.bridge.status("pilot-a")["command"], "w")
+        self.assertEqual(self.bridge.status("pilot-a")["speed"], 2500)
+
     def test_invalid_commands_cannot_reach_hardware(self):
         with self.assertRaises(ValueError):
             self.command("run shell")
+        with self.assertRaises(ValueError):
+            self.bridge.set_speed("pilot-a", 99)
         self.assertEqual(self.hardware.payloads, [b"x"])
 
     def test_lost_transport_releases_assisted_devices(self):
@@ -300,6 +377,7 @@ class RoverTests(unittest.TestCase):
 
     def test_failed_initial_stop_preserves_error_and_releases_connection(self):
         self.bridge.disconnect("pilot-a")
+        self.bridge._close_serial()  # A fresh failed link, not the healthy cached port.
         hardware = FakeSerial()
         failure = OSError("Bluetooth link lost during initial STOP")
         with patch("serial.Serial", return_value=hardware), patch.object(

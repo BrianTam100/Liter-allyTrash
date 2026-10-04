@@ -64,17 +64,46 @@ class DashboardIntegrationTests(unittest.TestCase):
         log = self.app.extensions['database'].detections()
         self.assertEqual([(row['label'],row['source'],row['confirmed']) for row in log],[('plastic water bottle','photo',1)])
 
-    def test_live_frames_share_one_scan_id_and_confirmation_is_idempotent(self):
+    @patch.object(ItemLock, 'LOCK_SECONDS', 0)
+    def test_live_frames_share_one_scan_id_and_lid_opening_counts_one_item(self):
         self.post('/api/classifier/start',{'source':'server'})
         readings = [self.post('/api/classifier/camera',live=True).get_json() for _ in range(5)]
         self.assertEqual([row['state'] for row in readings[:3]],['checking','checking','locked'])
         self.assertEqual(readings[2]['scan_id'],readings[4]['scan_id'])
-        self.assertEqual(len(self.app.extensions['database'].detections()),1)  # one row per locked item, not per frame
-        self.assertEqual(self.app.extensions['database'].stats(1)['points'],0)
+        db = self.app.extensions['database']
+        self.assertEqual(len(db.detections()),1)  # one row per locked item, not per frame
+        # The lid opened, so the item is counted in its can.
+        self.assertTrue(readings[2]['auto_recorded'])
+        self.assertEqual(readings[2]['stats']['points'],10)
+        self.assertNotIn('stats',readings[4])  # only the first locked frame records it
+        self.assertEqual((db.stats(1)['points'],db.detections()[0]['confirmed']),(10,1))
+        self.assertEqual(db.bin_contents()['recycling']['total'],1)
         event = {'scan_id':readings[2]['scan_id'],'count':1}
-        self.assertEqual(self.post('/api/classifier/confirm',event).status_code,201)
-        self.assertEqual(self.post('/api/classifier/confirm',event).status_code,200)
-        self.assertEqual(self.app.extensions['database'].stats(1)['points'],10)
+        self.assertEqual(self.post('/api/classifier/confirm',event).status_code,200)  # already recorded
+        self.assertEqual(db.stats(1)['points'],10)
+
+    @patch.object(ItemLock, 'LOCK_SECONDS', 0)
+    def test_no_can_count_when_lids_are_manual(self):
+        self.post('/api/classifier/lid',{'enabled':False})
+        self.post('/api/classifier/start',{'source':'server'})
+        readings = [self.post('/api/classifier/camera',live=True).get_json() for _ in range(4)]
+        self.assertEqual(readings[2]['state'],'locked')
+        self.assertNotIn('auto_recorded',readings[2])
+        self.assertEqual(self.app.extensions['database'].stats(1)['points'],0)
+
+    def test_settings_clears_all_data_but_keeps_tables(self):
+        import uuid
+        self.photo()
+        self.post('/api/collections',{'category':'trash','item_name':'Wrapper','count':2,'request_id':str(uuid.uuid4())})
+        self.post('/api/bins/trash/done')
+        self.assertIn('Delete everything', self.client.get('/settings').get_data(as_text=True))
+        self.assertEqual(self.post('/api/settings/clear-data',{'confirm':'nope'}).status_code,400)
+        db = self.app.extensions['database']
+        self.assertEqual(db.stats(1)['items'],2)
+        self.assertEqual(self.post('/api/settings/clear-data',{'confirm':'DELETE'}).status_code,200)
+        self.assertEqual((db.stats(1)['items'],len(db.detections()),db.bin_contents()['trash']['emptied_at']),(0,0,None))
+        self.assertEqual(self.client.get('/log').status_code,200)
+        self.assertEqual(self.client.post('/api/settings/clear-data',json={'confirm':'DELETE'}).status_code,403)  # needs the CSRF token
 
     def test_slow_model_readings_can_still_lock_one_live_item(self):
         item = ItemLock()
@@ -82,6 +111,73 @@ class DashboardIntegrationTests(unittest.TestCase):
         with patch('classifier_service.time.monotonic', side_effect=[100,104.3,108.6]):
             states = [item.update(result)['state'] for _ in range(3)]
         self.assertEqual(states, ['checking','checking','locked'])
+
+    def test_brief_gap_or_misreading_does_not_start_a_second_scan(self):
+        item = ItemLock()
+        bottle = {'label':'plastic water bottle', 'category':'Recyclable', 'score':0.8, 'seconds':0.05}
+        bag = {**bottle, 'label':'chip bag', 'category':'Trash'}
+        empty = {**bottle, 'label':'No sorted item detected', 'category':None}
+        readings = [bottle]*5 + [empty]*4 + [bottle] + [bag]*6 + [bottle] + [empty]*8
+        with patch('classifier_service.time.monotonic', side_effect=[100 + 0.15*i for i in range(len(readings))]):
+            results = [item.update(reading) for reading in readings]
+        states = [result['state'] for result in results]
+        self.assertEqual(states[:5], ['checking']*4 + ['locked'])  # locks after 0.5 s, not 3 fast readings
+        self.assertEqual(states[5:17], ['locked']*12)  # a 0.6 s gap or 0.9 s misreading keeps the lock
+        self.assertEqual({result['scan_id'] for result in results[4:17]}, {results[4]['scan_id']})
+        self.assertEqual(states[-1], 'empty')  # gone for over a second clears it
+
+    def test_emptying_a_bin_opens_its_lid_then_clears_only_that_bin(self):
+        import uuid
+        for category, name, count in (('trash','Wrapper',2),('recycling','Can',3),('recycling','Can',1)):
+            self.post('/api/collections',{'category':category,'item_name':name,'count':count,'request_id':str(uuid.uuid4())})
+        page = self.client.get('/log').get_data(as_text=True)
+        self.assertIn('Empty trash', page)
+        self.assertIn('Never emptied', page)
+        db = self.app.extensions['database']
+        self.assertEqual(db.bin_contents()['recycling']['items'], [{'item_name':'Can','count':4}])
+        self.assertEqual(self.post('/api/bins/recycling/open').status_code, 200)
+        self.service.lid.open.assert_called_with('Recyclable')
+        done = self.post('/api/bins/recycling/done').get_json()
+        self.service.lid.close.assert_called_with('Recyclable')
+        self.assertEqual(done['cleared'], 4)
+        self.assertEqual((done['bins']['recycling']['total'], done['bins']['trash']['total']), (0, 2))
+        self.assertIsNotNone(done['bins']['recycling']['emptied_at'])
+        self.post('/api/bins/trash/close')
+        self.assertEqual(db.bin_contents()['trash']['total'], 2)  # cancelling keeps the contents
+        time.sleep(0.01)
+        self.post('/api/collections',{'category':'recycling','item_name':'Jar','count':1,'request_id':str(uuid.uuid4())})
+        self.assertEqual(db.bin_contents()['recycling']['items'], [{'item_name':'Jar','count':1}])
+        # The log marks a counted detection as emptied once its bin was emptied afterwards.
+        db.add_detection('jar-scan', 1, 'Jar', 'recycling', 0, 0.9, 'photo')
+        self.assertEqual(db.detections()[0]['emptied'], 0)
+        self.post('/api/collections',{'category':'recycling','item_name':'Jar','count':1,'request_id':'00000000-0000-4000-8000-000000000001'})
+        with db.connect() as conn:
+            db.execute(conn, "UPDATE lt_detections SET scan_id = ? WHERE scan_id = 'jar-scan'", ('00000000-0000-4000-8000-000000000001',))
+        self.assertEqual((db.detections()[0]['confirmed'], db.detections()[0]['emptied']), (1, 0))
+        self.assertIn('Still in can', self.client.get('/log').get_data(as_text=True))
+        time.sleep(0.01)
+        self.post('/api/bins/recycling/done')
+        self.assertEqual(db.detections()[0]['emptied'], 1)
+        page = self.client.get('/log').get_data(as_text=True)
+        self.assertIn('<th scope="col">Emptied</th>', page)
+        self.assertNotIn('Dropped', page)
+        self.assertEqual(self.post('/api/bins/compost/open').status_code, 404)
+        self.assertEqual(self.client.post('/api/bins/trash/done').status_code, 403)  # needs the CSRF token
+
+    @patch.object(ItemLock, 'LOCK_SECONDS', 0)
+    def test_dashboard_switch_turns_automatic_lid_opening_off_and_on(self):
+        self.assertTrue(self.client.get('/api/classifier/status').get_json()['lid_enabled'])
+        off = self.post('/api/classifier/lid',{'enabled':False})
+        self.assertEqual((off.status_code, off.get_json()['lid_enabled']), (200, False))
+        self.service.lid.close.assert_called()
+        self.post('/api/classifier/start',{'source':'server'})
+        for _ in range(4):
+            self.post('/api/classifier/camera',live=True)
+        self.service.lid.open.assert_not_called()  # locked item, but automatic opening is off
+        self.assertTrue(self.post('/api/classifier/lid',{'enabled':True}).get_json()['lid_enabled'])
+        self.post('/api/classifier/camera',live=True)
+        self.service.lid.open.assert_called_with('Recyclable')
+        self.assertEqual(self.post('/api/classifier/lid',{'enabled':'yes'}).status_code, 400)
 
     def test_trash_recognition_never_earns_recycling_points(self):
         self.service.model.category = 'Trash'
@@ -99,6 +195,30 @@ class DashboardIntegrationTests(unittest.TestCase):
         self.assertEqual(self.post('/api/classifier/confirm',{'scan_id':scan['scan_id']},client=other).status_code,400)
         self.assertEqual(self.post('/api/classifier/start',{'source':'server'},client=other).status_code,400)
         self.assertEqual(other.get(f'/api/classifier/stream?generation={self.detector.generation}').status_code,403)
+
+    @patch.object(ItemLock, 'LOCK_SECONDS', 0)
+    def test_another_browser_watches_the_live_scan_and_sees_new_activity(self):
+        other = self.app.test_client()
+        other.get('/')
+        self.assertIsNone(other.get('/api/classifier/status').get_json()['watch_url'])
+        self.post('/api/classifier/start',{'source':'server'})
+        status = other.get('/api/classifier/status').get_json()
+        self.assertTrue(status['busy'])
+        before = status['activity']
+        watch = other.get(status['watch_url'], buffered=False)
+        self.assertEqual(watch.status_code,200)
+        self.assertIn(b'jpeg', next(watch.response))
+        watch.close()
+        self.assertIsNone(other.get('/api/classifier/live').get_json()['result'])
+        for _ in range(3):
+            self.post('/api/classifier/camera',live=True)
+        live = other.get('/api/classifier/live').get_json()['result']
+        self.assertEqual((live['label'],live['state']),('plastic water bottle','locked'))
+        # The lid opened and counted the item, so every screen should refresh its stats.
+        self.assertGreater(other.get('/api/classifier/status').get_json()['activity'],before)
+        self.post('/api/classifier/stop',{'generation':self.detector.generation})
+        self.assertIsNone(other.get('/api/classifier/status').get_json()['watch_url'])
+        self.assertEqual(other.get(status['watch_url']).status_code,404)
 
     def test_empty_or_checking_result_cannot_be_confirmed(self):
         self.service.model.category = None
@@ -143,7 +263,7 @@ class DashboardIntegrationTests(unittest.TestCase):
         self.assertTrue(self.app.static_folder.endswith('web'))
         page = self.client.get('/').data
         self.assertIn(b'id="scanner"',page)
-        self.assertIn(b'id="collection-form"',page)
+        self.assertNotIn(b'id="collection-form"',page)  # items are counted by the lids, not a manual form
         self.assertNotIn(b'{%',page)
         for asset in ('app.js', 'style.css'):
             with self.client.get('/static/' + asset) as response:
