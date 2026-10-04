@@ -14,6 +14,14 @@ ROOT = Path(__file__).resolve().parent
 CA_CERT = ROOT / "ca.pem"
 
 
+def is_ipv4(text):
+    try:
+        socket.inet_aton(text)
+        return text.count(".") == 3
+    except OSError:
+        return False
+
+
 def lan_ip():
     """Return this machine's Wi-Fi/LAN address, or None if offline."""
     # Ask the OS for the Wi-Fi address first; a VPN can hijack the default route.
@@ -22,7 +30,8 @@ def lan_ip():
             out = subprocess.run(cmd, capture_output=True, text=True, timeout=2).stdout.split()
         except (OSError, subprocess.SubprocessError):
             continue
-        if out:
+        # Windows has its own ipconfig, which prints an error message instead of an address.
+        if out and is_ipv4(out[0]):
             return out[0]
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
         try:

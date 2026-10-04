@@ -76,7 +76,7 @@ class Database:
                 source TEXT NOT NULL CHECK (source IN ('browser', 'server', 'photo')),
                 created_at {timestamp} NOT NULL)""")
             conn.execute("CREATE INDEX IF NOT EXISTS lt_detections_time ON lt_detections(created_at)")
-            # Each row marks a bin as emptied; drops after the latest one are what the bin holds now.
+            # Each row marks a bin as emptied; items counted after the latest one are what the bin holds now.
             conn.execute(f"""CREATE TABLE IF NOT EXISTS lt_bin_empties (
                 id {identity}, category TEXT NOT NULL CHECK (category IN ('trash', 'recycling')),
                 item_count INTEGER NOT NULL, emptied_at {timestamp} NOT NULL)""")
@@ -185,7 +185,7 @@ class Database:
             return [dict(row) for row in rows]
 
     def bin_contents(self):
-        """What each bin holds now: confirmed drops since that bin was last emptied."""
+        """What each bin holds now: items counted since that bin was last emptied."""
         bins = {}
         with self.connect() as conn:
             for category in ("trash", "recycling"):
@@ -210,7 +210,7 @@ class Database:
         return total
 
     def clear_all(self):
-        """Delete every detection, drop and bin-empty record. Tables and the Pilot account stay."""
+        """Delete every detection, can count and bin-empty record. Tables and the Pilot account stay."""
         with self.connect() as conn:
             for table in ("lt_detections", "lt_collections", "lt_bin_empties"):
                 self.execute(conn, f"DELETE FROM {table}")

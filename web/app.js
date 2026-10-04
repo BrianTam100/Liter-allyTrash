@@ -51,7 +51,7 @@ async function refreshPanels() {
   const response = await fetch(location.pathname + location.search, {headers:{"Accept":"text/html"}});
   if (!response.ok) return;
   const fresh = new DOMParser().parseFromString(await response.text(), "text/html");
-  for (const selector of [".history-panel", ".detections-preview", ".bins-panel"]) {
+  for (const selector of [".stat-grid", ".history-panel", ".bins-panel"]) {
     const current = $(selector), next = fresh.querySelector(selector);
     if (current && next) { current.replaceWith(next); formatTimes(next); }
   }
@@ -101,6 +101,20 @@ window.addEventListener("pagehide", () => {
   }
 });
 
+// Camera views can go full screen; the same button or Esc exits.
+if (document.fullscreenEnabled) {
+  document.querySelectorAll("[data-fullscreen]").forEach((button) => { button.hidden = false; });
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-fullscreen]");
+    if (!button) return;
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    else document.getElementById(button.dataset.fullscreen).requestFullscreen().catch(() => toast("Full screen isn't available in this browser.", true));
+  });
+  document.addEventListener("fullscreenchange", () => {
+    document.querySelectorAll("[data-fullscreen]").forEach((button) => button.setAttribute("aria-label", document.fullscreenElement ? "Exit full screen" : "Full screen camera"));
+  });
+}
+
 const clearForm = $("#clear-data-form");
 if (clearForm) {
   clearForm.addEventListener("submit", async (event) => {
@@ -111,7 +125,7 @@ if (clearForm) {
     try {
       await api("/api/settings/clear-data", {confirm: $("#clear-confirm").value.trim()});
       clearForm.reset();
-      feedback.textContent = "All detections, drops and bin history were deleted.";
+      feedback.textContent = "All detections, can counts and bin history were deleted.";
     } catch (error) {
       feedback.textContent = error.message;
       feedback.classList.add("error");
@@ -119,64 +133,16 @@ if (clearForm) {
   });
 }
 
-const collectionForm = $("#collection-form");
-if (collectionForm) {
-  let requestId = null;
-  let attemptedPayload = null;
-  collectionForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const button = collectionForm.querySelector('button[type="submit"]');
-    const feedback = $("#collection-feedback");
-    const fields = new FormData(collectionForm);
-    const payload = {item_name: fields.get("item_name").trim(), category: fields.get("category"), count: Number(fields.get("count"))};
-    const signature = JSON.stringify(payload);
-    if (!requestId || signature !== attemptedPayload) requestId = crypto.randomUUID();
-    attemptedPayload = signature;
-    button.disabled = true;
-    feedback.classList.remove("error");
-    feedback.textContent = "Recording your drop…";
-    try {
-      const scanId = collectionForm.dataset.scanId;
-      const result = await api(scanId ? "/api/classifier/confirm" : "/api/collections", {...payload, request_id: requestId, scan_id:scanId});
-      requestId = null;
-      const points = payload.category === "recycling" ? payload.count * 10 : 0;
-      feedback.textContent = result.saved ? (points ? `Drop recorded. +${points} recycling points!` : "Trash drop recorded in your history.") : "This drop was already recorded. Your score is up to date.";
-      for (const name of ["points", "recycled", "items", "collections"]) $("#stat-" + name).textContent = result.stats[name];
-      collectionForm.reset();
-      delete collectionForm.dataset.scanId;
-      $("#entry-source").textContent = "Manual entry · Confirm only items you have put in the bin.";
-      button.disabled = false;
-      refreshPanels().catch(() => {});
-    } catch (error) {
-      feedback.textContent = error.message;
-      feedback.classList.add("error");
-      button.disabled = false;
-    }
-  });
-  document.addEventListener("trash:auto-recorded", (event) => {
-    const result = event.detail;
-    for (const name of ["points", "recycled", "items", "collections"]) $("#stat-" + name).textContent = result.stats[name];
-    toast(result.category === "Recyclable" ? `${result.label} added to recycling. +10 points!` : `${result.label} added to trash.`);
-    refreshPanels().catch(() => {});
-  });
-  document.addEventListener("trash:recognized", (event) => {
-    const result = event.detail;
-    $("#item-name").value = result.label;
-    const category = result.category === "Recyclable" ? "recycling" : "trash";
-    collectionForm.querySelector(`[name="category"][value="${category}"]`).checked = true;
-    $("#item-count").value = "1";
-    collectionForm.dataset.scanId = result.scan_id;
-    $("#entry-source").textContent = "Recognized item · Confirm after putting it in the correct bin.";
-    $("#collection-feedback").textContent = "Item added below. Confirm your drop to update your score.";
-    collectionForm.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'center'});
-    $("#item-name").focus({preventScroll:true});
-  });
-  collectionForm.addEventListener("input", (event) => {
-    if (event.target.name === "count") return;
-    delete collectionForm.dataset.scanId;
-    $("#entry-source").textContent = "Manual entry · Confirm only items you have put in the bin.";
-  });
-}
+// A lid opening counts the item in its can on the server; show the new totals right away.
+document.addEventListener("trash:auto-recorded", (event) => {
+  const result = event.detail;
+  for (const name of ["points", "recycled", "items", "collections"]) {
+    const stat = $("#stat-" + name);
+    if (stat) stat.textContent = result.stats[name];
+  }
+  toast(result.category === "Recyclable" ? `${result.label} added to recycling. +10 points!` : `${result.label} added to trash.`);
+  refreshPanels().catch(() => {});
+});
 
 (() => {
   "use strict";
@@ -186,8 +152,9 @@ if (collectionForm) {
   const csrf = document.querySelector('meta[name="csrf-token"]').content;
   const canvas = document.createElement('canvas');
   let ready = false, running = false, stream = null, generation = 0;
-  let cameraGeneration = null, owned = false, latestResult = null;
+  let cameraGeneration = null, owned = false;
   let heartbeatTimer = null, requestController = null, statusTimer = null, objectUrl = null;
+  let watching = null, liveTimer = null, lastActivity = null;
 
   function message(text, error = false) {
     $('message').textContent = text;
@@ -223,14 +190,12 @@ if (collectionForm) {
   }
 
   function resetResult() {
-    latestResult = null;
     $('label').textContent = 'Ready for an item';
     $('result-bin').hidden = true;
     $('score').textContent = '—';
     $('score-bar').value = 0;
     $('candidates').replaceChildren();
     $('hint').textContent = 'Show one item against a plain background.';
-    $('use-result').disabled = true;
   }
 
   function stop(notify = true) {
@@ -261,8 +226,44 @@ if (collectionForm) {
     cameraGeneration = null;
   }
 
+  // While someone else scans with the connected camera, this screen shows the same video and readings.
+  function watch(url) {
+    if (url === watching) return;
+    unwatch();
+    watching = url;
+    $('preview').src = url;
+    $('preview').hidden = false; $('video').hidden = true; $('placeholder').hidden = true;
+    resetResult();
+    message('Watching a live scan from another screen.');
+    const poll = async () => {
+      if (watching !== url) return;
+      try {
+        const response = await fetch('/api/classifier/live');
+        const live = await response.json();
+        if (watching !== url) return;
+        if (live.result) {
+          // Stats belong to the scanning account; this screen refreshes its own when the activity count changes.
+          show({...live.result, stats:undefined});
+        }
+      } catch (_) {}
+      liveTimer = setTimeout(poll, 300);
+    };
+    poll();
+  }
+
+  function unwatch() {
+    if (!watching) return;
+    watching = null;
+    clearTimeout(liveTimer);
+    $('preview').removeAttribute('src');
+    $('preview').hidden = true;
+    $('placeholder').hidden = false;
+    resetResult();
+    message('');
+  }
+
   function sourceChanged() {
-    stop(); resetResult(); message('');
+    unwatch(); stop(); resetResult(); message('');
     if (objectUrl) URL.revokeObjectURL(objectUrl);
     objectUrl = null;
     $('preview').removeAttribute('src');
@@ -274,9 +275,8 @@ if (collectionForm) {
 
   function show(result) {
     const checking = result.state === 'checking';
-    const recognized = !checking && ['Trash','Recyclable'].includes(result.category) && !result.drop_off && result.scan_id && !result.auto_recorded;
+    const recognized = !checking && ['Trash','Recyclable'].includes(result.category) && !result.drop_off && !result.auto_recorded;
     if (result.stats) document.dispatchEvent(new CustomEvent('trash:auto-recorded',{detail:result}));
-    latestResult = recognized ? result : null;
     const label = checking ? 'Checking item…' : result.label;
     if ($('label').textContent !== label) $('label').textContent = label;
     $('result-bin').hidden = !result.category || checking;
@@ -284,9 +284,9 @@ if (collectionForm) {
     $('result-bin').classList.toggle('is-recycling', result.category === 'Recyclable');
     const hint = checking ? `Hold still — comparing readings (${result.checks}/${result.of}).`
       : result.drop_off ? 'Take this item to a drop-off site. It does not belong in the regular bin.'
-      : result.auto_recorded ? `Lid opened. Counted as a drop in the ${result.category === 'Recyclable' ? 'recycling' : 'trash'} bin.`
-      : recognized ? 'Check the result, then use it to confirm your drop below.'
-      : 'No supported item found. Try another angle or enter your item below.';
+      : result.auto_recorded ? `Lid opened. Counted in the ${result.category === 'Recyclable' ? 'recycling' : 'trash'} can.`
+      : recognized ? `Put it in the ${result.category === 'Recyclable' ? 'recycling' : 'trash'} can.`
+      : 'No supported item found. Try another angle.';
     if ($('hint').textContent !== hint) $('hint').textContent = hint;
     const score = Math.max(0,Math.min(1,Number(result.score) || 0));
     $('score').textContent = Math.round(score*100)+'%';
@@ -299,7 +299,6 @@ if (collectionForm) {
       return li;
     }));
     $('timing').textContent = `Last recognition: ${Number(result.seconds || 0).toFixed(2)}s · Processed locally`;
-    $('use-result').disabled = !recognized;
   }
 
   async function frameBlob() {
@@ -333,6 +332,7 @@ if (collectionForm) {
 
   $('start').addEventListener('click',async () => {
     if (!signedIn || !ready) return;
+    unwatch();
     message(''); $('start').disabled = true;
     const token = ++generation;
     try {
@@ -396,14 +396,6 @@ if (collectionForm) {
     event.target.value='';
   });
 
-  $('use-result').addEventListener('click',()=> {
-    if (!latestResult) return;
-    const result = {...latestResult};
-    stop();
-    document.dispatchEvent(new CustomEvent('trash:recognized',{detail:result}));
-    message('Recognized item added to your drop. Confirm it below.');
-  });
-
   let lidSaving = false;
   $('auto-lid').addEventListener('change',async event => {
     const enabled = event.target.checked;
@@ -437,12 +429,19 @@ if (collectionForm) {
       if (!running) $('start').disabled = !ready || !signedIn || result.busy;
       $('file').disabled = !ready || !signedIn;
       if (result.error && signedIn) message('The scanner could not load. Retry it or record your item manually.',true);
+      // An item counted in a can on any screen changes the stats and bins, so refresh them here too.
+      if (lastActivity !== null && result.activity !== lastActivity) refreshPanels().catch(() => {});
+      lastActivity = result.activity;
+      if (signedIn && !running) {
+        if (result.watch_url && !result.owned && !document.hidden && $('source').value === 'server') watch(result.watch_url);
+        else unwatch();
+      }
     } catch (_) { $('detector-status').textContent = 'Connecting to scanner…'; }
     statusTimer = setTimeout(status,2000);
   }
   window.addEventListener('resize',sizeGuide);
-  window.addEventListener('pagehide',()=> { stop(); clearTimeout(statusTimer); if(objectUrl) URL.revokeObjectURL(objectUrl); });
-  document.addEventListener('visibilitychange',()=> { if(document.hidden) stop(); });
+  window.addEventListener('pagehide',()=> { unwatch(); stop(); clearTimeout(statusTimer); if(objectUrl) URL.revokeObjectURL(objectUrl); });
+  document.addEventListener('visibilitychange',()=> { if(document.hidden) { unwatch(); stop(); } });
   status();
 })();
 

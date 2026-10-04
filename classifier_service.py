@@ -201,6 +201,6 @@ class Service:
         if self.lid and self.auto_lid and result["state"] == "locked" and result["category"] in ("Trash", "Recyclable") \
                 and not result["drop_off"]:
             self.lid.open(result["category"])
-            # The lid opening is the confirmation: the item counts as dropped in that bin.
+            # The lid opening is the confirmation: the item is counted in that can.
             result = {**result, "lid_opened": True}
         return result

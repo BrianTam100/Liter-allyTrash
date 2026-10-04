@@ -6,7 +6,7 @@
 <div class="page-heading"><h1>Detection log</h1><nav class="period-nav" aria-label="Time period">{% for value, label in [('all', 'All time'), ('month', '30 days'), ('week', '7 days')] %}<a href="{{ url_for('detection_log', period=value) }}" class="{{ 'selected' if period == value }}" {% if period == value %}aria-current="true"{% endif %}>{{ label }}</a>{% endfor %}</nav></div>
 <div class="stat-grid">
   <section class="stat-card accent"><div class="stat-label">Detections</div><strong>{{ summary.total }}</strong></section>
-  <section class="stat-card"><div class="stat-label">Confirmed as drops</div><strong>{{ summary.confirmed }}</strong><span>{{ pct(summary.confirm_rate) ~ ' of recognized' if summary.confirm_rate is not none else '—' }}</span></section>
+  <section class="stat-card"><div class="stat-label">Counted in a can</div><strong>{{ summary.confirmed }}</strong><span>{{ pct(summary.confirm_rate) ~ ' of recognized' if summary.confirm_rate is not none else '—' }}</span></section>
   <section class="stat-card"><div class="stat-label">Average match</div><strong>{{ pct(summary.avg_score) if summary.avg_score is not none else '—' }}</strong><span>Recognized items only</span></section>
   <section class="stat-card"><div class="stat-label">Unrecognized</div><strong>{{ summary.unrecognized }}</strong></section>
 </div>
@@ -18,7 +18,7 @@
     {% if items %}<div class="table-wrap" tabindex="0" role="region" aria-label="Detections by item"><table><thead><tr><th scope="col">Item</th><th scope="col">Bin</th><th scope="col">Detected</th><th scope="col">Avg match</th><th scope="col">Confirmed</th></tr></thead><tbody>{% for row in items %}<tr><td>{{ row.label }}</td><td>{{ bin(row) }}</td><td>{{ row.detections }}</td><td>{{ pct(row.avg_score) }}</td><td>{{ row.confirmed }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<p class="empty-inline">No detections yet.</p>{% endif %}
   </section>
 </div>
-<section class="panel bins-panel" aria-label="Bins now"><div class="panel-heading compact"><h2>In the bins now</h2><span class="muted">Confirmed drops since each bin was emptied</span></div>
+<section class="panel bins-panel" aria-label="Bins now"><div class="panel-heading compact"><h2>In the bins now</h2><span class="muted">Items counted since each bin was emptied</span></div>
   <div class="bin-grid">{% for key, name, verb in [('trash', 'Trash', 'trash'), ('recycling', 'Recycling', 'recycling')] %}{% set contents = bins[key] %}
     <article class="bin-card {{ key }}" data-bin="{{ key }}" data-lid="{{ 'true' if lid_available else 'false' }}">
       <div class="bin-card-top"><div><h3>{{ name }}</h3><p class="muted">{% if contents.emptied_at %}Emptied <time datetime="{{ contents.emptied_at }}" class="local-time">{{ contents.emptied_at|string|truncate(16, true, '') }}</time>{% else %}Never emptied{% endif %}</p></div><strong class="bin-total">{{ contents.total }}<span> item{{ '' if contents.total == 1 else 's' }}</span></strong></div>

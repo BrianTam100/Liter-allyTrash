@@ -3,14 +3,14 @@
   <div class="scanner-grid">
     <div class="capture">
       <div class="scan-toolbar"><label for="source">Image source</label><select id="source"><option value="browser">This device’s camera</option><option value="server" selected>Connected / Pi camera</option><option value="upload">Upload a photo</option></select></div>
-      <div class="viewfinder"><video id="video" autoplay muted playsinline hidden></video><img id="preview" alt="Item being identified" hidden><div id="placeholder"><p>Show one item against a plain background.</p></div><div id="guide" aria-hidden="true" hidden><span>ONE ITEM AT A TIME</span></div></div>
+      <div class="viewfinder" id="viewfinder"><button class="fullscreen-button" type="button" data-fullscreen="viewfinder" aria-label="Full screen camera" hidden>{{ icon('expand') }}</button><video id="video" autoplay muted playsinline hidden></video><img id="preview" alt="Item being identified" hidden><div id="placeholder"><p>Show one item against a plain background.</p></div><div id="guide" aria-hidden="true" hidden><span>ONE ITEM AT A TIME</span></div></div>
       <div class="scan-buttons"><button class="button primary" id="start" type="button" disabled>Start detection</button><button id="stop" class="button outline" type="button" hidden>Stop scanning</button><label id="upload-label" class="button outline scan-upload" hidden>Choose photo<input id="file" type="file" accept="image/*"></label><span id="capture-note" class="form-note">Images are processed here and aren’t saved.</span></div>
     </div>
     <div class="scan-result">
       <div class="result-main" aria-live="polite"><h3 id="label">No item yet</h3><span id="result-bin" class="scan-bin" hidden></span><p id="hint"></p></div>
       <div class="match"><div><span id="match-label">Relative match</span><strong id="score">—</strong></div><progress id="score-bar" value="0" max="1" aria-labelledby="match-label"></progress></div>
       <div class="scan-candidates"><span class="eyebrow">OTHER MATCHES</span><ul id="candidates"><li>Waiting for an image<span>—</span></li></ul></div>
-      <button id="use-result" class="button primary full" type="button" disabled>{{ icon('plus') }} Use recognized item</button><span id="timing" class="form-note">Recognition happens locally.</span>
+      <span id="timing" class="form-note">Recognition happens locally.</span>
     </div>
   </div>
   <p id="message" class="form-feedback" role="status" aria-live="polite"></p>

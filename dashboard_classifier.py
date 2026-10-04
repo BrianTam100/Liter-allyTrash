@@ -28,6 +28,8 @@ class Detector:
         self.loading = False
         self.generation = 0
         self.pending = {}
+        self.live = None  # the latest live reading, which other screens show while they watch
+        self.activity = 0  # goes up whenever a can count or bin change is saved, so every screen refreshes its stats
         self.closed = threading.Event()
         self.monitor = threading.Thread(target=self.watchdog, daemon=True)
         self.monitor.start()
@@ -51,7 +53,10 @@ class Detector:
             return {"ready": self.service.model is not None, "loading": self.loading,
                 "error": self.service.error, "owned": bool(owner and owner == self.owner),
                 "busy": bool(self.owner and owner != self.owner), "source": self.source,
-                "generation": self.generation,
+                "generation": self.generation, "activity": self.activity,
+                # Other screens can watch a connected-camera scan: same video, same readings.
+                "watch_url": f"/api/classifier/watch?generation={self.generation}"
+                    if self.owner and self.source == "server" else None,
                 "lid_available": self.service.lid is not None,
                 "lid_enabled": self.service.lid is not None and self.service.auto_lid}
 
@@ -76,6 +81,7 @@ class Detector:
             self.stop(owner)
             self.generation += 1
             self.owner, self.source = owner, source
+            self.live = None
             self.heartbeat_at = time.monotonic()
             self.service.item.reset()
             if source == "server":
@@ -97,6 +103,7 @@ class Detector:
             if self.source == "server":
                 self.service.capture.unsubscribe()
             self.owner, self.source = None, None
+            self.live = None
             self.generation += 1
             self.service.item.reset()
             if self.service.lid:
@@ -204,7 +211,7 @@ def mount_classifier(app, service=None, autoload=True):
             return jsonify(error=str(exc)), 400
         return jsonify({**detector.status(owner), "url": f"/api/classifier/stream?generation={detector.generation}"})
 
-    auto_recorded = {"scan_id": None}  # the last locked item already saved as a drop
+    auto_recorded = {"scan_id": None}  # the last locked item already counted in a can
 
     def log_detection(result, source):
         # Live readings repeat the locked scan_id every frame; the unique key keeps one row per item.
@@ -257,6 +264,7 @@ def mount_classifier(app, service=None, autoload=True):
                     if generation != str(detector.generation):
                         raise ValueError("This camera session ended. Start the scan again.")
                     result = service.track(result)
+                    detector.live = (detector.generation, result)
                 else:
                     result = {**result, "state": "photo"}
                 result = detector.remember(owner, result)
@@ -265,15 +273,16 @@ def mount_classifier(app, service=None, autoload=True):
             if result.get("lid_opened"):
                 result = {**result, "auto_recorded": True}
                 if auto_recorded["scan_id"] != result["scan_id"]:
-                    # One drop per locked item: the scan_id is the collection's unique request_id.
+                    # One can count per locked item: the scan_id is the collection's unique request_id.
                     try:
                         db = app.extensions["database"]
                         category = "recycling" if result["category"] == "Recyclable" else "trash"
                         if db.add_collection(g.user["id"], category, 1, result["scan_id"], result["label"]):
                             result["stats"] = db.stats(g.user["id"])
+                            detector.activity += 1
                         auto_recorded["scan_id"] = result["scan_id"]
                     except Exception:
-                        app.logger.exception("Could not record the automatic drop")
+                        app.logger.exception("Could not count the item in its can")
             return jsonify(result)
         except (ValueError, UnidentifiedImageError, Image.DecompressionBombError) as exc:
             return jsonify(error=str(exc)), 400
@@ -282,6 +291,52 @@ def mount_classifier(app, service=None, autoload=True):
             return jsonify(error="Could not recognize that image. Try another photo or restart the scanner."), 500
         finally:
             service.lock.release()
+
+    # Saving any of these changes the stats or bins, so every open dashboard should refresh.
+    changes_stats = {"/api/collections", "/api/classifier/confirm", "/api/settings/clear-data", "/api/bin-events"}
+
+    @app.after_request
+    def count_activity(response):
+        if request.method == "POST" and response.status_code < 300 and (
+                request.path in changes_stats or (request.path.startswith("/api/bins/") and request.path.endswith("/done"))):
+            with detector.lock:
+                detector.activity += 1
+        return response
+
+    @app.get("/api/classifier/live")
+    @authenticated
+    def classifier_live():
+        """The latest reading of the current connected-camera scan, for screens watching it."""
+        with detector.lock:
+            if detector.source != "server" or not detector.live or detector.live[0] != detector.generation:
+                return jsonify(result=None, generation=detector.generation)
+            return jsonify(result=detector.live[1], generation=detector.generation)
+
+    @app.get("/api/classifier/watch")
+    @authenticated
+    def classifier_watch():
+        """The connected-camera preview for any signed-in screen while someone scans."""
+        generation = request.args.get("generation")
+
+        def watching():
+            return detector.source == "server" and generation == str(detector.generation)
+
+        with detector.lock:
+            if not watching():
+                return jsonify(error="No one is scanning with the connected camera right now."), 404
+
+        def frames():
+            sequence = None
+            while not detector.closed.is_set():
+                with detector.lock:
+                    if not watching():
+                        return
+                try:
+                    sequence, _, jpeg = service.capture.latest(after=sequence)
+                except ValueError:
+                    return
+                yield b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" + jpeg + b"\r\n"
+        return Response(frames(), mimetype="multipart/x-mixed-replace; boundary=frame")
 
     @app.get("/api/classifier/stream")
     @authenticated

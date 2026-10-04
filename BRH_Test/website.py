@@ -24,7 +24,7 @@ else:
     from rover_bridge import RoverBridge, list_serial_ports
 
 ROOT = Path(__file__).resolve().parent
-# Accounts are not used: every visitor records drops as this one local pilot.
+# Accounts are not used: every visitor's can counts go to this one local pilot.
 PILOT_EMAIL = "pilot@literally-trash.local"
 PILOT_NAME = "Pilot"
 # Dashboard bin name -> lid name used by lid.py.
