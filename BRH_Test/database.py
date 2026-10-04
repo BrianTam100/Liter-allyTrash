@@ -58,6 +58,16 @@ class Database:
                 request_id TEXT NOT NULL UNIQUE, created_at {timestamp} NOT NULL)""")
             conn.execute("CREATE INDEX IF NOT EXISTS lt_collections_user_time ON lt_collections(user_id, created_at)")
             conn.execute("CREATE INDEX IF NOT EXISTS lt_collections_time ON lt_collections(created_at)")
+            real = "DOUBLE PRECISION" if self.is_tiger else "REAL"
+            # One row per final AI reading; scan_id matches lt_collections.request_id once confirmed.
+            conn.execute(f"""CREATE TABLE IF NOT EXISTS lt_detections (
+                id {identity}, scan_id TEXT NOT NULL UNIQUE, user_id BIGINT REFERENCES lt_users(id),
+                label TEXT NOT NULL,
+                category TEXT NOT NULL CHECK (category IN ('recycling', 'trash', 'unrecognized')),
+                drop_off SMALLINT NOT NULL DEFAULT 0, score {real} NOT NULL,
+                source TEXT NOT NULL CHECK (source IN ('browser', 'server', 'photo')),
+                created_at {timestamp} NOT NULL)""")
+            conn.execute("CREATE INDEX IF NOT EXISTS lt_detections_time ON lt_detections(created_at)")
 
     def user(self, user_id):
         with self.connect() as conn:
@@ -88,19 +98,55 @@ class Database:
                 (user_id, category, count, request_id, item_name, self.now()))
             return cursor.rowcount == 1
 
-    def leaderboard(self, period="all"):
+    @staticmethod
+    def since(period):
         days = {"week": 7, "month": 30}.get(period)
-        since = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat() if days else "1970-01-01T00:00:00+00:00"
+        return (datetime.now(timezone.utc) - timedelta(days=days)).isoformat() if days else "1970-01-01T00:00:00+00:00"
+
+    def add_detection(self, scan_id, user_id, label, category, drop_off, score, source):
         with self.connect() as conn:
-            rows = self.execute(conn, """WITH scores AS (
-                SELECT u.id, u.display_name, COALESCE(SUM(c.item_count), 0) AS items,
-                    COUNT(c.id) AS collections,
-                    COALESCE(SUM(CASE WHEN c.category = 'recycling' THEN c.item_count ELSE 0 END), 0) AS recycled,
-                    COALESCE(SUM(CASE WHEN c.category = 'recycling' THEN c.item_count * 10 ELSE 0 END), 0) AS points
-                FROM lt_users u LEFT JOIN lt_collections c ON c.user_id = u.id AND c.created_at >= ?
-                GROUP BY u.id, u.display_name
-            ) SELECT *, RANK() OVER (ORDER BY recycled DESC) AS rank FROM scores
-                WHERE recycled > 0 ORDER BY recycled DESC, display_name, id LIMIT 50""", (since,)).fetchall()
+            cursor = self.execute(conn, """INSERT INTO lt_detections
+                (scan_id, user_id, label, category, drop_off, score, source, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(scan_id) DO NOTHING""",
+                (scan_id, user_id, label, category, int(drop_off), float(score), source, self.now()))
+            return cursor.rowcount == 1
+
+    def detection_summary(self, period="all"):
+        with self.connect() as conn:
+            row = dict(self.execute(conn, """SELECT COUNT(*) AS total,
+                COALESCE(SUM(CASE WHEN d.category = 'recycling' AND d.drop_off = 0 THEN 1 ELSE 0 END), 0) AS recycling,
+                COALESCE(SUM(CASE WHEN d.category = 'trash' AND d.drop_off = 0 THEN 1 ELSE 0 END), 0) AS trash,
+                COALESCE(SUM(CASE WHEN d.drop_off = 1 THEN 1 ELSE 0 END), 0) AS drop_off,
+                COALESCE(SUM(CASE WHEN d.category = 'unrecognized' THEN 1 ELSE 0 END), 0) AS unrecognized,
+                AVG(CASE WHEN d.category <> 'unrecognized' THEN d.score END) AS avg_score,
+                COUNT(c.id) AS confirmed
+                FROM lt_detections d LEFT JOIN lt_collections c ON c.request_id = d.scan_id
+                WHERE d.created_at >= ?""", (self.since(period),)).fetchone())
+        avg_score = row.pop("avg_score")
+        row = {key: int(value or 0) for key, value in row.items()}
+        row["avg_score"] = None if avg_score is None else float(avg_score)
+        recognized = row["total"] - row["unrecognized"]
+        row["confirm_rate"] = row["confirmed"] / recognized if recognized else None
+        row["bins"] = [(name, row[key]) for name, key in (("Recycling", "recycling"), ("Trash", "trash"),
+            ("Drop-off", "drop_off"), ("Unrecognized", "unrecognized"))]
+        return row
+
+    def detection_items(self, period="all"):
+        with self.connect() as conn:
+            rows = self.execute(conn, """SELECT d.label, d.category, d.drop_off, COUNT(*) AS detections,
+                AVG(d.score) AS avg_score, COUNT(c.id) AS confirmed
+                FROM lt_detections d LEFT JOIN lt_collections c ON c.request_id = d.scan_id
+                WHERE d.created_at >= ? GROUP BY d.label, d.category, d.drop_off
+                ORDER BY detections DESC, d.label LIMIT 50""", (self.since(period),)).fetchall()
+            return [{**dict(row), "avg_score": float(row["avg_score"])} for row in rows]
+
+    def detections(self, period="all", limit=100):
+        with self.connect() as conn:
+            rows = self.execute(conn, """SELECT d.label, d.category, d.drop_off, d.score, d.source, d.created_at,
+                CASE WHEN c.id IS NULL THEN 0 ELSE 1 END AS confirmed
+                FROM lt_detections d LEFT JOIN lt_collections c ON c.request_id = d.scan_id
+                WHERE d.created_at >= ? ORDER BY d.created_at DESC, d.id DESC LIMIT ?""",
+                (self.since(period), limit)).fetchall()
             return [dict(row) for row in rows]
 
     def stats(self, user_id=None):
@@ -111,7 +157,6 @@ class Database:
             row = self.execute(conn, query + (" WHERE user_id = ?" if user_id else ""), (user_id,) if user_id else ()).fetchone()
             result = dict(row)
             result["points"] = result["recycled"] * 10
-            result["pilots"] = conn.execute("SELECT COUNT(*) AS total FROM lt_users").fetchone()["total"]
             return result
 
     def recent(self, user_id):

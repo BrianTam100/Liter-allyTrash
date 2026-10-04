@@ -3,21 +3,17 @@ from __future__ import annotations
 
 import argparse
 import atexit
-import functools
 import hmac
 import os
-import re
 import secrets
 import threading
 import time
 import uuid
 import sys
-from collections import defaultdict, deque
 from pathlib import Path
 
 from dotenv import load_dotenv
-from flask import Flask, Response, flash, g, jsonify, redirect, render_template, request, session, url_for
-from werkzeug.security import check_password_hash, generate_password_hash
+from flask import Flask, Response, g, jsonify, render_template, request, session
 from jinja2 import ChoiceLoader, FileSystemLoader
 
 if __package__:
@@ -28,6 +24,9 @@ else:
     from rover_bridge import RoverBridge
 
 ROOT = Path(__file__).resolve().parent
+# Accounts are not used: every visitor records drops as this one local pilot.
+PILOT_EMAIL = "pilot@literally-trash.local"
+PILOT_NAME = "Pilot"
 PROJECT_ROOT = ROOT.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -64,19 +63,15 @@ def create_app(config=None, bridge=None, classifier_service=None):
     from dashboard_classifier import mount_classifier
     detector = mount_classifier(app, classifier_service, autoload=app.config["CLASSIFIER_AUTOLOAD"] and not app.testing)
     atexit.register(detector.close)
-    attempts = defaultdict(deque)
-    rate_lock = threading.Lock()
+    pilot_lock = threading.Lock()
+    pilot = {}
 
-    def rate_limited():
-        now = time.monotonic()
-        with rate_lock:
-            history = attempts[request.remote_addr]
-            while history and now - history[0] > 300:
-                history.popleft()
-            if len(history) >= 15:
-                return True
-            history.append(now)
-            return False
+    def pilot_user():
+        with pilot_lock:
+            if "id" not in pilot:
+                account = db.user_by_email(PILOT_EMAIL)
+                pilot["id"] = account["id"] if account else db.create_user(PILOT_EMAIL, PILOT_NAME, "")
+        return db.user(pilot["id"])
 
     def csrf_token():
         if "csrf_token" not in session:
@@ -96,7 +91,9 @@ def create_app(config=None, bridge=None, classifier_service=None):
                 return jsonify(error="A valid bin API key is required."), 401
             g.user = None
             return
-        g.user = db.user(session["user_id"]) if session.get("user_id") else None
+        # Each browser still gets its own pilot token so rover/camera leases stay per-visitor.
+        session.setdefault("pilot_token", secrets.token_urlsafe(24))
+        g.user = pilot_user()
         if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
             supplied = request.headers.get("X-CSRF-Token") or request.form.get("csrf_token", "")
             expected = session.get("csrf_token", "")
@@ -119,99 +116,28 @@ def create_app(config=None, bridge=None, classifier_service=None):
             response.headers["Cache-Control"] = "no-store"
         return response
 
-    def login_required(view):
-        @functools.wraps(view)
-        def wrapped(*args, **kwargs):
-            if not g.user:
-                if request.path.startswith("/api/"):
-                    return jsonify(error="Sign in to use the dashboard controls."), 401
-                return redirect(url_for("login"))
-            return view(*args, **kwargs)
-        return wrapped
-
-    def sign_in(user_id):
-        detector.stop(session.get("pilot_token")) if session.get("pilot_token") else None
-        rover.disconnect(session.get("pilot_token")) if session.get("pilot_token") else None
-        session.clear()
-        session.update(user_id=user_id, pilot_token=secrets.token_urlsafe(24))
-        csrf_token()
-
     @app.get("/")
     def index():
-        return render_template("index.html", stats=db.stats(g.user["id"] if g.user else None),
-            leaders=db.leaderboard()[:3], recent=db.recent(g.user["id"]) if g.user else [])
-
-    @app.route("/login", methods=["GET", "POST"])
-    def login():
-        if request.method == "POST":
-            if rate_limited():
-                flash("Too many attempts. Wait five minutes and try again.", "error")
-                return render_template("auth.html", registering=False), 429
-            email = request.form.get("email", "").strip().casefold()
-            account = db.user_by_email(email)
-            if account and check_password_hash(account["password_hash"], request.form.get("password", "")):
-                sign_in(account["id"])
-                return redirect(url_for("index"))
-            flash("Email or password is incorrect.", "error")
-        return render_template("auth.html", registering=False)
-
-    @app.route("/register", methods=["GET", "POST"])
-    def register():
-        if request.method == "POST":
-            if rate_limited():
-                flash("Too many attempts. Wait five minutes and try again.", "error")
-                return render_template("auth.html", registering=True), 429
-            email = request.form.get("email", "").strip().casefold()
-            name = request.form.get("display_name", "").strip()
-            password = request.form.get("password", "")
-            if not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", email) or len(email) > 254:
-                flash("Enter a valid email address.", "error")
-            elif not 2 <= len(name) <= 32 or any(ord(char) < 32 for char in name):
-                flash("Your pilot name must have 2–32 characters.", "error")
-            elif not 10 <= len(password) <= 128:
-                flash("Use a password with 10–128 characters.", "error")
-            elif db.user_by_email(email):
-                flash("That email is already registered. Sign in instead.", "error")
-            else:
-                try:
-                    user_id = db.create_user(email, name, generate_password_hash(password))
-                except Exception:
-                    # Handle a registration race without returning database details.
-                    if db.user_by_email(email):
-                        flash("That email is already registered. Sign in instead.", "error")
-                    else:
-                        raise
-                else:
-                    sign_in(user_id)
-                    return redirect(url_for("index"))
-        return render_template("auth.html", registering=True)
-
-    @app.post("/logout")
-    @login_required
-    def logout():
-        detector.stop(session.get("pilot_token"))
-        rover.disconnect(session.get("pilot_token"))
-        session.clear()
-        return redirect(url_for("index"))
+        return render_template("index.html", stats=db.stats(g.user["id"]),
+            latest=db.detections(limit=5), recent=db.recent(g.user["id"]))
 
     @app.get("/controls")
     def controls():
         return render_template("controls.html")
 
-    @app.get("/leaderboard")
-    def leaderboard():
+    @app.get("/log")
+    def detection_log():
         period = request.args.get("period", "all")
         if period not in {"all", "week", "month"}:
             period = "all"
-        return render_template("leaderboard.html", leaders=db.leaderboard(period), period=period, stats=db.stats())
+        return render_template("detections.html", period=period, summary=db.detection_summary(period),
+            items=db.detection_items(period), log=db.detections(period))
 
     @app.get("/api/rover")
-    @login_required
     def rover_status():
         return jsonify(rover.status(session.get("pilot_token")))
 
     @app.post("/api/rover/<action>")
-    @login_required
     def rover_action(action):
         payload = request.get_json(silent=True) or {}
         if not isinstance(payload, dict):
@@ -242,7 +168,6 @@ def create_app(config=None, bridge=None, classifier_service=None):
         return jsonify(rover.status(owner))
 
     @app.get("/api/rover/camera")
-    @login_required
     def camera():
         owner = session.get("pilot_token")
         if not rover.status(owner)["owned"]:
@@ -257,7 +182,6 @@ def create_app(config=None, bridge=None, classifier_service=None):
         return Response(frames(), mimetype="multipart/x-mixed-replace; boundary=frame")
 
     @app.post("/api/collections")
-    @login_required
     def collection():
         payload = request.get_json(silent=True) or {}
         if not isinstance(payload, dict):

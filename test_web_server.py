@@ -27,11 +27,7 @@ class WebTests(unittest.TestCase):
         self.app = create_app({'TESTING': True, 'SECRET_KEY': 'classifier-test-key', 'DATABASE_URL': '',
             'SQLITE_PATH': str(Path(self.temp.name) / 'test.db')}, classifier_service=self.service)
         self.client = self.app.test_client()
-        self.client.get('/register')
-        with self.client.session_transaction() as state:
-            csrf = state['csrf_token']
-        self.client.post('/register', data={'csrf_token': csrf, 'email':'scanner@example.com',
-            'display_name':'Scanner Pilot', 'password':'test-password-123'})
+        self.client.get('/')
         with self.client.session_transaction() as state:
             self.csrf = state['csrf_token']
         self.detector = self.app.extensions['classifier']
@@ -137,12 +133,12 @@ class WebTests(unittest.TestCase):
         self.assertIn(b'Liter-ally Trash', body)
         self.assertEqual(self.request('/../classifier.py', method='GET')[0], 404)
 
-    def test_camera_stream_requires_own_signed_in_session(self):
+    def test_camera_stream_requires_own_session(self):
         self.assertEqual(self.request('/api/classifier/stream', method='GET')[0], 403)
         result = self.start_camera()
         self.assertIn('/api/classifier/stream?generation=', result['url'])
         guest = self.app.test_client()
-        self.assertEqual(guest.get(result['url']).status_code, 401)
+        self.assertEqual(guest.get(result['url']).status_code, 403)
 
     @patch('classifier_service.cv2.VideoCapture')
     def test_camera_keeps_capturing_during_inference(self, video_capture):

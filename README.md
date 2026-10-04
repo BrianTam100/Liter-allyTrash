@@ -1,7 +1,7 @@
 ﻿# Liter-ally Trash
 
 One dashboard for joining the project, identifying waste, recording personal
-recycling, earning points, viewing the leaderboard, and driving the SortRover.
+recycling, earning points, reviewing what the AI detected, and driving the SortRover.
 The original `web` classifier interface and `BRH_Test` account/control application
 now run together, with shared login and navigation.
 
@@ -25,7 +25,7 @@ create the environment. On macOS/Linux, the equivalent interpreter is
 Recognition loads in the background. First use downloads CLIP weights into
 `.model-cache`; loading time and download size depend on the model. Use
 `--no-model-load` to start immediately with scanning on standby, then select
-**Prepare scanner** after signing in. Accounts, manual drops, rewards, and rover
+**Prepare scanner** on the dashboard. No account is needed; manual drops, rewards, and rover
 controls work while the model loads. Cameras and microphones only activate when
 you select their controls.
 
@@ -37,8 +37,9 @@ The dashboard has three destinations:
   what you deposited, the bin, quantity, and time.
 - **Rover controls:** keyboard/arrows, touch/mouse, Grok voice, and hand gestures,
   using the existing Bluetooth and Wi-Fi protocols.
-- **Leaderboard:** rank people by recycled-item count, across all time or the
-  past 7/30 days. Recycling earns **10 points per item**; trash earns **0**.
+- **Detection log:** every AI detection with its bin, match score, camera source,
+  and whether it was confirmed as a drop, plus breakdowns by bin and by item
+  across all time or the past 7/30 days. Recycling earns **10 points per item**; trash earns **0**.
 
 Camera frames never award points by themselves. A stable live reading has one
 scan ID; retrying its confirmation cannot credit it twice. Recognition does not
@@ -50,7 +51,7 @@ Prize redemption is not implemented.
 
 Configuration lives in **`BRH_Test/.env`**. Set `DATABASE_URL` to your Tiger Cloud
 PostgreSQL connection string with `sslmode=require`, and set a long random
-`SECRET_KEY`. Then initialize the two application tables:
+`SECRET_KEY`. Then initialize the application tables:
 
 ```powershell
 .\BRH_Test\.venv\Scripts\python.exe web_server.py --init-db

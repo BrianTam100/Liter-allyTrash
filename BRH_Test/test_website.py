@@ -28,11 +28,8 @@ class WebsiteTests(unittest.TestCase):
         with (client or self.client).session_transaction() as state:
             return state["csrf_token"]
 
-    def register(self, email="alex@example.com", name="Alex", client=None):
-        client = client or self.client
-        client.get("/register")
-        return client.post("/register", data={"csrf_token": self.csrf(client), "email": email,
-            "display_name": name, "password": "a-good-password-123"})
+    def visit(self, client=None):
+        return (client or self.client).get("/")
 
     def drop(self, count=1, category="recycling", request_id=None, item_name="Plastic bottle"):
         return self.client.post("/api/collections", json={"count": count, "category": category,
@@ -40,7 +37,7 @@ class WebsiteTests(unittest.TestCase):
             headers={"X-CSRF-Token": self.csrf()})
 
     def test_public_pages_render_and_have_accessible_landmarks(self):
-        for route in ["/", "/controls", "/leaderboard", "/login", "/register"]:
+        for route in ["/", "/controls", "/log"]:
             response = self.client.get(route)
             self.assertEqual(response.status_code, 200, route)
             self.assertIn(b'lang="en"', response.data)
@@ -48,19 +45,27 @@ class WebsiteTests(unittest.TestCase):
             self.assertIn(b"Liter-ally Trash", response.data)
         self.assertEqual(self.client.get("/unknown").status_code, 404)
 
-    def test_login_session_csrf_and_logout(self):
-        self.assertEqual(self.register().status_code, 302)
-        self.assertNotIn("password_hash", self.app.extensions["database"].user(1))
-        self.assertNotEqual(self.app.extensions["database"].user_by_email("alex@example.com")["password_hash"], "a-good-password-123")
+    def test_scanner_and_rover_console_have_their_own_pages(self):
+        dashboard = self.client.get("/").data
+        self.assertIn(b'id="scanner"', dashboard)
+        self.assertNotIn(b'id="connect-button"', dashboard)
+        controls = self.client.get("/controls")
+        self.assertEqual(controls.status_code, 200)
+        self.assertIn(b'id="connect-button"', controls.data)
+
+    def test_no_account_needed_but_csrf_still_required(self):
+        self.visit()
+        other = self.app.test_client()
+        self.visit(other)
+        self.assertEqual(self.app.extensions["database"].detection_summary()["total"], 0)
+        self.assertEqual(self.app.extensions["database"].user(1)["display_name"], "Pilot")
         self.assertEqual(self.client.post("/api/collections", json={}).status_code, 403)
-        self.assertEqual(self.client.post("/logout", data={"csrf_token": self.csrf()}).status_code, 302)
-        self.assertEqual(self.client.get("/api/rover").status_code, 401)
-        self.client.get("/login")
-        response = self.client.post("/login", data={"csrf_token": self.csrf(), "email": "ALEX@example.com", "password": "a-good-password-123"})
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.client.get("/api/rover").status_code, 200)
+        for route in ["/login", "/register"]:
+            self.assertEqual(self.client.get(route).status_code, 404)
 
     def test_recycling_rewards_and_personal_item_history(self):
-        self.register()
+        self.visit()
         self.assertEqual(self.drop(3).get_json()["stats"]["points"], 30)
         response = self.drop(20, "trash", item_name="Food wrapper")
         self.assertEqual(response.get_json()["stats"]["points"], 30)
@@ -75,7 +80,7 @@ class WebsiteTests(unittest.TestCase):
         self.assertEqual({entry["item_name"] for entry in recent}, {"Plastic bottle", "Food wrapper"})
 
     def test_retries_do_not_duplicate_scores(self):
-        self.register()
+        self.visit()
         request_id = str(uuid.uuid4())
         self.assertEqual(self.drop(2, request_id=request_id).status_code, 201)
         response = self.drop(2, request_id=request_id)
@@ -83,25 +88,31 @@ class WebsiteTests(unittest.TestCase):
         self.assertFalse(response.get_json()["saved"])
         self.assertEqual(response.get_json()["stats"]["points"], 20)
 
-    def test_rank_uses_recycling_not_trash_and_handles_ties(self):
-        self.register()
-        self.drop(500, "trash")
-        self.drop(2)
-        other = self.app.test_client()
-        self.register("sam@example.com", "Sam", other)
-        with other.session_transaction() as state:
-            sam_id = state["user_id"]
+    def test_detection_log_breaks_down_bins_items_and_confirmations(self):
+        self.visit()
         db = self.app.extensions["database"]
-        db.add_collection(sam_id, "recycling", 3, str(uuid.uuid4()), "Aluminum can")
-        leaders = db.leaderboard()
-        self.assertEqual([row["display_name"] for row in leaders], ["Sam", "Alex"])
-        self.assertEqual(leaders[0]["points"], 30)
-        self.drop(1)
-        self.assertEqual([row["rank"] for row in db.leaderboard()], [1, 1])
-        self.assertEqual(self.client.get("/leaderboard?period=week").status_code, 200)
+        can = str(uuid.uuid4())
+        self.assertTrue(db.add_detection(can, 1, "Aluminum can", "recycling", False, 0.8, "browser"))
+        self.assertFalse(db.add_detection(can, 1, "Aluminum can", "recycling", False, 0.8, "browser"))
+        db.add_detection(str(uuid.uuid4()), 1, "Aluminum can", "recycling", False, 0.6, "server")
+        db.add_detection(str(uuid.uuid4()), 1, "Battery", "recycling", True, 0.7, "photo")
+        db.add_detection(str(uuid.uuid4()), 1, "Hold an item", "unrecognized", False, 0.1, "photo")
+        db.add_collection(1, "recycling", 1, can, "Aluminum can")
+        summary = db.detection_summary()
+        self.assertEqual((summary["total"], summary["recycling"], summary["drop_off"], summary["unrecognized"]), (4, 2, 1, 1))
+        self.assertEqual(summary["confirmed"], 1)
+        self.assertAlmostEqual(summary["avg_score"], 0.7)
+        top = db.detection_items()[0]
+        self.assertEqual((top["label"], top["detections"], top["confirmed"]), ("Aluminum can", 2, 1))
+        page = self.client.get("/log?period=week")
+        self.assertEqual(page.status_code, 200)
+        self.assertIn(b"Battery", page.data)
+        self.assertIn(b"Drop-off", page.data)
+        self.assertEqual(self.client.get("/leaderboard").status_code, 404)
 
     def test_invalid_payloads_and_html_are_handled(self):
-        self.register(name="<script>alert(1)</script>")
+        self.visit()
+        self.assertEqual(self.drop(item_name="<script>alert(1)</script>").status_code, 201)
         self.assertEqual(self.drop(-1).status_code, 400)
         self.assertEqual(self.drop(True).status_code, 400)
         self.assertEqual(self.drop(category=["recycling"]).status_code, 400)
@@ -111,7 +122,7 @@ class WebsiteTests(unittest.TestCase):
         self.assertNotIn(b"<script>alert(1)</script>", page.data)
 
     def test_pi_bin_event_auth_and_depositor_attribution(self):
-        self.register()
+        self.visit()
         event = {"user_id": 1, "count": 4, "category": "recycling", "item_name": "Paper", "request_id": str(uuid.uuid4())}
         self.assertEqual(self.client.post("/api/bin-events", json=event).status_code, 401)
         headers = {"Authorization": "Bearer test-bin-secret"}
@@ -123,15 +134,8 @@ class WebsiteTests(unittest.TestCase):
         self.assertEqual(self.client.post("/api/bin-events", json=event, headers=headers).status_code, 400)
         self.assertEqual(self.app.extensions["database"].recent(1)[0]["item_name"], "Paper")
 
-    def test_password_and_duplicate_account_validation(self):
-        self.register()
-        second = self.app.test_client()
-        response = self.register("alex@example.com", "Another Alex", second)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b"already registered", response.data)
-
-    def test_rover_api_uses_protocol_and_logout_stops_owned_rover(self):
-        self.register()
+    def test_rover_api_uses_protocol_and_disconnect_stops_owned_rover(self):
+        self.visit()
         hardware = FakeSerial()
         headers = {"X-CSRF-Token": self.csrf()}
         with patch("serial.Serial", return_value=hardware):
@@ -141,7 +145,7 @@ class WebsiteTests(unittest.TestCase):
         movement = self.client.post("/api/rover/command", json={"command":"w", "epoch":connection.get_json()["epoch"], "sequence":1}, headers=headers)
         self.assertEqual(movement.status_code, 200)
         self.assertEqual(hardware.payloads[-1], b"w")
-        self.client.post("/logout", data={"csrf_token": self.csrf()})
+        self.client.post("/api/rover/disconnect", json={}, headers=headers)
         self.assertEqual(hardware.payloads[-1], b"x")
         self.assertTrue(hardware.closed)
 

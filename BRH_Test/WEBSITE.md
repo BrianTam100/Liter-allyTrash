@@ -1,7 +1,7 @@
 # Liter-ally Trash
 
 A laptop-hosted website for the BRH_Test rover, with accounts, disposal history,
-recycling rewards, a leaderboard, and keyboard/touch, Grok voice, and hand controls.
+recycling rewards, an AI detection log, and keyboard/touch, Grok voice, and hand controls.
 The classifier in `web` and the BRH_Test application share one dashboard, login,
 and database. Browser assets now live in the repository-level `web` directory.
 The original desktop scripts still work independently. Run either the desktop controller or the website at a time,
@@ -18,14 +18,14 @@ Copy-Item BRH_Test/.env.example BRH_Test/.env  # first setup only
 .\BRH_Test\.venv\Scripts\python.exe web_server.py --host 127.0.0.1 --http --no-lid
 ```
 
-Open **http://localhost:8000**. Create an account; no demo credentials are included.
+Open **http://localhost:8000**. No account is needed: every visitor records drops as one shared local pilot.
 `BRH_Test/website.py` also serves this same dashboard with Waitress over HTTP.
 Without `DATABASE_URL`, accounts use the persistent **local development** SQLite
 database in `BRH_Test/.instance/`. The interface labels this mode. Local records
 are not uploaded or migrated automatically to TigerData when you switch.
 
 Recognition prepares in the background, downloading CLIP weights on first use.
-Pass `--no-model-load` to defer this, then use **Prepare scanner** after signing in.
+Pass `--no-model-load` to defer this, then use **Prepare scanner** on the dashboard.
 Manual drops, rankings, and rover controls work while the model loads.
 `requirements-dashboard.txt` includes both recognition and laptop control dependencies.
 The smaller `requirements-web.txt` is only sufficient for the account/control
@@ -42,9 +42,10 @@ modules and their isolated tests; the unified website also needs CLIP/Pillow.
    `python -c "import secrets; print(secrets.token_hex(32))"`.
 4. From the repository root, run `python web_server.py --init-db`, then start the dashboard.
 
-Initialization creates only `lt_users` and `lt_collections`, plus their indexes.
-Accounts and individual disposal records live in your TigerData database. Names
-appear publicly on the leaderboard; email addresses and password hashes do not.
+Initialization creates only `lt_users`, `lt_collections`, and `lt_detections`, plus their indexes.
+Rerun `--init-db` after upgrading so an existing TigerData database gets `lt_detections`.
+Accounts, individual disposal records, and AI detections live in your TigerData
+database. Email addresses and password hashes are never shown on the site.
 Queries use parameters. These ordinary PostgreSQL tables do not need a TimescaleDB
 hypertable for this project size.
 
@@ -57,7 +58,8 @@ database URL or API secrets in browser code.
 ## Recycling rewards and attribution
 
 - Every recycled item earns **10 points**. Trash is tracked and earns **0 points**.
-- The leaderboard ranks by recycled-item count. Equal counts share a rank.
+- The detection log records each final AI reading (one per item in a live scan,
+  one per photo) and links it to the drop it was confirmed as, if any.
 - All time, rolling 30-day, and rolling 7-day rankings are available.
 - Each event records **who**, **what item**, **which bin**, **how many**, and **when**.
 - Signed-in manual entries always belong to that account. Pilot IDs are shown
@@ -111,7 +113,7 @@ person; confirmed and manual drops are self-reported.
 
 ## Connect and drive the rover
 
-Open **Rover controls**, sign in, choose Bluetooth or Wi-Fi, and click **Connect rover**.
+Open **Rover controls**, choose Bluetooth or Wi-Fi, and click **Connect rover**.
 No motors, cameras, or microphones activate just by opening a page. The connected
 scanner and hand tracker coordinate ownership of camera 0; enabling hand tracking
 releases your own scan or rejects a camera another person is using.

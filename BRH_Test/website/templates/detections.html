@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% macro bin(row) %}{% if row.drop_off %}<span class="category-pill">Drop-off</span>{% elif row.category == 'unrecognized' %}<span class="category-pill muted">Unrecognized</span>{% else %}<span class="category-pill {{ row.category }}">{{ row.category|capitalize }}</span>{% endif %}{% endmacro %}
+{% macro pct(value) %}{{ (value * 100)|round|int }}%{% endmacro %}
+{% block title %}Detection log{% endblock %}
+{% block content %}
+<div class="page-heading"><h1>Detection log</h1><nav class="period-nav" aria-label="Time period">{% for value, label in [('all', 'All time'), ('month', '30 days'), ('week', '7 days')] %}<a href="{{ url_for('detection_log', period=value) }}" class="{{ 'selected' if period == value }}" {% if period == value %}aria-current="true"{% endif %}>{{ label }}</a>{% endfor %}</nav></div>
+<div class="stat-grid">
+  <section class="stat-card accent"><div class="stat-label">Detections</div><strong>{{ summary.total }}</strong></section>
+  <section class="stat-card"><div class="stat-label">Confirmed as drops</div><strong>{{ summary.confirmed }}</strong><span>{{ pct(summary.confirm_rate) ~ ' of recognized' if summary.confirm_rate is not none else '—' }}</span></section>
+  <section class="stat-card"><div class="stat-label">Average match</div><strong>{{ pct(summary.avg_score) if summary.avg_score is not none else '—' }}</strong><span>Recognized items only</span></section>
+  <section class="stat-card"><div class="stat-label">Unrecognized</div><strong>{{ summary.unrecognized }}</strong></section>
+</div>
+<div class="log-grid">
+  <section class="panel"><div class="panel-heading compact"><h2>By bin</h2></div>
+    <dl class="bin-breakdown">{% for name, count in summary.bins %}<div><dt>{{ name }}</dt><dd><progress value="{{ count }}" max="{{ summary.total or 1 }}" aria-label="{{ name }}: {{ count }} of {{ summary.total }}"></progress><span>{{ count }}{% if summary.total %} <span class="muted">· {{ pct(count / summary.total) }}</span>{% endif %}</span></dd></div>{% endfor %}</dl>
+  </section>
+  <section class="panel"><div class="panel-heading compact"><h2>By item</h2></div>
+    {% if items %}<div class="table-wrap" tabindex="0" role="region" aria-label="Detections by item"><table><thead><tr><th scope="col">Item</th><th scope="col">Bin</th><th scope="col">Detected</th><th scope="col">Avg match</th><th scope="col">Confirmed</th></tr></thead><tbody>{% for row in items %}<tr><td>{{ row.label }}</td><td>{{ bin(row) }}</td><td>{{ row.detections }}</td><td>{{ pct(row.avg_score) }}</td><td>{{ row.confirmed }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<p class="empty-inline">No detections yet.</p>{% endif %}
+  </section>
+</div>
+<section class="panel history-panel"><div class="panel-heading compact"><h2>Log</h2>{% if log|length == 100 %}<span class="muted">Latest 100</span>{% endif %}</div>
+  {% if log %}<div class="table-wrap" tabindex="0" role="region" aria-label="Detection log"><table><thead><tr><th scope="col">Time</th><th scope="col">Item</th><th scope="col">Bin</th><th scope="col">Match</th><th scope="col">Source</th><th scope="col">Dropped</th></tr></thead><tbody>{% for row in log %}<tr><td><time datetime="{{ row.created_at }}" class="local-time">{{ row.created_at|string|truncate(16, true, '') }}</time></td><td>{{ row.label }}</td><td>{{ bin(row) }}</td><td>{{ pct(row.score) }}</td><td>{{ {'browser': 'Device camera', 'server': 'Connected camera', 'photo': 'Photo'}[row.source] }}</td><td>{{ 'Yes' if row.confirmed else '—' }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<p class="empty-inline">Nothing scanned{{ ' in this period' if period != 'all' }}. Detections from the scanner appear here.</p>{% endif %}
+</section>
+{% endblock %}

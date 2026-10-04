@@ -38,20 +38,24 @@ function toast(message, error = false) {
   toastTimer = setTimeout(() => { element.hidden = true; }, 5500);
 }
 
-$("#current-date").textContent = new Intl.DateTimeFormat(undefined, {month:"short", day:"numeric", year:"numeric"}).format(new Date());
-document.querySelectorAll(".local-time").forEach((element) => {
-  const date = new Date(element.dateTime);
-  if (!Number.isNaN(date.getTime())) element.textContent = new Intl.DateTimeFormat(undefined, {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}).format(date);
-});
+function formatTimes(root) {
+  root.querySelectorAll(".local-time").forEach((element) => {
+    const date = new Date(element.dateTime);
+    if (!Number.isNaN(date.getTime())) element.textContent = new Intl.DateTimeFormat(undefined, {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}).format(date);
+  });
+}
+formatTimes(document);
 
-const passwordToggle = $("#password-toggle");
-if (passwordToggle) passwordToggle.addEventListener("click", () => {
-  const input = $("#password");
-  const show = input.type === "password";
-  input.type = show ? "text" : "password";
-  passwordToggle.textContent = show ? "Hide" : "Show";
-  passwordToggle.setAttribute("aria-pressed", String(show));
-});
+// Swap in fresh history and detections without a full page reload.
+async function refreshPanels() {
+  const response = await fetch(location.pathname, {headers:{"Accept":"text/html"}});
+  if (!response.ok) return;
+  const fresh = new DOMParser().parseFromString(await response.text(), "text/html");
+  for (const selector of [".history-panel", ".detections-preview"]) {
+    const current = $(selector), next = fresh.querySelector(selector);
+    if (current && next) { current.replaceWith(next); formatTimes(next); }
+  }
+}
 
 const collectionForm = $("#collection-form");
 if (collectionForm) {
@@ -76,7 +80,11 @@ if (collectionForm) {
       const points = payload.category === "recycling" ? payload.count * 10 : 0;
       feedback.textContent = result.saved ? (points ? `Drop recorded. +${points} recycling points!` : "Trash drop recorded in your history.") : "This drop was already recorded. Your score is up to date.";
       for (const name of ["points", "recycled", "items", "collections"]) $("#stat-" + name).textContent = result.stats[name];
-      setTimeout(() => location.reload(), 950);
+      collectionForm.reset();
+      delete collectionForm.dataset.scanId;
+      $("#entry-source").textContent = "Manual entry · Confirm only items you have put in the bin.";
+      button.disabled = false;
+      refreshPanels().catch(() => {});
     } catch (error) {
       feedback.textContent = error.message;
       feedback.classList.add("error");
@@ -303,7 +311,7 @@ if (collectionForm) {
   $('file').addEventListener('change',async event => {
     const file = event.target.files[0];
     if (!file) return;
-    if (!ready || !signedIn) { message('Sign in and wait for the scanner to be ready.',true); event.target.value=''; return; }
+    if (!ready || !signedIn) { message('Wait for the scanner to be ready.',true); event.target.value=''; return; }
     stop(); resetResult(); const token = generation;
     if (file.size > 8*1024*1024) { message('Choose an image smaller than 8 MB.',true); event.target.value=''; return; }
     if (objectUrl) URL.revokeObjectURL(objectUrl);
@@ -355,7 +363,7 @@ if (collectionForm) {
   status();
 })();
 
-if (document.body.dataset.page === "controls" && signedIn) {
+if ($("#connect-button") && signedIn) {
   const commands = {w:"w", a:"a", s:"s", d:"d", ArrowUp:"w", ArrowLeft:"a", ArrowDown:"s", ArrowRight:"d"};
   const labels = {w:"MOVING FORWARD", s:"MOVING BACKWARD", a:"SPINNING LEFT", d:"SPINNING RIGHT", x:"STOPPED"};
   let status = {connected:false, owned:false, mode:"manual", command:"x"};

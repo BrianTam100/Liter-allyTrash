@@ -28,21 +28,13 @@ class DashboardIntegrationTests(unittest.TestCase):
         self.app = create_app({'TESTING':True, 'SECRET_KEY':'unified-test-key', 'DATABASE_URL':'',
             'SQLITE_PATH':str(Path(self.temp.name)/'test.db')}, classifier_service=self.service)
         self.client = self.app.test_client()
-        self.register(self.client,'first@example.com','First Pilot')
+        self.client.get('/')
         self.detector = self.app.extensions['classifier']
 
     def tearDown(self):
         self.detector.close()
         self.app.extensions['rover'].close()
         self.temp.cleanup()
-
-    def register(self, client, email, name):
-        client.get('/register')
-        with client.session_transaction() as state:
-            csrf = state['csrf_token']
-        response = client.post('/register', data={'csrf_token':csrf,'email':email,
-            'display_name':name,'password':'a-long-test-password'})
-        self.assertEqual(response.status_code,302)
 
     def post(self, path, data=None, client=None, live=False):
         client = client or self.client
@@ -69,13 +61,15 @@ class DashboardIntegrationTests(unittest.TestCase):
         self.assertEqual(response.get_json()['stats']['points'],10)
         history = self.app.extensions['database'].recent(1)
         self.assertEqual((history[0]['item_name'],history[0]['category']),('plastic water bottle','recycling'))
-        self.assertIn(b'First Pilot',self.client.get('/leaderboard').data)
+        log = self.app.extensions['database'].detections()
+        self.assertEqual([(row['label'],row['source'],row['confirmed']) for row in log],[('plastic water bottle','photo',1)])
 
     def test_live_frames_share_one_scan_id_and_confirmation_is_idempotent(self):
         self.post('/api/classifier/start',{'source':'server'})
         readings = [self.post('/api/classifier/camera',live=True).get_json() for _ in range(5)]
         self.assertEqual([row['state'] for row in readings[:3]],['checking','checking','locked'])
         self.assertEqual(readings[2]['scan_id'],readings[4]['scan_id'])
+        self.assertEqual(len(self.app.extensions['database'].detections()),1)  # one row per locked item, not per frame
         self.assertEqual(self.app.extensions['database'].stats(1)['points'],0)
         event = {'scan_id':readings[2]['scan_id'],'count':1}
         self.assertEqual(self.post('/api/classifier/confirm',event).status_code,201)
@@ -97,11 +91,11 @@ class DashboardIntegrationTests(unittest.TestCase):
         stats = self.app.extensions['database'].stats(1)
         self.assertEqual((stats['items'],stats['points']),(2,0))
 
-    def test_another_account_cannot_use_someone_elses_result_or_live_camera(self):
+    def test_another_browser_cannot_use_someone_elses_result_or_live_camera(self):
         scan = self.photo().get_json()
         self.post('/api/classifier/start',{'source':'server'})
         other = self.app.test_client()
-        self.register(other,'second@example.com','Second Pilot')
+        other.get('/')
         self.assertEqual(self.post('/api/classifier/confirm',{'scan_id':scan['scan_id']},client=other).status_code,400)
         self.assertEqual(self.post('/api/classifier/start',{'source':'server'},client=other).status_code,400)
         self.assertEqual(other.get(f'/api/classifier/stream?generation={self.detector.generation}').status_code,403)
