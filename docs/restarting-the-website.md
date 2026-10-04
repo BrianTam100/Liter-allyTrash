@@ -19,10 +19,13 @@ Double-click `docs\restart-website.bat`, or run it from any terminal. It finds t
 repository from where the script sits, so it works on any teammate's laptop. It stops every
 running `web_server.py` and waits for port 8000 to free up. Then it starts the server in
 that window with the `.venv` Python, or with `python` on PATH if there's no `.venv`.
+By default it serves HTTPS on the local Wi-Fi (`--host 0.0.0.0`), so phones and other
+laptops on the same network can open `https://<this laptop's Wi-Fi IP>:8000`.
 
 ```powershell
-docs\restart-website.bat                     # defaults: --host 127.0.0.1 --http --no-lid
-docs\restart-website.bat --host 127.0.0.1 --http --enable-lid --lid-host <pi-ip> --camera http://<pi-ip>:8080/stream.mjpg
+docs\restart-website.bat                     # defaults: --host 0.0.0.0 --no-lid (Wi-Fi, HTTPS)
+docs\restart-website.bat --host 127.0.0.1 --http --no-lid   # this laptop only
+docs\restart-website.bat --host 0.0.0.0 --enable-lid --lid-host <pi-ip> --camera http://<pi-ip>:8080/stream.mjpg
 ```
 
 Any options you pass replace the defaults. The manual steps are below.

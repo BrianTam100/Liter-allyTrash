@@ -449,6 +449,7 @@ if (collectionForm) {
 if ($("#connect-button") && signedIn) {
   const commands = {w:"w", a:"a", s:"s", d:"d", z:"z", c:"c", ArrowUp:"w", ArrowLeft:"a", ArrowDown:"s", ArrowRight:"d"};  const labels = {w:"MOVING FORWARD", s:"MOVING BACKWARD", a:"SPINNING LEFT", d:"SPINNING RIGHT", z:"TURNING LEFT", c:"TURNING RIGHT", x:"STOPPED"};
   let status = {connected:false, owned:false, mode:"manual", command:"x"};
+  const toggleNames = {voice:"voice", gesture:"hand tracking"};
   let heldCommand = null;
   let heldKey = null;
   let sendTimer;
@@ -501,8 +502,9 @@ if ($("#connect-button") && signedIn) {
     $("#active-mode").textContent = (next.mode || "manual").toUpperCase();
     document.querySelectorAll("[data-mode-card]").forEach((card) => card.classList.toggle("selected-mode", owned && card.dataset.modeCard === next.mode));
     $("#voice-status").textContent = next.voice_error ? "Voice session ended. Enable it again to retry." : next.mode === "voice" ? (next.voice_ready ? "Listening on the laptop. Say a direction or “stop.”" : "Starting the voice session…") : "Microphone activates only when enabled.";
-    const gestureButton = $('[data-mode="gesture"]');
-    gestureButton.textContent = owned && next.mode === "gesture" ? "Disable hand tracking" : "Enable hand tracking";
+    for (const [mode, name] of Object.entries(toggleNames)) {
+      $(`[data-mode="${mode}"]`).textContent = (owned && next.mode === mode ? "Disable " : "Enable ") + name;
+    }
     const camera = $("#camera-panel");
     const cameraActive = owned && next.mode === "gesture";
     if (cameraActive && camera.hidden) $("#camera-view").src = "/api/rover/camera";
@@ -598,13 +600,15 @@ if ($("#connect-button") && signedIn) {
 
   document.querySelectorAll("[data-mode]").forEach((button) => button.addEventListener("click", async () => {
     if (status.busy) { tellBusy(); return; }
-    // Pressing the hand tracking button while it is on turns it off and hides the camera view.
-    const mode = button.dataset.mode === "gesture" && status.mode === "gesture" ? "manual" : button.dataset.mode;
+    // Pressing Voice or Hand tracking again while it is on turns it off and goes back to manual.
+    const turningOff = button.dataset.mode in toggleNames && status.mode === button.dataset.mode;
+    const mode = turningOff ? "manual" : button.dataset.mode;
+    const name = toggleNames[button.dataset.mode];
     changingMode = true;
     clearHeld();
     showStatus(status);
-    feedback(mode === "manual" && button.dataset.mode === "gesture" ? "Turning off hand tracking…" : "Starting " + mode + " controls…");
-    try { showStatus(await api("/api/rover/mode", {mode})); feedback(mode === "manual" && button.dataset.mode === "gesture" ? "Hand tracking off. Back to manual controls." : "Control mode updated. Manual input always has priority."); }
+    feedback(turningOff ? `Turning off ${name}…` : "Starting " + mode + " controls…");
+    try { showStatus(await api("/api/rover/mode", {mode})); feedback(turningOff ? `${name[0].toUpperCase() + name.slice(1)} off. Back to manual controls.` : "Control mode updated. Manual input always has priority."); }
     catch (error) { feedback(error.message, true); }
     finally {
       changingMode = false;
