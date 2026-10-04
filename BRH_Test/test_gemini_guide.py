@@ -1,9 +1,11 @@
 import base64
 import io
+import json
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
+from urllib.error import HTTPError
 from PIL import Image
 from BRH_Test.website import create_app
 
@@ -79,6 +81,20 @@ class GeminiGuideTests(unittest.TestCase):
             for _ in range(20):
                 self.assertEqual(self.post({"description":"box"}).status_code, 200)
             self.assertEqual(self.post({"description":"box"}).status_code, 429)
+
+    def test_analysis_recovers_after_two_failed_models_without_recording_a_drop(self):
+        self.app.config["GEMINI_CHAT_MODEL"] = "gemini-3.7-flash"
+        self.app.config["GEMINI_FALLBACK_MODELS"] = "gemini-3.8-flash,gemini-3.1-flash-lite"
+        errors = [HTTPError("https://example.test", code, "private", {}, None) for code in (503, 400)]
+        answer = io.BytesIO(json.dumps({"status": "completed", "steps": [{"type": "model_output",
+            "content": [{"type": "text", "text": "Separate the plastic window."}]}]}).encode())
+        with patch("BRH_Test.ai_client.urlopen", side_effect=[*errors, answer]) as send:
+            result = self.post({"description": "Mixed packaging"})
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result.json["answer"], "Separate the plastic window.")
+        self.assertEqual(send.call_count, 3)
+        self.assertEqual(self.ai.status()["gemini"]["model"], "gemini-3.1-flash-lite")
+        self.assertEqual(self.app.extensions["database"].stats(1)["collections"], 0)
 
 
 if __name__ == "__main__":

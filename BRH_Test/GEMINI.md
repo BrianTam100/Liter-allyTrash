@@ -8,12 +8,15 @@ questions to verify locally. Rover chat and Spectrum iMessage use xAI separately
 ```dotenv
 GEMINI_API_KEY=your-key
 GEMINI_CHAT_MODEL=gemini-3.7-flash
+GEMINI_FALLBACK_MODELS=gemini-3.7-flash,gemini-3.8-flash,gemini-3.1-flash-lite
 ```
 
 Keys remain in `BRH_Test/.env` on the server. Restart the Python dashboard after
 changing configuration. No additional key is needed in the browser or Spectrum.
 
-The guide uses Google's [stable Interactions API](https://ai.google.dev/api/interactions-api-v1).
+The guide uses Google's [stable Interactions API](https://ai.google.dev/api/interactions-api-v1)
+for 3.7 Flash and 3.1 Flash-Lite, and the [v1beta Interactions API](https://ai.google.dev/api/interactions-api)
+for 3.8 Flash, which is listed in that reference.
 It sends only the submitted question, optional location, and selected photo;
 it does not send Pilot records or Rover conversation history. Each analysis is
 independent. `store: false` disables interaction storage; Google still processes
@@ -27,12 +30,20 @@ It does not look up live municipal rules or collection facilities.
 
 ## Reliability
 
-Gemini transient failures get one retry with an eight-second socket timeout per
-attempt. Authentication/configuration failures pause requests for five minutes;
-quota failures pause them for one minute. Three failed requests open a one-minute
+The configured primary model is tried first, followed by every model in
+`GEMINI_FALLBACK_MODELS`, skipping duplicates. The defaults are 3.7 Flash,
+3.8 Flash, and 3.1 Flash-Lite. Each model is attempted once, with an eight-second
+socket timeout. Any HTTP error (including 400, 429, and 503), network error,
+or empty, malformed, or incomplete response advances to the next model.
+The first successful answer ends the chain. The same text and photo are sent
+to each attempted model. An empty fallback list disables additional models.
+
+Cooldowns apply only after all models fail. Authentication/configuration failures
+pause requests for five minutes; quota failures pause them for one minute.
+Three failed requests open a one-minute
 circuit. Four simultaneous analyses are allowed per process; existing per-session
 and global request limits also apply. Socket timeouts are not a strict wall-clock
-deadline. The browser stops waiting after 30 seconds and preserves inputs.
+deadline. The browser stops waiting after 40 seconds and preserves inputs.
 
 The guide explicitly reports unavailable, malformed, or incomplete responses.
 It does not substitute another provider's answer for Gemini. It displays only
@@ -52,4 +63,4 @@ The doctor makes a small live Gemini text request and exits nonzero on failure.
 Tests use fake providers and isolated databases. They cover uploads, metadata
 removal, CSRF, rate limits, provider separation, failure recovery, and prevention
 of ledger writes. Gemini 3.7 Flash was verified with this account; availability
-can still vary. Change the model only after checking compatible API settings.
+can still vary. The doctor prints the successful model and all models attempted.

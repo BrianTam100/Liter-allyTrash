@@ -49,6 +49,8 @@ def create_app(config=None, bridge=None, classifier_service=None):
         SPECTRUM_PROVIDER=os.getenv("SPECTRUM_PROVIDER", "imessage"),
         GEMINI_API_KEY=os.getenv("GEMINI_API_KEY", ""),
         GEMINI_CHAT_MODEL=os.getenv("GEMINI_CHAT_MODEL", "gemini-3.7-flash"),
+        GEMINI_FALLBACK_MODELS=os.getenv("GEMINI_FALLBACK_MODELS",
+            "gemini-3.7-flash,gemini-3.8-flash,gemini-3.1-flash-lite"),
         XAI_API_KEY=os.getenv("XAI_API_KEY", ""),
         XAI_CHAT_MODEL=os.getenv("XAI_CHAT_MODEL", "grok-4.7"),
         SESSION_COOKIE_SAMESITE="Strict", SESSION_COOKIE_SECURE=os.getenv("COOKIE_SECURE", "false").lower() == "true",

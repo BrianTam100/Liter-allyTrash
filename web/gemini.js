@@ -81,7 +81,7 @@
       const response = await fetch('/api/gemini/analyze', {
         method: 'POST', body: data,
         headers: {'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content},
-        signal: AbortSignal.timeout(30000),
+        signal: AbortSignal.timeout(40000),
       });
       const body = await response.json();
       if (!response.ok) throw new Error(body.error || 'Analysis is unavailable. Try again shortly.');
