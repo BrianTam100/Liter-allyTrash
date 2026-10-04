@@ -18,10 +18,10 @@ from jinja2 import ChoiceLoader, FileSystemLoader
 
 if __package__:
     from .database import Database
-    from .rover_bridge import RoverBridge
+    from .rover_bridge import RoverBridge, list_serial_ports
 else:
     from database import Database
-    from rover_bridge import RoverBridge
+    from rover_bridge import RoverBridge, list_serial_ports
 
 ROOT = Path(__file__).resolve().parent
 # Accounts are not used: every visitor records drops as this one local pilot.
@@ -145,6 +145,13 @@ def create_app(config=None, bridge=None, classifier_service=None):
     def rover_status():
         return jsonify(rover.status(session.get("pilot_token")))
 
+    @app.get("/api/rover/ports")
+    def rover_ports():
+        try:
+            return jsonify(ports=list_serial_ports())
+        except ImportError:
+            return jsonify(ports=[])
+
     @app.post("/api/rover/<action>")
     def rover_action(action):
         payload = request.get_json(silent=True) or {}
@@ -153,7 +160,7 @@ def create_app(config=None, bridge=None, classifier_service=None):
         owner = session["pilot_token"]
         try:
             if action == "connect":
-                rover.connect(owner, payload.get("transport", "bluetooth"))
+                rover.connect(owner, payload.get("transport", "bluetooth"), payload.get("port"))
             elif action == "disconnect":
                 rover.disconnect(owner)
             elif action == "heartbeat":

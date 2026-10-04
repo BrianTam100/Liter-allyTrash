@@ -153,6 +153,31 @@ class WebsiteTests(unittest.TestCase):
 
 
 class PortDetectionTests(unittest.TestCase):
+    def test_chosen_port_is_used_strictly_and_switching_reopens(self):
+        ports = [{"device": "COM3", "kind": "paired Bluetooth", "paired": True},
+                 {"device": "COM8", "kind": "paired Bluetooth", "paired": True}]
+        bridge = RoverBridge()
+        opened = []
+        def open_port(port, *args, **kwargs):
+            opened.append(FakeSerial())
+            opened[-1].port = port
+            return opened[-1]
+        try:
+            with patch("rover_bridge.list_serial_ports", return_value=ports), patch("serial.Serial", side_effect=open_port):
+                bridge.connect("pilot", "bluetooth", "COM8")
+                self.assertEqual(bridge.status("pilot")["port"], "COM8")
+                bridge.disconnect("pilot")
+                bridge.connect("pilot", "bluetooth", "com3")
+                self.assertEqual([port.port for port in opened], ["COM8", "COM3"])
+                self.assertTrue(opened[0].closed)
+                bridge.disconnect("pilot")
+                with self.assertRaisesRegex(ValueError, "COM5 isn't available"):
+                    bridge.connect("pilot", "bluetooth", "COM5")
+                with self.assertRaisesRegex(ValueError, "Choose the rover's port"):
+                    bridge.connect("pilot", "bluetooth", "auto")  # two paired ports: auto can't guess
+        finally:
+            bridge.close()
+
     def test_port_detection_prefers_outgoing_bluetooth_port(self):
         from rover_bridge import find_serial_port
         port = lambda device, hwid: Mock(device=device, description="Serial over Bluetooth", hwid=hwid)

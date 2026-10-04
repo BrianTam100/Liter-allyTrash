@@ -15,20 +15,36 @@ import threading
 import time
 
 
-def find_serial_port(configured):
-    """Use the configured port if it exists, else the one outgoing Bluetooth serial port."""
+def list_serial_ports():
+    """Serial ports on this laptop, flagging outgoing Bluetooth links to a paired device."""
     from serial.tools import list_ports
-    ports = list(list_ports.comports())
-    if configured and configured.lower() != "auto" and configured.upper() in {p.device.upper() for p in ports}:
-        return configured
-    # Windows gives each paired device an outgoing port tagged with its address; incoming ports use zeros.
-    outgoing = [p.device for p in ports if "BTHENUM" in (p.hwid or "").upper()
-                and (match := re.search(r"&([0-9A-F]{12})_", p.hwid.upper())) and match.group(1) != "0" * 12]
-    if len(outgoing) == 1:
-        return outgoing[0]
-    found = ", ".join(f"{p.device} ({p.description})" for p in ports) or "none"
+    ports = []
+    for port in sorted(list_ports.comports(), key=lambda p: p.device):
+        hwid = (port.hwid or "").upper()
+        # Windows tags each paired device's outgoing port with its address; incoming ports use zeros.
+        address = re.search(r"&([0-9A-F]{12})_", hwid) if "BTHENUM" in hwid else None
+        paired = bool(address and address.group(1) != "0" * 12)
+        kind = "paired Bluetooth" if paired else "incoming Bluetooth" if "BTHENUM" in hwid else \
+            re.sub(r"\s*\(COM\d+\)$", "", port.description or "serial")
+        ports.append({"device": port.device, "kind": kind, "paired": paired})
+    return ports
+
+
+def find_serial_port(configured, strict=False):
+    """Use the chosen port if it exists, else the one outgoing Bluetooth port. Strict choices never fall back."""
+    ports = list_serial_ports()
+    found = ", ".join(f"{p['device']} ({p['kind']})" for p in ports) or "none"
+    if configured and configured.lower() != "auto":
+        for port in ports:
+            if port["device"].upper() == configured.upper():
+                return port["device"]
+        if strict:
+            raise ValueError(f"{configured} isn't available on this laptop. Ports found: {found}.")
+    paired = [p["device"] for p in ports if p["paired"]]
+    if len(paired) == 1:
+        return paired[0]
     missing = f"{configured} was not found. " if configured and configured.lower() != "auto" else ""
-    raise ValueError(f"{missing}Set ROVER_SERIAL_PORT in BRH_Test/.env to the rover's outgoing Bluetooth port. Ports found: {found}.")
+    raise ValueError(f"{missing}Choose the rover's port in the Port menu. Ports found: {found}.")
 
 
 class RoverBridge:
@@ -36,6 +52,7 @@ class RoverBridge:
         self.lock = threading.RLock()
         self.port_lock = threading.Lock()
         self.serial = None
+        self.serial_port = None
         self.transport = None
         self.link = "offline"
         self.owner = None
@@ -65,6 +82,7 @@ class RoverBridge:
                     "voice_ready": bool(self.voice and self.voice.ready.is_set() and not voice_error),
                     "voice_error": voice_error, "camera_error": self.camera_error,
                     "camera_active": bool(self.camera_thread and self.camera_thread.is_alive()),
+                    "port": self.serial_port if self.link == "bluetooth" else None,
                     "epoch": self.epoch, "sequence": self.sequence}
 
     def _require_owner(self, owner):
@@ -73,21 +91,28 @@ class RoverBridge:
         if not owner or self.owner != owner:
             raise ValueError("Another pilot has control of this rover.")
 
-    def _open_serial(self, fresh=False):
+    def _open_serial(self, choice=None, fresh=False):
         """Return the open Bluetooth port, opening it outside the bridge lock so status stays responsive."""
+        if choice is not None and (not isinstance(choice, str) or len(choice) > 64):
+            raise ValueError("Choose a serial port from the list.")
         with self.port_lock:
-            if fresh:
+            if choice and choice.lower() != "auto":
+                port = find_serial_port(choice, strict=True)
+            else:
+                port = find_serial_port(os.getenv("ROVER_SERIAL_PORT", "auto"))
+            if fresh or port != self.serial_port:
                 self._close_serial()
             if self.serial is None:
                 import serial
-                port = find_serial_port(os.getenv("ROVER_SERIAL_PORT", "auto"))
                 try:
                     self.serial = serial.Serial(port, int(os.getenv("ROVER_BAUD", "115200")), timeout=0.2, write_timeout=0.3)
                 except serial.SerialException as exc:
                     raise ValueError(f"Could not open {port}. Check the rover is on and paired, then try again. ({exc})") from exc
+                self.serial_port = port
             return self.serial
 
     def _close_serial(self):
+        self.serial_port = None
         port, self.serial = self.serial, None
         if port:
             try:
@@ -101,7 +126,7 @@ class RoverBridge:
             self.transport.close()
         self.transport, self.owner, self.link = None, None, "offline"
 
-    def connect(self, owner, kind):
+    def connect(self, owner, kind, port=None):
         if kind not in {"bluetooth", "wifi"}:
             raise ValueError("Choose Bluetooth or Wi-Fi.")
         for attempt in range(2):
@@ -111,7 +136,7 @@ class RoverBridge:
                 if self.transport:
                     raise ValueError("Disconnect before changing the connection.")
             # A cached port can go stale while idle, so a failed first STOP reopens it once.
-            transport = self._open_serial(fresh=attempt > 0) if kind == "bluetooth" else None
+            transport = self._open_serial(port, fresh=attempt > 0) if kind == "bluetooth" else None
             with self.lock:
                 if self.transport or (self.owner and self.owner != owner):
                     raise ValueError("Another pilot connected first. Wait for them to disconnect.")

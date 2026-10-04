@@ -393,8 +393,9 @@ if ($("#connect-button") && signedIn) {
     $("#connect-button").textContent = owned ? "Disconnect" : "Connect rover";
     $("#connect-button").disabled = next.busy || changingMode;
     $("#transport").disabled = next.connected;
+    $("#serial-port").disabled = next.connected;
     document.querySelectorAll(".drive-button, [data-mode], #emergency-stop").forEach((button) => { button.disabled = !owned || changingMode; });
-    $("#connection-note").textContent = next.busy ? "The current pilot must disconnect before you can take control." : owned && next.link === "wifi" ? "Commands target the configured Pi. UDP does not confirm delivery." : owned ? "Bluetooth serial link is open. Keep the rover in view." : "Run this website on the laptop paired with the Pi.";
+    $("#connection-note").textContent = next.busy ? "The current pilot must disconnect before you can take control." : owned && next.link === "wifi" ? "Commands target the configured Pi. UDP does not confirm delivery." : owned ? `Bluetooth link open on ${next.port || "the serial port"}. Keep the rover in view.` : "Run this website on the laptop paired with the Pi.";
     $("#motion-state").textContent = owned ? (labels[next.command] || `HAND ANGLE ${next.command}°`) : "STANDING BY";
     $("#active-mode").textContent = (next.mode || "manual").toUpperCase();
     document.querySelectorAll("[data-mode-card]").forEach((card) => card.classList.toggle("selected-mode", owned && card.dataset.modeCard === next.mode));
@@ -459,7 +460,7 @@ if ($("#connect-button") && signedIn) {
     clearHeld();
     try {
       // Opening a Bluetooth serial port can take several seconds on Windows.
-      showStatus(await api("/api/rover/" + (disconnecting ? "disconnect" : "connect"), {transport:$("#transport").value}, disconnecting ? 5000 : 20000));
+      showStatus(await api("/api/rover/" + (disconnecting ? "disconnect" : "connect"), {transport:$("#transport").value, port:$("#serial-port").value}, disconnecting ? 5000 : 20000));
       feedback(disconnecting ? "Rover stopped and disconnected." : "Ready. Hold a direction to drive.");
     } catch (error) {
       feedback(error.message, true);
@@ -525,6 +526,28 @@ if ($("#connect-button") && signedIn) {
   window.addEventListener("blur", () => { if (heldCommand) release(); });
   try { const saved = localStorage.getItem("rover-transport"); if (saved) $("#transport").value = saved; } catch (_) {}
   $("#transport").addEventListener("change", () => { try { localStorage.setItem("rover-transport", $("#transport").value); } catch (_) {} });
+
+  // Each laptop has its own COM numbers, so the list comes from the server and the choice is kept per browser.
+  async function loadPorts() {
+    const select = $("#serial-port");
+    let wanted = select.value;
+    try { wanted = localStorage.getItem("rover-port") || wanted; } catch (_) {}
+    try {
+      const {ports} = await api("/api/rover/ports");
+      const paired = ports.filter((port) => port.paired);
+      const options = [new Option(paired.length === 1 ? `Auto (${paired[0].device})` : "Auto", "auto"),
+        ...ports.map((port) => new Option(`${port.device} · ${port.kind}`, port.device))];
+      if (wanted !== "auto" && !ports.some((port) => port.device === wanted)) options.push(new Option(`${wanted} · not found`, wanted));
+      select.replaceChildren(...options);
+      select.value = wanted;
+    } catch (_) {}
+  }
+  function showPortField() { $("#port-field").hidden = $("#transport").value !== "bluetooth"; }
+  $("#serial-port").addEventListener("change", () => { try { localStorage.setItem("rover-port", $("#serial-port").value); } catch (_) {} });
+  $("#serial-port").addEventListener("focus", loadPorts);
+  $("#transport").addEventListener("change", showPortField);
+  showPortField();
+  loadPorts();
   window.addEventListener("pagehide", leave);
   document.addEventListener("visibilitychange", () => { if (document.hidden) leave(); else leaving = false; });
   window.addEventListener("focus", () => { leaving = false; });
