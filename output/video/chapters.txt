@@ -1,0 +1,16 @@
+0:00 Litter-ally Trash
+0:07 The hardware
+0:14 Rover movement
+0:34 Local AI recognition
+0:40 Website and outside view
+1:02 Recycling result
+1:05 Trash result
+1:08 Automatic lid selection
+1:12 Every detection has a record
+1:18 Shared data in TigerData
+1:25 Website controls
+1:34 Voice control
+1:55 Hand gestures
+2:08 Hand-tracking close-up
+2:11 Gemini Sort Guide
+2:17 Litter-ally Trash

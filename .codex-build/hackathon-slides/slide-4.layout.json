@@ -1,0 +1,850 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/14xfpu",
+    "id": "14xfpu",
+    "slide": 4,
+    "layoutId": "165b64b1-46e0-4d91-9c18-666c37309d13",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "cb6d16d8-95f1-4b3e-98e7-d5c4e5288a5e",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#10191D",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "Segoe UI"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "165b64b1-46e0-4d91-9c18-666c37309d13",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "cb6d16d8-95f1-4b3e-98e7-d5c4e5288a5e",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "cb6d16d8-95f1-4b3e-98e7-d5c4e5288a5e",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/zqxkfq58",
+      "id": "1",
+      "bbox": [
+        55,
+        45,
+        266,
+        40
+      ],
+      "alt": "Litter-ally Trash branding from the demo",
+      "contentType": "image/png",
+      "imageFit": "contain",
+      "asset": {
+        "assetId": "a856f90b-c874-4e83-8d15-eb617c021931",
+        "contentType": "image/png",
+        "byteLength": 2386
+      }
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/xs3q50zi",
+      "id": "2",
+      "bbox": [
+        55,
+        124,
+        1170,
+        78
+      ],
+      "geometry": "rect",
+      "text": "A detection opens the matching lid",
+      "textPreview": "A detection opens the matching lid",
+      "resolvedFontSize": 50,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 50,
+        "typeface": "Segoe UI",
+        "color": "#EFF7F4",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "A detection opens the matching lid"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "A detection opens the matching lid",
+          "resolvedTextStyle": {
+            "fontSize": 50,
+            "typeface": "Segoe UI",
+            "color": "#EFF7F4",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "A detection opens the matching lid",
+              "fontSize": 50,
+              "typeface": "Segoe UI",
+              "color": "#EFF7F4",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/wrapcvyx",
+      "id": "3",
+      "bbox": [
+        55,
+        660,
+        1170,
+        1
+      ],
+      "geometry": "rect",
+      "fillColor": "#33464A",
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/nm18zqhg",
+      "id": "4",
+      "bbox": [
+        55,
+        677,
+        350,
+        25
+      ],
+      "geometry": "rect",
+      "text": "HACKATHON BUILD",
+      "textPreview": "HACKATHON BUILD",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 16,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "HACKATHON BUILD"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "HACKATHON BUILD",
+          "resolvedTextStyle": {
+            "fontSize": 16,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "HACKATHON BUILD",
+              "fontSize": 16,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/mls76l0v",
+      "id": "5",
+      "bbox": [
+        1190,
+        677,
+        35,
+        25
+      ],
+      "geometry": "rect",
+      "text": "04",
+      "textPreview": "04",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 16,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "04"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "04",
+          "resolvedTextStyle": {
+            "fontSize": 16,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "04",
+              "fontSize": 16,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/9ojq1gzm",
+      "id": "6",
+      "bbox": [
+        55,
+        228,
+        690,
+        35
+      ],
+      "geometry": "rect",
+      "text": "LIVE ITEM LOCK",
+      "textPreview": "LIVE ITEM LOCK",
+      "resolvedFontSize": 27,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 27,
+        "typeface": "Segoe UI",
+        "color": "#A2EFB6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "LIVE ITEM LOCK"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "LIVE ITEM LOCK",
+          "resolvedTextStyle": {
+            "fontSize": 27,
+            "typeface": "Segoe UI",
+            "color": "#A2EFB6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "LIVE ITEM LOCK",
+              "fontSize": 27,
+              "typeface": "Segoe UI",
+              "color": "#A2EFB6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/8nap8by1",
+      "id": "7",
+      "bbox": [
+        55,
+        271,
+        690,
+        75
+      ],
+      "geometry": "rect",
+      "text": "The laptop sends the bin command\nover Wi-Fi UDP to the lid Pi.",
+      "textPreview": "The laptop sends the bin command | over Wi-Fi UDP to the lid Pi.",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 25,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The laptop sends the bin command"
+          },
+          {
+            "index": 2,
+            "text": "over Wi-Fi UDP to the lid Pi."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The laptop sends the bin command",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The laptop sends the bin command",
+              "fontSize": 25,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "over Wi-Fi UDP to the lid Pi.",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "over Wi-Fi UDP to the lid Pi.",
+              "fontSize": 25,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/zyh8v6hk",
+      "id": "8",
+      "bbox": [
+        55,
+        370,
+        690,
+        35
+      ],
+      "geometry": "rect",
+      "text": "CALIBRATED SERVO LIDS",
+      "textPreview": "CALIBRATED SERVO LIDS",
+      "resolvedFontSize": 27,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 27,
+        "typeface": "Segoe UI",
+        "color": "#A2EFB6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "CALIBRATED SERVO LIDS"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "CALIBRATED SERVO LIDS",
+          "resolvedTextStyle": {
+            "fontSize": 27,
+            "typeface": "Segoe UI",
+            "color": "#A2EFB6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "CALIBRATED SERVO LIDS",
+              "fontSize": 27,
+              "typeface": "Segoe UI",
+              "color": "#A2EFB6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/yx87210z",
+      "id": "9",
+      "bbox": [
+        55,
+        413,
+        690,
+        75
+      ],
+      "geometry": "rect",
+      "text": "The Pi drives the PCA9685 over I²C.\nEach bin has its own servo channel.",
+      "textPreview": "The Pi drives the PCA9685 over I²C. | Each bin has its own servo channel.",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 25,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The Pi drives the PCA9685 over I²C."
+          },
+          {
+            "index": 2,
+            "text": "Each bin has its own servo channel."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The Pi drives the PCA9685 over I²C.",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The Pi drives the PCA9685 over I²C.",
+              "fontSize": 25,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "Each bin has its own servo channel.",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Each bin has its own servo channel.",
+              "fontSize": 25,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/cv69wvqx",
+      "id": "10",
+      "bbox": [
+        55,
+        512,
+        690,
+        35
+      ],
+      "geometry": "rect",
+      "text": "AUTOMATIC CLOSE",
+      "textPreview": "AUTOMATIC CLOSE",
+      "resolvedFontSize": 27,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 27,
+        "typeface": "Segoe UI",
+        "color": "#A2EFB6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "AUTOMATIC CLOSE"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "AUTOMATIC CLOSE",
+          "resolvedTextStyle": {
+            "fontSize": 27,
+            "typeface": "Segoe UI",
+            "color": "#A2EFB6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "AUTOMATIC CLOSE",
+              "fontSize": 27,
+              "typeface": "Segoe UI",
+              "color": "#A2EFB6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/dgfap0ri",
+      "id": "11",
+      "bbox": [
+        55,
+        555,
+        690,
+        75
+      ],
+      "geometry": "rect",
+      "text": "The lid stays open for about 5 seconds\nafter the last matching reading.",
+      "textPreview": "The lid stays open for about 5 seconds | after the last matching reading.",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 25,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The lid stays open for about 5 seconds"
+          },
+          {
+            "index": 2,
+            "text": "after the last matching reading."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The lid stays open for about 5 seconds",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The lid stays open for about 5 seconds",
+              "fontSize": 25,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "after the last matching reading.",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "after the last matching reading.",
+              "fontSize": 25,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 12,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/pwfytg7i",
+      "id": "12",
+      "bbox": [
+        815,
+        229,
+        410,
+        397
+      ],
+      "alt": "Actual servos, cardboard lids, PCA9685 and Raspberry Pi",
+      "contentType": "image/jpeg",
+      "imageFit": "cover",
+      "asset": {
+        "assetId": "38adff4d-63f0-4255-b1b2-7ab00eb5540c",
+        "contentType": "image/jpeg",
+        "byteLength": 403803
+      }
+    },
+    {
+      "order": 13,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ruxsnq9c",
+      "id": "13",
+      "bbox": [
+        55,
+        629,
+        1170,
+        25
+      ],
+      "geometry": "rect",
+      "text": "Automatic lids use live scans when enabled. Photo uploads do not open lids.",
+      "textPreview": "Automatic lids use live scans when enabled. Photo uploads do not open lids.",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 18,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Automatic lids use live scans when enabled. Photo uploads do not open lids."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Automatic lids use live scans when enabled. Photo uploads do not open lids.",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Automatic lids use live scans when enabled. Photo uploads do not open lids.",
+              "fontSize": 18,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

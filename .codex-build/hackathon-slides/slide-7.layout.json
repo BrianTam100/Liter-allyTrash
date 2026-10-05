@@ -1,0 +1,677 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/6da60c",
+    "id": "6da60c",
+    "slide": 7,
+    "layoutId": "165b64b1-46e0-4d91-9c18-666c37309d13",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "cb6d16d8-95f1-4b3e-98e7-d5c4e5288a5e",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#10191D",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "Segoe UI"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "165b64b1-46e0-4d91-9c18-666c37309d13",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "cb6d16d8-95f1-4b3e-98e7-d5c4e5288a5e",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "cb6d16d8-95f1-4b3e-98e7-d5c4e5288a5e",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/f69432h0",
+      "id": "1",
+      "bbox": [
+        55,
+        45,
+        266,
+        40
+      ],
+      "alt": "Litter-ally Trash branding from the demo",
+      "contentType": "image/png",
+      "imageFit": "contain",
+      "asset": {
+        "assetId": "5ce8611d-6a4b-46cc-b31d-715ff280a828",
+        "contentType": "image/png",
+        "byteLength": 2386
+      }
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/tgvul4j6",
+      "id": "2",
+      "bbox": [
+        55,
+        124,
+        1170,
+        78
+      ],
+      "geometry": "rect",
+      "text": "Gemini guidance for unfamiliar items",
+      "textPreview": "Gemini guidance for unfamiliar items",
+      "resolvedFontSize": 50,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 50,
+        "typeface": "Segoe UI",
+        "color": "#EFF7F4",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Gemini guidance for unfamiliar items"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Gemini guidance for unfamiliar items",
+          "resolvedTextStyle": {
+            "fontSize": 50,
+            "typeface": "Segoe UI",
+            "color": "#EFF7F4",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Gemini guidance for unfamiliar items",
+              "fontSize": 50,
+              "typeface": "Segoe UI",
+              "color": "#EFF7F4",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/svmdcj2l",
+      "id": "3",
+      "bbox": [
+        55,
+        660,
+        1170,
+        1
+      ],
+      "geometry": "rect",
+      "fillColor": "#33464A",
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/jqtcful4",
+      "id": "4",
+      "bbox": [
+        55,
+        677,
+        350,
+        25
+      ],
+      "geometry": "rect",
+      "text": "HACKATHON BUILD",
+      "textPreview": "HACKATHON BUILD",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 16,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "HACKATHON BUILD"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "HACKATHON BUILD",
+          "resolvedTextStyle": {
+            "fontSize": 16,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "HACKATHON BUILD",
+              "fontSize": 16,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ipkv6pkj",
+      "id": "5",
+      "bbox": [
+        1190,
+        677,
+        35,
+        25
+      ],
+      "geometry": "rect",
+      "text": "07",
+      "textPreview": "07",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 16,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "07"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "07",
+          "resolvedTextStyle": {
+            "fontSize": 16,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "07",
+              "fontSize": 16,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/5sbuh43a",
+      "id": "6",
+      "bbox": [
+        55,
+        232,
+        715,
+        92
+      ],
+      "geometry": "rect",
+      "text": "Upload a photo or ask about\nan unfamiliar item.",
+      "textPreview": "Upload a photo or ask about | an unfamiliar item.",
+      "resolvedFontSize": 30,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 30,
+        "typeface": "Segoe UI",
+        "color": "#A2EFB6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Upload a photo or ask about"
+          },
+          {
+            "index": 2,
+            "text": "an unfamiliar item."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Upload a photo or ask about",
+          "resolvedTextStyle": {
+            "fontSize": 30,
+            "typeface": "Segoe UI",
+            "color": "#A2EFB6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Upload a photo or ask about",
+              "fontSize": 30,
+              "typeface": "Segoe UI",
+              "color": "#A2EFB6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "an unfamiliar item.",
+          "resolvedTextStyle": {
+            "fontSize": 30,
+            "typeface": "Segoe UI",
+            "color": "#A2EFB6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "an unfamiliar item.",
+              "fontSize": 30,
+              "typeface": "Segoe UI",
+              "color": "#A2EFB6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/4r2d8z2p",
+      "id": "7",
+      "bbox": [
+        55,
+        364,
+        715,
+        145
+      ],
+      "geometry": "rect",
+      "text": "Material guidance\nPreparation steps\nReuse ideas",
+      "textPreview": "Material guidance | Preparation steps | Reuse ideas",
+      "resolvedFontSize": 31,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 31,
+        "typeface": "Segoe UI",
+        "color": "#EFF7F4",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 3,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Material guidance"
+          },
+          {
+            "index": 2,
+            "text": "Preparation steps"
+          },
+          {
+            "index": 3,
+            "text": "Reuse ideas"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Material guidance",
+          "resolvedTextStyle": {
+            "fontSize": 31,
+            "typeface": "Segoe UI",
+            "color": "#EFF7F4"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Material guidance",
+              "fontSize": 31,
+              "typeface": "Segoe UI",
+              "color": "#EFF7F4"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "Preparation steps",
+          "resolvedTextStyle": {
+            "fontSize": 31,
+            "typeface": "Segoe UI",
+            "color": "#EFF7F4"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Preparation steps",
+              "fontSize": 31,
+              "typeface": "Segoe UI",
+              "color": "#EFF7F4"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 3,
+          "text": "Reuse ideas",
+          "resolvedTextStyle": {
+            "fontSize": 31,
+            "typeface": "Segoe UI",
+            "color": "#EFF7F4"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Reuse ideas",
+              "fontSize": 31,
+              "typeface": "Segoe UI",
+              "color": "#EFF7F4"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/3mxwry18",
+      "id": "8",
+      "bbox": [
+        55,
+        533,
+        715,
+        80
+      ],
+      "geometry": "rect",
+      "text": "Advice stays separate from local CLIP\nrecognition and rover control.",
+      "textPreview": "Advice stays separate from local CLIP | recognition and rover control.",
+      "resolvedFontSize": 26,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 26,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Advice stays separate from local CLIP"
+          },
+          {
+            "index": 2,
+            "text": "recognition and rover control."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Advice stays separate from local CLIP",
+          "resolvedTextStyle": {
+            "fontSize": 26,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Advice stays separate from local CLIP",
+              "fontSize": 26,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "recognition and rover control.",
+          "resolvedTextStyle": {
+            "fontSize": 26,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "recognition and rover control.",
+              "fontSize": 26,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/jepkvihs",
+      "id": "9",
+      "bbox": [
+        800,
+        233,
+        425,
+        387
+      ],
+      "alt": "Actual Gemini Sort Guide sorting plan interface",
+      "contentType": "image/png",
+      "imageFit": "contain",
+      "asset": {
+        "assetId": "05b2a4cd-d0fc-4d83-929f-8b37cbe94aba",
+        "contentType": "image/png",
+        "byteLength": 80210
+      }
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/k3e1crqh",
+      "id": "10",
+      "bbox": [
+        55,
+        628,
+        1170,
+        26
+      ],
+      "geometry": "rect",
+      "text": "Gemini processes submitted content in the cloud. The guide does not record drops.",
+      "textPreview": "Gemini processes submitted content in the cloud. The guide does not record drops.",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 18,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Gemini processes submitted content in the cloud. The guide does not record drops."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Gemini processes submitted content in the cloud. The guide does not record drops.",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Gemini processes submitted content in the cloud. The guide does not record drops.",
+              "fontSize": 18,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

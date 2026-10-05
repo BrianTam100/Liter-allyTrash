@@ -115,6 +115,19 @@ if (document.fullscreenEnabled) {
   });
 }
 
+const demoToggle = $("#demo-mode");
+if (demoToggle) demoToggle.addEventListener("change", async () => {
+  const enabled = demoToggle.checked;
+  demoToggle.disabled = true;
+  try {
+    await api("/api/settings/demo-mode", {enabled});
+    $("#demo-feedback").textContent = enabled ? "Demo mode on. Open Rover controls to try voice or hand tracking." : "Demo mode off. Connect the rover to use controls.";
+  } catch (error) {
+    demoToggle.checked = !enabled;
+    $("#demo-feedback").textContent = error.message;
+  } finally { demoToggle.disabled = false; }
+});
+
 const clearForm = $("#clear-data-form");
 if (clearForm) {
   clearForm.addEventListener("submit", async (event) => {
@@ -478,7 +491,7 @@ if ($("#connect-button") && signedIn) {
     status = next;
     const owned = next.connected && next.owned;
     const badge = $("#connection-badge");
-    badge.textContent = next.busy ? "SOMEONE ELSE IS DRIVING" : owned ? (next.link === "wifi" ? "WI-FI TARGET SET" : "BLUETOOTH LINK OPEN") : "ROVER OFFLINE";
+    badge.textContent = next.busy ? "SOMEONE ELSE IS DRIVING" : owned ? (next.link === "demo" ? "DEMO MODE" : next.link === "wifi" ? "WI-FI TARGET SET" : "BLUETOOTH LINK OPEN") : next.demo_mode ? "DEMO MODE" : "ROVER OFFLINE";
     badge.classList.toggle("online", owned);
     $("#connect-button").textContent = owned ? "Disconnect" : next.busy ? "Someone else is driving" : "Connect rover";
     $("#connect-button").disabled = changingMode;
@@ -487,8 +500,9 @@ if ($("#connect-button") && signedIn) {
     // While someone else drives, controls stay clickable (dimmed) so pressing them explains why nothing happens.
     $("#connect-button").setAttribute("aria-disabled", String(Boolean(next.busy)));
     document.querySelectorAll(".drive-button, [data-mode], #emergency-stop").forEach((button) => {
-      button.disabled = changingMode || (!owned && !next.busy);
-      button.setAttribute("aria-disabled", String(!owned));
+      const demoFeature = next.demo_mode && ["voice", "gesture"].includes(button.dataset.mode) && !next.busy;
+      button.disabled = changingMode || (!owned && !next.busy && !demoFeature);
+      button.setAttribute("aria-disabled", String(!owned && !demoFeature));
     });
     const throttle = $("#speed-throttle");
     throttle.disabled = changingMode || !owned || next.link !== "bluetooth";
@@ -497,7 +511,7 @@ if ($("#connect-button") && signedIn) {
       throttle.value = String(next.speed);
       showThrottle(next.speed);
     }
-    $("#connection-note").textContent = next.busy ? busyMessage : owned && next.link === "wifi" ? "Commands target the configured Pi. UDP does not confirm delivery." : owned ? `Bluetooth link open on ${next.port || "the serial port"}. Keep the rover in view.` : "Run this website on the laptop paired with the Pi.";
+    $("#connection-note").textContent = next.busy ? busyMessage : next.demo_mode ? "Demo mode: try voice or hand tracking. Commands stay on this laptop." : owned && next.link === "wifi" ? "Commands target the configured Pi. UDP does not confirm delivery." : owned ? `Bluetooth link open on ${next.port || "the serial port"}. Keep the rover in view.` : "Run this website on the laptop paired with the Pi.";
     $("#motion-state").textContent = owned ? (labels[next.command] || `HAND ANGLE ${next.command}°`) : "STANDING BY";
     $("#active-mode").textContent = (next.mode || "manual").toUpperCase();
     document.querySelectorAll("[data-mode-card]").forEach((card) => card.classList.toggle("selected-mode", owned && card.dataset.modeCard === next.mode));

@@ -186,7 +186,17 @@ def create_app(config=None, bridge=None, classifier_service=None):
 
     @app.get("/settings")
     def settings():
-        return render_template("settings.html")
+        return render_template("settings.html", demo_mode=session.get("demo_mode", False))
+
+    @app.post("/api/settings/demo-mode")
+    def demo_mode():
+        payload = request.get_json(silent=True)
+        if not isinstance(payload, dict) or type(payload.get("enabled")) is not bool:
+            return jsonify(error="Choose whether demo mode is enabled."), 400
+        rover.disconnect(session["pilot_token"])
+        session["demo_mode"] = payload["enabled"]
+        session.permanent = True
+        return jsonify(demo_mode=session["demo_mode"])
 
     @app.post("/api/settings/clear-data")
     def clear_data():
@@ -216,7 +226,7 @@ def create_app(config=None, bridge=None, classifier_service=None):
 
     @app.get("/api/rover")
     def rover_status():
-        return jsonify(rover.status(session.get("pilot_token")))
+        return jsonify(**rover.status(session.get("pilot_token")), demo_mode=session.get("demo_mode", False))
 
     @app.get("/api/rover/ports")
     def rover_ports():
@@ -233,7 +243,10 @@ def create_app(config=None, bridge=None, classifier_service=None):
         owner = session["pilot_token"]
         try:
             if action == "connect":
-                rover.connect(owner, payload.get("transport", "bluetooth"), payload.get("port"))
+                kind = "demo" if session.get("demo_mode") else payload.get("transport", "bluetooth")
+                if kind == "demo" and not session.get("demo_mode"):
+                    raise ValueError("Enable demo mode in Settings first.")
+                rover.connect(owner, kind, payload.get("port"))
             elif action == "disconnect":
                 rover.disconnect(owner)
             elif action == "heartbeat":
@@ -245,6 +258,8 @@ def create_app(config=None, bridge=None, classifier_service=None):
             elif action == "stop":
                 rover.stop(owner)
             elif action == "mode":
+                if session.get("demo_mode") and not rover.status(owner)["connected"]:
+                    rover.connect(owner, "demo")
                 if payload.get("mode") == "gesture":
                     detector.prepare_gesture(owner)
                 rover.set_mode(owner, payload.get("mode", "manual"))
@@ -258,7 +273,7 @@ def create_app(config=None, bridge=None, classifier_service=None):
         except Exception:
             app.logger.exception("Rover action failed")
             return jsonify(error="Could not start that control. Check the laptop connection, dependencies, and setup guide."), 503
-        return jsonify(rover.status(owner))
+        return jsonify(**rover.status(owner), demo_mode=session.get("demo_mode", False))
 
     @app.get("/api/rover/camera")
     def camera():

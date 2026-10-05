@@ -54,6 +54,15 @@ def find_serial_port(configured, strict=False):
     raise ValueError(f"{missing}Choose the rover's port in the Port menu. Ports found: {found}.")
 
 
+class DemoTransport:
+    """Local command sink: demo controls never touch robot hardware."""
+    def write(self, payload):
+        pass
+
+    def close(self):
+        pass
+
+
 class RoverBridge:
     def __init__(self):
         self.lock = threading.RLock()
@@ -139,7 +148,7 @@ class RoverBridge:
         self.transport, self.owner, self.link = None, None, "offline"
 
     def connect(self, owner, kind, port=None):
-        if kind not in {"bluetooth", "wifi"}:
+        if kind not in {"bluetooth", "wifi", "demo"}:
             raise ValueError("Choose Bluetooth or Wi-Fi.")
         for attempt in range(2):
             with self.lock:
@@ -148,7 +157,7 @@ class RoverBridge:
                 if self.transport:
                     raise ValueError("Disconnect before changing the connection.")
             # A cached port can go stale while idle, so a failed first STOP reopens it once.
-            transport = self._open_serial(port, fresh=attempt > 0) if kind == "bluetooth" else None
+            transport = self._open_serial(port, fresh=attempt > 0) if kind == "bluetooth" else DemoTransport() if kind == "demo" else None
             with self.lock:
                 if self.transport or (self.owner and self.owner != owner):
                     raise ValueError(BUSY)
@@ -260,7 +269,7 @@ class RoverBridge:
         self.stop(owner)
         with self.lock:
             self._require_owner(owner)
-            if mode == "gesture" and self.link != "bluetooth":
+            if mode == "gesture" and self.link not in {"bluetooth", "demo"}:
                 raise ValueError("Hand angles need Bluetooth; the existing Wi-Fi receiver accepts WASD only.")
             self.mode = mode
             self.camera_error = None

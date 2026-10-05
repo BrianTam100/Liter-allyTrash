@@ -1,0 +1,606 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/w7g9k2",
+    "id": "w7g9k2",
+    "slide": 6,
+    "layoutId": "165b64b1-46e0-4d91-9c18-666c37309d13",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "cb6d16d8-95f1-4b3e-98e7-d5c4e5288a5e",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#10191D",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "Segoe UI"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "165b64b1-46e0-4d91-9c18-666c37309d13",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "cb6d16d8-95f1-4b3e-98e7-d5c4e5288a5e",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "cb6d16d8-95f1-4b3e-98e7-d5c4e5288a5e",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/e5sjut0b",
+      "id": "1",
+      "bbox": [
+        55,
+        45,
+        266,
+        40
+      ],
+      "alt": "Litter-ally Trash branding from the demo",
+      "contentType": "image/png",
+      "imageFit": "contain",
+      "asset": {
+        "assetId": "284e8610-55e5-47ed-b5c6-3018e0421330",
+        "contentType": "image/png",
+        "byteLength": 2386
+      }
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/4fuhkv6t",
+      "id": "2",
+      "bbox": [
+        55,
+        124,
+        1170,
+        78
+      ],
+      "geometry": "rect",
+      "text": "Every detection has a record",
+      "textPreview": "Every detection has a record",
+      "resolvedFontSize": 50,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 50,
+        "typeface": "Segoe UI",
+        "color": "#EFF7F4",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Every detection has a record"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Every detection has a record",
+          "resolvedTextStyle": {
+            "fontSize": 50,
+            "typeface": "Segoe UI",
+            "color": "#EFF7F4",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Every detection has a record",
+              "fontSize": 50,
+              "typeface": "Segoe UI",
+              "color": "#EFF7F4",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/pg3it0ne",
+      "id": "3",
+      "bbox": [
+        55,
+        660,
+        1170,
+        1
+      ],
+      "geometry": "rect",
+      "fillColor": "#33464A",
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/qhwzm5oz",
+      "id": "4",
+      "bbox": [
+        55,
+        677,
+        350,
+        25
+      ],
+      "geometry": "rect",
+      "text": "HACKATHON BUILD",
+      "textPreview": "HACKATHON BUILD",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 16,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "HACKATHON BUILD"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "HACKATHON BUILD",
+          "resolvedTextStyle": {
+            "fontSize": 16,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "HACKATHON BUILD",
+              "fontSize": 16,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ri50va5k",
+      "id": "5",
+      "bbox": [
+        1190,
+        677,
+        35,
+        25
+      ],
+      "geometry": "rect",
+      "text": "06",
+      "textPreview": "06",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 16,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "06"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "06",
+          "resolvedTextStyle": {
+            "fontSize": 16,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "06",
+              "fontSize": 16,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/cjehof65",
+      "id": "6",
+      "bbox": [
+        55,
+        226,
+        680,
+        48
+      ],
+      "geometry": "rect",
+      "text": "TigerData PostgreSQL",
+      "textPreview": "TigerData PostgreSQL",
+      "resolvedFontSize": 35,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 35,
+        "typeface": "Segoe UI",
+        "color": "#A2EFB6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "TigerData PostgreSQL"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "TigerData PostgreSQL",
+          "resolvedTextStyle": {
+            "fontSize": 35,
+            "typeface": "Segoe UI",
+            "color": "#A2EFB6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "TigerData PostgreSQL",
+              "fontSize": 35,
+              "typeface": "Segoe UI",
+              "color": "#A2EFB6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/dknixknq",
+      "id": "7",
+      "bbox": [
+        55,
+        281,
+        1170,
+        80
+      ],
+      "geometry": "rect",
+      "text": "Computers and phones access the same history\nthrough the dashboard.",
+      "textPreview": "Computers and phones access the same history | through the dashboard.",
+      "resolvedFontSize": 29,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 29,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Computers and phones access the same history"
+          },
+          {
+            "index": 2,
+            "text": "through the dashboard."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Computers and phones access the same history",
+          "resolvedTextStyle": {
+            "fontSize": 29,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Computers and phones access the same history",
+              "fontSize": 29,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "through the dashboard.",
+          "resolvedTextStyle": {
+            "fontSize": 29,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "through the dashboard.",
+              "fontSize": 29,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/bylkbih4",
+      "id": "8",
+      "bbox": [
+        55,
+        385,
+        1170,
+        242
+      ],
+      "alt": "Actual detection log with item, bin, match, source and time",
+      "contentType": "image/png",
+      "imageFit": "contain",
+      "asset": {
+        "assetId": "78cac0dd-3b45-4447-a110-770074ad59b9",
+        "contentType": "image/png",
+        "byteLength": 147688
+      }
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/zm50zu5g",
+      "id": "9",
+      "bbox": [
+        55,
+        359,
+        1170,
+        30
+      ],
+      "geometry": "rect",
+      "text": "One scan ID prevents repeat frames from creating duplicate records.",
+      "textPreview": "One scan ID prevents repeat frames from creating duplicate records.",
+      "resolvedFontSize": 22,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 22,
+        "typeface": "Segoe UI",
+        "color": "#EFF7F4",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "One scan ID prevents repeat frames from creating duplicate records."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "One scan ID prevents repeat frames from creating duplicate records.",
+          "resolvedTextStyle": {
+            "fontSize": 22,
+            "typeface": "Segoe UI",
+            "color": "#EFF7F4"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "One scan ID prevents repeat frames from creating duplicate records.",
+              "fontSize": 22,
+              "typeface": "Segoe UI",
+              "color": "#EFF7F4"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/vq5svats",
+      "id": "10",
+      "bbox": [
+        55,
+        628,
+        1170,
+        26
+      ],
+      "geometry": "rect",
+      "text": "The ledger stores metadata, not camera images. Lid openings record collection events.",
+      "textPreview": "The ledger stores metadata, not camera images. Lid openings record collection events.",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 18,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The ledger stores metadata, not camera images. Lid openings record collection events."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The ledger stores metadata, not camera images. Lid openings record collection events.",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The ledger stores metadata, not camera images. Lid openings record collection events.",
+              "fontSize": 18,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

@@ -1,0 +1,850 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/u4toas",
+    "id": "u4toas",
+    "slide": 5,
+    "layoutId": "165b64b1-46e0-4d91-9c18-666c37309d13",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "cb6d16d8-95f1-4b3e-98e7-d5c4e5288a5e",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#10191D",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "Segoe UI"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "165b64b1-46e0-4d91-9c18-666c37309d13",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "cb6d16d8-95f1-4b3e-98e7-d5c4e5288a5e",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "cb6d16d8-95f1-4b3e-98e7-d5c4e5288a5e",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/zud0ba1c",
+      "id": "1",
+      "bbox": [
+        55,
+        45,
+        266,
+        40
+      ],
+      "alt": "Litter-ally Trash branding from the demo",
+      "contentType": "image/png",
+      "imageFit": "contain",
+      "asset": {
+        "assetId": "f6c5ae91-dd81-4569-9a34-9b76d06c146d",
+        "contentType": "image/png",
+        "byteLength": 2386
+      }
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/l8rmlofm",
+      "id": "2",
+      "bbox": [
+        55,
+        124,
+        1170,
+        78
+      ],
+      "geometry": "rect",
+      "text": "Website, voice and hand controls",
+      "textPreview": "Website, voice and hand controls",
+      "resolvedFontSize": 50,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 50,
+        "typeface": "Segoe UI",
+        "color": "#EFF7F4",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Website, voice and hand controls"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Website, voice and hand controls",
+          "resolvedTextStyle": {
+            "fontSize": 50,
+            "typeface": "Segoe UI",
+            "color": "#EFF7F4",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Website, voice and hand controls",
+              "fontSize": 50,
+              "typeface": "Segoe UI",
+              "color": "#EFF7F4",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/07i5cjy1",
+      "id": "3",
+      "bbox": [
+        55,
+        660,
+        1170,
+        1
+      ],
+      "geometry": "rect",
+      "fillColor": "#33464A",
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/na94nyxs",
+      "id": "4",
+      "bbox": [
+        55,
+        677,
+        350,
+        25
+      ],
+      "geometry": "rect",
+      "text": "HACKATHON BUILD",
+      "textPreview": "HACKATHON BUILD",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 16,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "HACKATHON BUILD"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "HACKATHON BUILD",
+          "resolvedTextStyle": {
+            "fontSize": 16,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "HACKATHON BUILD",
+              "fontSize": 16,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/m90netg7",
+      "id": "5",
+      "bbox": [
+        1190,
+        677,
+        35,
+        25
+      ],
+      "geometry": "rect",
+      "text": "05",
+      "textPreview": "05",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 16,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "05"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "05",
+          "resolvedTextStyle": {
+            "fontSize": 16,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "05",
+              "fontSize": 16,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/9wrmp8fi",
+      "id": "6",
+      "bbox": [
+        55,
+        224,
+        755,
+        35
+      ],
+      "geometry": "rect",
+      "text": "WEBSITE CONTROLS",
+      "textPreview": "WEBSITE CONTROLS",
+      "resolvedFontSize": 27,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 27,
+        "typeface": "Segoe UI",
+        "color": "#A2EFB6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "WEBSITE CONTROLS"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "WEBSITE CONTROLS",
+          "resolvedTextStyle": {
+            "fontSize": 27,
+            "typeface": "Segoe UI",
+            "color": "#A2EFB6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "WEBSITE CONTROLS",
+              "fontSize": 27,
+              "typeface": "Segoe UI",
+              "color": "#A2EFB6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/8bi5g3yd",
+      "id": "7",
+      "bbox": [
+        55,
+        267,
+        755,
+        75
+      ],
+      "geometry": "rect",
+      "text": "Direction buttons and throttle\nsend commands through the rover bridge.",
+      "textPreview": "Direction buttons and throttle | send commands through the rover bridge.",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 25,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Direction buttons and throttle"
+          },
+          {
+            "index": 2,
+            "text": "send commands through the rover bridge."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Direction buttons and throttle",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Direction buttons and throttle",
+              "fontSize": 25,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "send commands through the rover bridge.",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "send commands through the rover bridge.",
+              "fontSize": 25,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/3e54bux8",
+      "id": "8",
+      "bbox": [
+        55,
+        350,
+        755,
+        35
+      ],
+      "geometry": "rect",
+      "text": "GROK VOICE",
+      "textPreview": "GROK VOICE",
+      "resolvedFontSize": 27,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 27,
+        "typeface": "Segoe UI",
+        "color": "#A2EFB6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "GROK VOICE"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "GROK VOICE",
+          "resolvedTextStyle": {
+            "fontSize": 27,
+            "typeface": "Segoe UI",
+            "color": "#A2EFB6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "GROK VOICE",
+              "fontSize": 27,
+              "typeface": "Segoe UI",
+              "color": "#A2EFB6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/2dw329gn",
+      "id": "9",
+      "bbox": [
+        55,
+        393,
+        755,
+        75
+      ],
+      "geometry": "rect",
+      "text": "Spoken directions call a drive tool.\nThe bridge sends the motor command.",
+      "textPreview": "Spoken directions call a drive tool. | The bridge sends the motor command.",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 25,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Spoken directions call a drive tool."
+          },
+          {
+            "index": 2,
+            "text": "The bridge sends the motor command."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Spoken directions call a drive tool.",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Spoken directions call a drive tool.",
+              "fontSize": 25,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "The bridge sends the motor command.",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The bridge sends the motor command.",
+              "fontSize": 25,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/k7a9kjah",
+      "id": "10",
+      "bbox": [
+        55,
+        476,
+        755,
+        35
+      ],
+      "geometry": "rect",
+      "text": "MEDIAPIPE HAND TRACKING",
+      "textPreview": "MEDIAPIPE HAND TRACKING",
+      "resolvedFontSize": 27,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 27,
+        "typeface": "Segoe UI",
+        "color": "#A2EFB6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "MEDIAPIPE HAND TRACKING"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "MEDIAPIPE HAND TRACKING",
+          "resolvedTextStyle": {
+            "fontSize": 27,
+            "typeface": "Segoe UI",
+            "color": "#A2EFB6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "MEDIAPIPE HAND TRACKING",
+              "fontSize": 27,
+              "typeface": "Segoe UI",
+              "color": "#A2EFB6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/l8jatob2",
+      "id": "11",
+      "bbox": [
+        55,
+        519,
+        755,
+        75
+      ],
+      "geometry": "rect",
+      "text": "Wrist-to-fingertip angle sets direction.\nBluetooth carries the angle to the rover.",
+      "textPreview": "Wrist-to-fingertip angle sets direction. | Bluetooth carries the angle to the rover.",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 25,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Wrist-to-fingertip angle sets direction."
+          },
+          {
+            "index": 2,
+            "text": "Bluetooth carries the angle to the rover."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Wrist-to-fingertip angle sets direction.",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Wrist-to-fingertip angle sets direction.",
+              "fontSize": 25,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "Bluetooth carries the angle to the rover.",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Bluetooth carries the angle to the rover.",
+              "fontSize": 25,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 12,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/x8zyhkra",
+      "id": "12",
+      "bbox": [
+        890,
+        211,
+        335,
+        397
+      ],
+      "alt": "Recorded MediaPipe hand landmarks and rover driving state",
+      "contentType": "image/png",
+      "imageFit": "contain",
+      "asset": {
+        "assetId": "e71de3c7-9596-47f4-a55e-f6ec15471e59",
+        "contentType": "image/png",
+        "byteLength": 404998
+      }
+    },
+    {
+      "order": 13,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/j6hsretw",
+      "id": "13",
+      "bbox": [
+        55,
+        628,
+        1170,
+        26
+      ],
+      "geometry": "rect",
+      "text": "One driving browser at a time. A missing heartbeat stops the rover after 1.5 seconds.",
+      "textPreview": "One driving browser at a time. A missing heartbeat stops the rover after 1.5 seconds.",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 18,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "One driving browser at a time. A missing heartbeat stops the rover after 1.5 seconds."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "One driving browser at a time. A missing heartbeat stops the rover after 1.5 seconds.",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "One driving browser at a time. A missing heartbeat stops the rover after 1.5 seconds.",
+              "fontSize": 18,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

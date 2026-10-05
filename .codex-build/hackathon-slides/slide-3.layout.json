@@ -1,0 +1,891 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/orne02",
+    "id": "orne02",
+    "slide": 3,
+    "layoutId": "165b64b1-46e0-4d91-9c18-666c37309d13",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "cb6d16d8-95f1-4b3e-98e7-d5c4e5288a5e",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#10191D",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "Segoe UI"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "165b64b1-46e0-4d91-9c18-666c37309d13",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "cb6d16d8-95f1-4b3e-98e7-d5c4e5288a5e",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "cb6d16d8-95f1-4b3e-98e7-d5c4e5288a5e",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/hk7etczy",
+      "id": "1",
+      "bbox": [
+        55,
+        45,
+        266,
+        40
+      ],
+      "alt": "Litter-ally Trash branding from the demo",
+      "contentType": "image/png",
+      "imageFit": "contain",
+      "asset": {
+        "assetId": "feadb296-98cf-4673-83a0-e816592970a7",
+        "contentType": "image/png",
+        "byteLength": 2386
+      }
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/329kjm5c",
+      "id": "2",
+      "bbox": [
+        55,
+        124,
+        1170,
+        78
+      ],
+      "geometry": "rect",
+      "text": "Local CLIP recognition",
+      "textPreview": "Local CLIP recognition",
+      "resolvedFontSize": 50,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 50,
+        "typeface": "Segoe UI",
+        "color": "#EFF7F4",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Local CLIP recognition"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Local CLIP recognition",
+          "resolvedTextStyle": {
+            "fontSize": 50,
+            "typeface": "Segoe UI",
+            "color": "#EFF7F4",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Local CLIP recognition",
+              "fontSize": 50,
+              "typeface": "Segoe UI",
+              "color": "#EFF7F4",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/i103ah4r",
+      "id": "3",
+      "bbox": [
+        55,
+        660,
+        1170,
+        1
+      ],
+      "geometry": "rect",
+      "fillColor": "#33464A",
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/h0r2hcn6",
+      "id": "4",
+      "bbox": [
+        55,
+        677,
+        350,
+        25
+      ],
+      "geometry": "rect",
+      "text": "HACKATHON BUILD",
+      "textPreview": "HACKATHON BUILD",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 16,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "HACKATHON BUILD"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "HACKATHON BUILD",
+          "resolvedTextStyle": {
+            "fontSize": 16,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "HACKATHON BUILD",
+              "fontSize": 16,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/gzil8rml",
+      "id": "5",
+      "bbox": [
+        1190,
+        677,
+        35,
+        25
+      ],
+      "geometry": "rect",
+      "text": "03",
+      "textPreview": "03",
+      "resolvedFontSize": 16,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 16,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "03"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "03",
+          "resolvedTextStyle": {
+            "fontSize": 16,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "03",
+              "fontSize": 16,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/vy9kfm50",
+      "id": "6",
+      "bbox": [
+        55,
+        225,
+        430,
+        92
+      ],
+      "geometry": "rect",
+      "text": "The laptop compares camera\nframes with text labels.",
+      "textPreview": "The laptop compares camera | frames with text labels.",
+      "resolvedFontSize": 29,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 29,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The laptop compares camera"
+          },
+          {
+            "index": 2,
+            "text": "frames with text labels."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The laptop compares camera",
+          "resolvedTextStyle": {
+            "fontSize": 29,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The laptop compares camera",
+              "fontSize": 29,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "frames with text labels.",
+          "resolvedTextStyle": {
+            "fontSize": 29,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "frames with text labels.",
+              "fontSize": 29,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ux036h4f",
+      "id": "7",
+      "bbox": [
+        55,
+        333,
+        425,
+        36
+      ],
+      "geometry": "rect",
+      "text": "CLIP ViT-L/14",
+      "textPreview": "CLIP ViT-L/14",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 25,
+        "typeface": "Segoe UI",
+        "color": "#EFF7F4",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "CLIP ViT-L/14"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "CLIP ViT-L/14",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Segoe UI",
+            "color": "#EFF7F4",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "CLIP ViT-L/14",
+              "fontSize": 25,
+              "typeface": "Segoe UI",
+              "color": "#EFF7F4",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/tcr2dcna",
+      "id": "8",
+      "bbox": [
+        55,
+        402,
+        425,
+        30
+      ],
+      "geometry": "rect",
+      "text": "RECYCLING",
+      "textPreview": "RECYCLING",
+      "resolvedFontSize": 22,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 22,
+        "typeface": "Segoe UI",
+        "color": "#A2EFB6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "RECYCLING"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "RECYCLING",
+          "resolvedTextStyle": {
+            "fontSize": 22,
+            "typeface": "Segoe UI",
+            "color": "#A2EFB6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "RECYCLING",
+              "fontSize": 22,
+              "typeface": "Segoe UI",
+              "color": "#A2EFB6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/8bi147mp",
+      "id": "9",
+      "bbox": [
+        55,
+        438,
+        425,
+        43
+      ],
+      "geometry": "rect",
+      "text": "Bottle and cardboard",
+      "textPreview": "Bottle and cardboard",
+      "resolvedFontSize": 28,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 28,
+        "typeface": "Segoe UI",
+        "color": "#EFF7F4",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Bottle and cardboard"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Bottle and cardboard",
+          "resolvedTextStyle": {
+            "fontSize": 28,
+            "typeface": "Segoe UI",
+            "color": "#EFF7F4"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Bottle and cardboard",
+              "fontSize": 28,
+              "typeface": "Segoe UI",
+              "color": "#EFF7F4"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/uhk7y9k3",
+      "id": "10",
+      "bbox": [
+        55,
+        508,
+        425,
+        30
+      ],
+      "geometry": "rect",
+      "text": "TRASH",
+      "textPreview": "TRASH",
+      "resolvedFontSize": 22,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 22,
+        "typeface": "Segoe UI",
+        "color": "#A2EFB6",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "TRASH"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "TRASH",
+          "resolvedTextStyle": {
+            "fontSize": 22,
+            "typeface": "Segoe UI",
+            "color": "#A2EFB6",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "TRASH",
+              "fontSize": 22,
+              "typeface": "Segoe UI",
+              "color": "#A2EFB6",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/vid87ul8",
+      "id": "11",
+      "bbox": [
+        55,
+        544,
+        425,
+        43
+      ],
+      "geometry": "rect",
+      "text": "Paper towel and chip bag",
+      "textPreview": "Paper towel and chip bag",
+      "resolvedFontSize": 28,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 28,
+        "typeface": "Segoe UI",
+        "color": "#EFF7F4",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Paper towel and chip bag"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Paper towel and chip bag",
+          "resolvedTextStyle": {
+            "fontSize": 28,
+            "typeface": "Segoe UI",
+            "color": "#EFF7F4"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Paper towel and chip bag",
+              "fontSize": 28,
+              "typeface": "Segoe UI",
+              "color": "#EFF7F4"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 12,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/z694ru5g",
+      "id": "12",
+      "bbox": [
+        495,
+        231,
+        730,
+        315
+      ],
+      "alt": "Actual bottle preview and plastic water bottle recycling result",
+      "contentType": "image/png",
+      "imageFit": "contain",
+      "asset": {
+        "assetId": "3152d194-f67b-4dac-91f9-d3de0fc536a7",
+        "contentType": "image/png",
+        "byteLength": 239026
+      }
+    },
+    {
+      "order": 13,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/hkvq943e",
+      "id": "13",
+      "bbox": [
+        505,
+        560,
+        710,
+        75
+      ],
+      "geometry": "rect",
+      "text": "Three readings over at least 0.5 seconds\nproduce a stable item lock.",
+      "textPreview": "Three readings over at least 0.5 seconds | produce a stable item lock.",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 25,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Three readings over at least 0.5 seconds"
+          },
+          {
+            "index": 2,
+            "text": "produce a stable item lock."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Three readings over at least 0.5 seconds",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Three readings over at least 0.5 seconds",
+              "fontSize": 25,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "produce a stable item lock.",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "produce a stable item lock.",
+              "fontSize": 25,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 14,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/mtk7upkr",
+      "id": "14",
+      "bbox": [
+        55,
+        627,
+        1170,
+        25
+      ],
+      "geometry": "rect",
+      "text": "Other labels return no supported item. Match scores compare candidates.",
+      "textPreview": "Other labels return no supported item. Match scores compare candidates.",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 18,
+        "typeface": "Segoe UI",
+        "color": "#A3B8B6",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "wrap": "none",
+        "autoFit": "none",
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Other labels return no supported item. Match scores compare candidates."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Other labels return no supported item. Match scores compare candidates.",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "typeface": "Segoe UI",
+            "color": "#A3B8B6"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Other labels return no supported item. Match scores compare candidates.",
+              "fontSize": 18,
+              "typeface": "Segoe UI",
+              "color": "#A3B8B6"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

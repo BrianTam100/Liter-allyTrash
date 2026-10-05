@@ -36,6 +36,36 @@ class WebsiteTests(unittest.TestCase):
             "request_id": request_id or str(uuid.uuid4()), "item_name": item_name},
             headers={"X-CSRF-Token": self.csrf()})
 
+    def test_demo_features_start_without_hardware_and_setting_stops_them(self):
+        self.visit()
+        headers = {"X-CSRF-Token": self.csrf()}
+        response = self.client.post("/api/settings/demo-mode", json={"enabled": True}, headers=headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(self.client.get("/api/rover").get_json()["demo_mode"])
+        voice = Mock()
+        voice.error = None
+        voice.ready.is_set.return_value = True
+        with patch.dict("os.environ", {"XAI_API_KEY": "test-key"}), patch(
+                "voice_control.VoiceDrive", return_value=voice) as drive, patch.object(
+                self.bridge, "_open_serial", side_effect=AssertionError("Demo opened hardware")):
+            response = self.client.post("/api/rover/mode", json={"mode": "voice"}, headers=headers)
+            self.assertEqual(response.status_code, 200, response.get_json())
+            self.assertEqual(response.get_json()["link"], "demo")
+            drive.call_args.args[0]("w")
+            self.assertEqual(self.bridge.last_command, "w")
+            self.assertIsNone(self.bridge.serial)
+            with patch.dict("sys.modules", {"cv2": Mock(), "mediapipe": Mock()}), patch.object(
+                    self.bridge, "_camera_loop", side_effect=lambda *args: self.bridge.camera_stop.wait(2)):
+                response = self.client.post("/api/rover/mode", json={"mode": "gesture"}, headers=headers)
+                self.assertEqual(response.status_code, 200, response.get_json())
+                self.assertEqual(response.get_json()["mode"], "gesture")
+                self.assertTrue(response.get_json()["camera_active"])
+                response = self.client.post("/api/settings/demo-mode", json={"enabled": False}, headers=headers)
+                self.assertEqual(response.status_code, 200)
+            voice.stop.assert_called_once()
+            self.assertIsNone(self.bridge.transport)
+            self.assertEqual(self.bridge.mode, "manual")
+
     def test_public_pages_render_and_have_accessible_landmarks(self):
         for route in ["/", "/controls", "/log"]:
             response = self.client.get(route)

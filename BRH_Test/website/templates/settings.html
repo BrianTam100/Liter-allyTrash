@@ -2,6 +2,12 @@
 {% block title %}Settings{% endblock %}
 {% block content %}
 <div class="page-heading"><h1>Settings</h1></div>
+<section class="panel">
+  <div class="panel-heading compact"><h2>Demo mode</h2></div>
+  <p class="muted">Try voice controls and live camera hand tracking without connecting a robot. Commands stay on this laptop. Voice still requires an xAI key.</p>
+  <label for="demo-mode"><input type="checkbox" id="demo-mode" {% if demo_mode %}checked{% endif %}> Enable demo mode</label>
+  <p id="demo-feedback" class="form-feedback" role="status"></p>
+</section>
 <section id="storage" class="panel storage-panel">
   <div class="panel-heading compact"><h2>Storage</h2><span class="storage-tag">{{ storage_label }}</span></div>
   <p class="muted">{% if storage_label == 'TigerData' %}Your recycling records and detections are stored in TigerData.{% else %}Your recycling records and detections are stored locally on this computer.{% endif %}</p>

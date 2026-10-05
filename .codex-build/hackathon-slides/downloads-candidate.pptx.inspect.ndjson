@@ -1,0 +1,122 @@
+{"kind":"deck","id":"pr/goarrk","name":"Deck"}
+{"kind":"layout","layoutId":"/ppt/slideMasters/slideMaster1.xml","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"/ppt/slideLayouts/slideLayout1.xml","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/y90nupkv","slide":1,"title":"HACKATHON BUILD","textShapes":4}
+{"kind":"shape","id":"sh/547294r6","slide":1,"bbox":[55,660,1170,1]}
+{"kind":"textbox","id":"sh/k3yl0zql","slide":1,"text":"HACKATHON BUILD","textPreview":"HACKATHON BUILD","textChars":15,"textLines":1,"bbox":[55,677,350,25]}
+{"kind":"textbox","id":"sh/7qp4be9c","slide":1,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[1190,677,35,25]}
+{"kind":"textbox","id":"sh/65g3298r","slide":1,"text":"Recognize.\nSort.\nConnect.","textPreview":"Recognize. | Sort. | Connect.","textChars":25,"textLines":3,"bbox":[55,174,635,310]}
+{"kind":"textbox","id":"sh/ts7md4r2","slide":1,"text":"A mobile trash-sorting rover\nwith local vision and a shared dashboard.","textPreview":"A mobile trash-sorting rover | with local vision and a shared dashboard.","textChars":70,"textLines":2,"bbox":[55,518,650,85]}
+{"kind":"image","id":"im/dkb2xcfy","slide":1,"name":"","bbox":[55,45.4,266,39.21]}
+{"kind":"image","id":"im/6lgjadw3","slide":1,"name":"","bbox":[745,45,480,585]}
+{"kind":"notes","id":"nt/y90nupkv","slide":1,"text":"Project overview. Sources: README.md; docs/hardware.md; docs/architecture.md. Hardware photograph: Media/IMG_3596.jpg. Photo preserves the actual prototype."}
+{"kind":"slide","id":"sl/hwbqtkby","slide":2,"title":"The software and hardware","textShapes":9}
+{"kind":"textbox","id":"sh/9072xkry","slide":2,"text":"The software and hardware","textPreview":"The software and hardware","textChars":25,"textLines":1,"bbox":[55,124,1170,78]}
+{"kind":"shape","id":"sh/ozy1ofad","slide":2,"bbox":[55,660,1170,1]}
+{"kind":"textbox","id":"sh/b29kza94","slide":2,"text":"HACKATHON BUILD","textPreview":"HACKATHON BUILD","textChars":15,"textLines":1,"bbox":[55,677,350,25]}
+{"kind":"textbox","id":"sh/a10jqpsj","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1190,677,35,25]}
+{"kind":"textbox","id":"sh/x4r21kru","slide":2,"text":"LAPTOP","textPreview":"LAPTOP","textChars":6,"textLines":1,"bbox":[55,226,735,35]}
+{"kind":"textbox","id":"sh/w3i1sfa9","slide":2,"text":"Flask serves the dashboard.\nCLIP runs inference on the laptop.","textPreview":"Flask serves the dashboard. | CLIP runs inference on the laptop.","textChars":62,"textLines":2,"bbox":[55,269,735,75]}
+{"kind":"textbox","id":"sh/r65knqtk","slide":2,"text":"TWO RASPBERRY PIS","textPreview":"TWO RASPBERRY PIS","textChars":17,"textLines":1,"bbox":[55,362,735,35]}
+{"kind":"textbox","id":"sh/q5wjelsz","slide":2,"text":"One relays drive commands.\nThe other streams the camera and moves lids.","textPreview":"One relays drive commands. | The other streams the camera and moves lids.","textChars":71,"textLines":2,"bbox":[55,405,735,75]}
+{"kind":"textbox","id":"sh/ove9o7yd","slide":2,"text":"ARDUINO + CNC SHIELD","textPreview":"ARDUINO + CNC SHIELD","textChars":20,"textLines":1,"bbox":[55,498,735,35]}
+{"kind":"textbox","id":"sh/9wnqhczy","slide":2,"text":"USB serial reaches the motor controller.\nFour steppers drive the mecanum wheels.","textPreview":"USB serial reaches the motor controller. | Four steppers drive the mecanum wheels.","textChars":80,"textLines":2,"bbox":[55,541,735,75]}
+{"kind":"image","id":"im/507e5kja","slide":2,"name":"","bbox":[55,45.4,266,39.21]}
+{"kind":"image","id":"im/kzexcfip","slide":2,"name":"","bbox":[850,220,375,408]}
+{"kind":"notes","id":"nt/hwbqtkby","slide":2,"text":"Sources: docs/architecture.md, especially Two Pis in practice; docs/hardware.md; web_server.py; BRH_Test/rover_bridge.py; BRH_Test/driveController/driveController.ino. The laptop hosts Flask and CLIP. Separate Pi processes handle drive and camera/lids. TigerData is a remote PostgreSQL service. Hardware photo: Media/IMG_3597.jpg."}
+{"kind":"slide","id":"sl/ofy9wn61","slide":3,"title":"Local CLIP recognition","textShapes":11}
+{"kind":"textbox","id":"sh/cza94vmx","slide":3,"text":"Local CLIP recognition","textPreview":"Local CLIP recognition","textChars":22,"textLines":1,"bbox":[55,124,1170,78]}
+{"kind":"shape","id":"sh/d0jax03i","slide":3,"bbox":[55,660,1170,1]}
+{"kind":"textbox","id":"sh/298ryl4v","slide":3,"text":"HACKATHON BUILD","textPreview":"HACKATHON BUILD","textChars":15,"textLines":1,"bbox":[55,677,350,25]}
+{"kind":"textbox","id":"sh/3ah8rqlg","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1190,677,35,25]}
+{"kind":"textbox","id":"sh/obq90bml","slide":3,"text":"The laptop compares camera\nframes with text labels.","textPreview":"The laptop compares camera | frames with text labels.","textChars":51,"textLines":2,"bbox":[55,225,430,92]}
+{"kind":"textbox","id":"sh/pcjqtg36","slide":3,"text":"CLIP ViT-L/14","textPreview":"CLIP ViT-L/14","textChars":13,"textLines":1,"bbox":[55,333,425,36]}
+{"kind":"textbox","id":"sh/m5cra54z","slide":3,"text":"RECYCLING","textPreview":"RECYCLING","textChars":9,"textLines":1,"bbox":[55,402,425,30]}
+{"kind":"textbox","id":"sh/n6ls3alk","slide":3,"text":"Bottle and cardboard","textPreview":"Bottle and cardboard","textChars":20,"textLines":1,"bbox":[55,438,425,43]}
+{"kind":"textbox","id":"sh/n2l4fq98","slide":3,"text":"TRASH","textPreview":"TRASH","textChars":5,"textLines":1,"bbox":[55,508,425,30]}
+{"kind":"textbox","id":"sh/m1c3mlsn","slide":3,"text":"Paper towel and chip bag","textPreview":"Paper towel and chip bag","textChars":24,"textLines":1,"bbox":[55,544,425,43]}
+{"kind":"textbox","id":"sh/83ulovat","slide":3,"text":"Three readings over at least 0.5 seconds\nproduce a stable item lock.","textPreview":"Three readings over at least 0.5 seconds | produce a stable item lock.","textChars":68,"textLines":2,"bbox":[505,560,710,75]}
+{"kind":"textbox","id":"sh/v6l4jq94","slide":3,"text":"Other labels return no supported item. Match scores compare candidates.","textPreview":"Other labels return no supported item. Match scores compare candidates.","textChars":71,"textLines":1,"bbox":[55,627,1170,25]}
+{"kind":"image","id":"im/hon6lgv6","slide":3,"name":"","bbox":[55,45.4,266,39.21]}
+{"kind":"image","id":"im/ulcnalwf","slide":3,"name":"","bbox":[495,248.79,730,279.41]}
+{"kind":"notes","id":"nt/ofy9wn61","slide":3,"text":"Sources: classifier.py MODEL_ID, TARGETS, Classifier.predict; classifier_service.py ItemLock.READINGS and LOCK_SECONDS. Default model is openai/clip-vit-large-patch14. The model compares the whole frame with text candidates, including non-target labels. Only four item families are reported. Three or more readings spanning at least 0.5 seconds form a lock. Relative scores are candidate comparisons, not accuracy probabilities. Screenshot: source recording at 167.5 seconds, actual bottle and recycling result."}
+{"kind":"slide","id":"sl/jyx0ra1s","slide":4,"title":"A detection opens the matching lid","textShapes":10}
+{"kind":"textbox","id":"sh/1cj2d8b6","slide":4,"text":"A detection opens the matching lid","textPreview":"A detection opens the matching lid","textChars":34,"textLines":1,"bbox":[55,124,1170,78]}
+{"kind":"shape","id":"sh/0ba143al","slide":4,"bbox":[55,660,1170,1]}
+{"kind":"textbox","id":"sh/rm1k7yt4","slide":4,"text":"HACKATHON BUILD","textPreview":"HACKATHON BUILD","textChars":15,"textLines":1,"bbox":[55,677,350,25]}
+{"kind":"textbox","id":"sh/ql8jytsj","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1190,677,35,25]}
+{"kind":"textbox","id":"sh/doj29oba","slide":4,"text":"LIVE ITEM LOCK","textPreview":"LIVE ITEM LOCK","textChars":14,"textLines":1,"bbox":[55,228,690,35]}
+{"kind":"textbox","id":"sh/sna103ap","slide":4,"text":"The laptop sends the bin command\nover Wi-Fi UDP to the lid Pi.","textPreview":"The laptop sends the bin command | over Wi-Fi UDP to the lid Pi.","textChars":62,"textLines":2,"bbox":[55,271,690,75]}
+{"kind":"textbox","id":"sh/3ihk3et8","slide":4,"text":"CALIBRATED SERVO LIDS","textPreview":"CALIBRATED SERVO LIDS","textChars":21,"textLines":1,"bbox":[55,370,690,35]}
+{"kind":"textbox","id":"sh/ih8ju9sn","slide":4,"text":"The Pi drives the PCA9685 over I²C.\nEach bin has its own servo channel.","textPreview":"The Pi drives the PCA9685 over I²C. | Each bin has its own servo channel.","textChars":71,"textLines":2,"bbox":[55,413,690,75]}
+{"kind":"textbox","id":"sh/kbm987y5","slide":4,"text":"AUTOMATIC CLOSE","textPreview":"AUTOMATIC CLOSE","textChars":15,"textLines":1,"bbox":[55,512,690,35]}
+{"kind":"textbox","id":"sh/5cva1cfq","slide":4,"text":"The lid stays open for about 5 seconds\nafter the last matching reading.","textPreview":"The lid stays open for about 5 seconds | after the last matching reading.","textChars":71,"textLines":2,"bbox":[55,555,690,75]}
+{"kind":"textbox","id":"sh/jadsz2xk","slide":4,"text":"Automatic lids use live scans when enabled. Photo uploads do not open lids.","textPreview":"Automatic lids use live scans when enabled. Photo uploads do not open lids.","textChars":75,"textLines":1,"bbox":[55,629,1170,25]}
+{"kind":"image","id":"im/7ad43q1c","slide":4,"name":"","bbox":[55,45.4,266,39.21]}
+{"kind":"image","id":"im/694nal0r","slide":4,"name":"","bbox":[815,229,410,397]}
+{"kind":"notes","id":"nt/jyx0ra1s","slide":4,"text":"Sources: classifier_service.py Service.track; lid.py RemoteLid and Lid; lid_server.py; docs/hardware.md. Live locked readings trigger open Trash or open Recyclable through UDP 5006. The lid Pi controls PCA9685 over I2C, channel 0 trash and channel 3 recycling. HOLD_SECONDS=5 after the last reading. Lid automation must be enabled. Photos do not open lids. Image: Media/IMG_3595.jpg."}
+{"kind":"slide","id":"sl/i107q5of","slide":5,"title":"Website, voice and hand controls","textShapes":10}
+{"kind":"textbox","id":"sh/dgbulwnm","slide":5,"text":"Website, voice and hand controls","textPreview":"Website, voice and hand controls","textChars":32,"textLines":1,"bbox":[55,124,1170,78]}
+{"kind":"shape","id":"sh/cf2tcr61","slide":5,"bbox":[55,660,1170,1]}
+{"kind":"textbox","id":"sh/z2tcnm5s","slide":5,"text":"HACKATHON BUILD","textPreview":"HACKATHON BUILD","textChars":15,"textLines":1,"bbox":[55,677,350,25]}
+{"kind":"textbox","id":"sh/yhkbe1o7","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1190,677,35,25]}
+{"kind":"textbox","id":"sh/l4bupwny","slide":5,"text":"WEBSITE CONTROLS","textPreview":"WEBSITE CONTROLS","textChars":16,"textLines":1,"bbox":[55,224,755,35]}
+{"kind":"textbox","id":"sh/032tgr6d","slide":5,"text":"Direction buttons and throttle\nsend commands through the rover bridge.","textPreview":"Direction buttons and throttle | send commands through the rover bridge.","textChars":70,"textLines":2,"bbox":[55,267,755,75]}
+{"kind":"textbox","id":"sh/n6dcr65o","slide":5,"text":"GROK VOICE","textPreview":"GROK VOICE","textChars":10,"textLines":1,"bbox":[55,350,755,35]}
+{"kind":"textbox","id":"sh/m5kbi1oj","slide":5,"text":"Spoken directions call a drive tool.\nThe bridge sends the motor command.","textPreview":"Spoken directions call a drive tool. | The bridge sends the motor command.","textChars":72,"textLines":2,"bbox":[55,393,755,75]}
+{"kind":"textbox","id":"sh/w32dkbuh","slide":5,"text":"MEDIAPIPE HAND TRACKING","textPreview":"MEDIAPIPE HAND TRACKING","textChars":23,"textLines":1,"bbox":[55,476,755,35]}
+{"kind":"textbox","id":"sh/x4vedgvm","slide":5,"text":"Wrist-to-fingertip angle sets direction.\nBluetooth carries the angle to the rover.","textPreview":"Wrist-to-fingertip angle sets direction. | Bluetooth carries the angle to the rover.","textChars":82,"textLines":2,"bbox":[55,519,755,75]}
+{"kind":"textbox","id":"sh/v2twb6dw","slide":5,"text":"One driving browser at a time. A missing heartbeat stops the rover after 1.5 seconds.","textPreview":"One driving browser at a time. A missing heartbeat stops the rover after 1.5 seconds.","textChars":85,"textLines":1,"bbox":[55,628,1170,26]}
+{"kind":"image","id":"im/jmdw3qlg","slide":5,"name":"","bbox":[55,45.4,266,39.21]}
+{"kind":"image","id":"im/ilkvul4v","slide":5,"name":"","bbox":[890,227.56,335,363.88]}
+{"kind":"notes","id":"nt/i107q5of","slide":5,"text":"Sources: BRH_Test/rover_bridge.py set_mode, _camera_loop, _watchdog; BRH_Test/voice_control.py DRIVE_TOOL and DIRECTION_TO_CMD; docs/hardware.md. Website directions support keyboard, touch/mouse. Grok voice uses xAI realtime WebSocket and invokes drive_rover. MediaPipe runs locally; wrist-to-index-tip angle is rounded to five degrees and sent over Bluetooth. Wi-Fi receiver supports WASD, not angles. One driving session at a time. Heartbeat loss beyond 1.5 seconds stops/releases rover. Hand image: Media/HandGuestureProof.png."}
+{"kind":"slide","id":"sl/x8f69ofe","slide":6,"title":"Every detection has a record","textShapes":7}
+{"kind":"textbox","id":"sh/yhg7epsj","slide":6,"text":"Every detection has a record","textPreview":"Every detection has a record","textChars":28,"textLines":1,"bbox":[55,124,1170,78]}
+{"kind":"shape","id":"sh/zi98nu94","slide":6,"bbox":[55,660,1170,1]}
+{"kind":"textbox","id":"sh/87ipkzal","slide":6,"text":"HACKATHON BUILD","textPreview":"HACKATHON BUILD","textChars":15,"textLines":1,"bbox":[55,677,350,25]}
+{"kind":"textbox","id":"sh/98rqt4r6","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1190,677,35,25]}
+{"kind":"textbox","id":"sh/ml07i9sv","slide":6,"text":"TigerData PostgreSQL","textPreview":"TigerData PostgreSQL","textChars":20,"textLines":1,"bbox":[55,226,680,48]}
+{"kind":"textbox","id":"sh/7m98ru9g","slide":6,"text":"Computers and phones access the same history\nthrough the dashboard.","textPreview":"Computers and phones access the same history | through the dashboard.","textChars":67,"textLines":2,"bbox":[55,281,1170,80]}
+{"kind":"textbox","id":"sh/pc76hkr2","slide":6,"text":"One scan ID prevents repeat frames from creating duplicate records.","textPreview":"One scan ID prevents repeat frames from creating duplicate records.","textChars":67,"textLines":1,"bbox":[55,359,1170,30]}
+{"kind":"textbox","id":"sh/h4bupgn6","slide":6,"text":"The ledger stores metadata, not camera images. Lid openings record collection events.","textPreview":"The ledger stores metadata, not camera images. Lid openings record collection events.","textChars":85,"textLines":1,"bbox":[55,628,1170,26]}
+{"kind":"image","id":"im/7ylcjetk","slide":6,"name":"","bbox":[55,45.4,266,39.21]}
+{"kind":"image","id":"im/8zutsju5","slide":6,"name":"","bbox":[227.45,385,825.1,242]}
+{"kind":"notes","id":"nt/x8f69ofe","slide":6,"text":"Sources: BRH_Test/database.py initialize, add_detection, add_collection, bin_contents, empty_bin; dashboard_classifier.py log_detection and auto_recorded; docs/architecture.md Logging and points. Each locked live scan and each photo records item, bin, score, source, time. Unique scan_id avoids duplicate rows as frames repeat. With configured DATABASE_URL the backend uses TigerData PostgreSQL, otherwise SQLite. Lids opening auto-records one collection event per locked scan. The camera does not verify a physical deposit. Photos and disabled lids require manual confirmation. No images stored in the ledger. Screenshot: output/video/assets/live-log-site.png. README.md manual-confirmation wording is older than the current automatic collection implementation."}
+{"kind":"slide","id":"sl/gnmp4jqx","slide":7,"title":"Gemini guidance for unfamiliar items","textShapes":7}
+{"kind":"textbox","id":"sh/cb2tkvap","slide":7,"text":"Gemini guidance for unfamiliar items","textPreview":"Gemini guidance for unfamiliar items","textChars":36,"textLines":1,"bbox":[55,124,1170,78]}
+{"kind":"shape","id":"sh/dcbud0ra","slide":7,"bbox":[55,660,1170,1]}
+{"kind":"textbox","id":"sh/ydkbm5sv","slide":7,"text":"HACKATHON BUILD","textPreview":"HACKATHON BUILD","textChars":15,"textLines":1,"bbox":[55,677,350,25]}
+{"kind":"textbox","id":"sh/zedcfa9g","slide":7,"text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1190,677,35,25]}
+{"kind":"textbox","id":"sh/kzmdova1","slide":7,"text":"Upload a photo or ask about\nan unfamiliar item.","textPreview":"Upload a photo or ask about | an unfamiliar item.","textChars":47,"textLines":2,"bbox":[55,232,715,92]}
+{"kind":"textbox","id":"sh/l0vuh0rm","slide":7,"text":"Material guidance\nPreparation steps\nReuse ideas","textPreview":"Material guidance | Preparation steps | Reuse ideas","textChars":47,"textLines":3,"bbox":[55,364,715,145]}
+{"kind":"textbox","id":"sh/eh0ba1sr","slide":7,"text":"Advice stays separate from local CLIP\nrecognition and rover control.","textPreview":"Advice stays separate from local CLIP | recognition and rover control.","textChars":68,"textLines":2,"bbox":[55,533,715,80]}
+{"kind":"textbox","id":"sh/baxkjqlk","slide":7,"text":"Gemini processes submitted content in the cloud. The guide does not record drops.","textPreview":"Gemini processes submitted content in the cloud. The guide does not record drops.","textChars":81,"textLines":1,"bbox":[55,628,1170,26]}
+{"kind":"image","id":"im/x0fet8ze","slide":7,"name":"","bbox":[55,45.4,266,39.21]}
+{"kind":"image","id":"im/axovit03","slide":7,"name":"","bbox":[816.83,233,391.35,387]}
+{"kind":"notes","id":"nt/gnmp4jqx","slide":7,"text":"Sources: BRH_Test/GEMINI.md; BRH_Test/gemini_guide.py; web/gemini.js. Guide accepts question, optional location and selected photo. Photos are decoded, resized and stripped of EXIF. Submitted content goes to Google Gemini. It is a separate advisory flow with no drive, lid or ledger tools and no live municipal-rule lookup. Screenshot: Media/Gemini-Integration.png."}
+{"kind":"slide","id":"sl/7tv1mi","slide":8,"title":"Photon messaging companion","textShapes":12}
+{"kind":"textbox","id":"sh/1wvqlkbi","slide":8,"text":"Photon messaging companion","textPreview":"Photon messaging companion","textChars":26,"textLines":1,"bbox":[55,124,1170,78]}
+{"kind":"shape","id":"sh/0vm9cfad","slide":8,"bbox":[55,660,1170,1]}
+{"kind":"textbox","id":"sh/r6t8fqtg","slide":8,"text":"HACKATHON BUILD","textPreview":"HACKATHON BUILD","textChars":15,"textLines":1,"bbox":[55,677,350,25]}
+{"kind":"textbox","id":"sh/q5k76lsv","slide":8,"text":"08","textPreview":"08","textChars":2,"textLines":1,"bbox":[1190,677,35,25]}
+{"kind":"textbox","id":"sh/d8bqh0bm","slide":8,"text":"iMessage, Telegram and dashboard chat","textPreview":"iMessage, Telegram and dashboard chat","textChars":37,"textLines":1,"bbox":[55,218,700,44]}
+{"kind":"textbox","id":"sh/c72p8va1","slide":8,"text":"SHARED PROGRESS","textPreview":"SHARED PROGRESS","textChars":15,"textLines":1,"bbox":[55,284,700,35]}
+{"kind":"textbox","id":"sh/b2x8ru90","slide":8,"text":"Reads the same Pilot history\nas the dashboard.","textPreview":"Reads the same Pilot history | as the dashboard.","textChars":46,"textLines":2,"bbox":[55,327,700,75]}
+{"kind":"textbox","id":"sh/a1oripsf","slide":8,"text":"SORTING ADVICE","textPreview":"SORTING ADVICE","textChars":14,"textLines":1,"bbox":[55,398,700,35]}
+{"kind":"textbox","id":"sh/4bi5snql","slide":8,"text":"Answers item questions with\nrecycling context.","textPreview":"Answers item questions with | recycling context.","textChars":46,"textLines":2,"bbox":[55,441,700,75]}
+{"kind":"textbox","id":"sh/5cb6ls76","slide":8,"text":"CONFIRMED DROPS","textPreview":"CONFIRMED DROPS","textChars":15,"textLines":1,"bbox":[55,512,700,35]}
+{"kind":"textbox","id":"sh/i90nqd8v","slide":8,"text":"A five-minute code confirms\na proposed collection record.","textPreview":"A five-minute code confirms | a proposed collection record.","textChars":57,"textLines":2,"bbox":[55,555,700,75]}
+{"kind":"textbox","id":"sh/g7i5o3qp","slide":8,"text":"Actual iMessage conversation","textPreview":"Actual iMessage conversation","textChars":28,"textLines":1,"bbox":[785,602,440,26]}
+{"kind":"textbox","id":"sh/h8r6h87a","slide":8,"text":"Driving stays with the dashboard controls.","textPreview":"Driving stays with the dashboard controls.","textChars":42,"textLines":1,"bbox":[55,629,1170,25]}
+{"kind":"image","id":"im/fm98ryxw","slide":8,"name":"","alt":"Litter-ally Trash branding from the demo","bbox":[55,45,266,40]}
+{"kind":"image","id":"im/0z2hwjed","slide":8,"name":"","alt":"Actual iMessage question and Photon companion reply with shared progress and recycling advice","bbox":[785,241,440,352]}
+{"kind":"notes","id":"nt/7tv1mi","slide":8,"text":"Sources: spectrum/README.md; BRH_Test/companion.py Companion.command and Companion.advice; spectrum/src/index.ts. Photon Spectrum transports iMessage or Telegram messages to the authenticated Python bridge. Dashboard chat shares the same companion. All interfaces read the shared Pilot records. Advice uses xAI with local fallback. Manual collections require an exact confirmation code within five minutes and duplicate request IDs cannot award points twice. The model has no hardware or write tools. Screenshot: user-supplied C:/Users/John/Downloads/Photon.png, cropped to the question and reply. Shown progress counts are from that recorded conversation, not current totals."}
+{"kind":"slide","id":"sl/1r0icv","slide":9,"title":"HACKATHON BUILD","textShapes":4}
+{"kind":"shape","id":"sh/ixsbi10z","slide":9,"bbox":[55,660,1170,1]}
+{"kind":"textbox","id":"sh/jy1cbm1k","slide":9,"text":"HACKATHON BUILD","textPreview":"HACKATHON BUILD","textChars":15,"textLines":1,"bbox":[55,677,350,25]}
+{"kind":"textbox","id":"sh/s3atobi1","slide":9,"text":"09","textPreview":"09","textChars":2,"textLines":1,"bbox":[1190,677,35,25]}
+{"kind":"textbox","id":"sh/t43uhgjm","slide":9,"text":"Recognize.\nSort.\nConnect.","textPreview":"Recognize. | Sort. | Connect.","textChars":25,"textLines":3,"bbox":[55,174,635,310]}
+{"kind":"textbox","id":"sh/61sbm10v","slide":9,"text":"Local vision. Automatic lids.\nShared recycling history.","textPreview":"Local vision. Automatic lids. | Shared recycling history.","textChars":55,"textLines":2,"bbox":[55,532,670,85]}
+{"kind":"image","id":"im/8jul8rql","slide":9,"name":"","alt":"Litter-ally Trash branding from the demo","bbox":[55,45,266,40]}
+{"kind":"image","id":"im/ytc32x8j","slide":9,"name":"","alt":"Original Litter-ally Trash trash-can mascot","bbox":[745,132,480,485]}
+{"kind":"notes","id":"nt/1r0icv","slide":9,"text":"Closing brand slide. User-supplied original mascot: C:/Users/John/Downloads/literarlytrash.png, cropped only to transparent bounds. Project sources: docs/architecture.md; classifier_service.py; lid.py; BRH_Test/database.py."}
